@@ -1,27 +1,26 @@
 #include <string>
 #include <iostream>
+#include "Controller.h"
 
 class Siafu
 {
-public:
-    /**
-	 * Siafu's version.
-	 */
-    char *RELEASE = "1.0.4";
 
-    /**
-	 * The string with the command line syntax.
-	 */
-    char *SYNTAX =
-        "Command line arguments: [--config=CONFIG_FILE] " + "[--simulation=SIMULATION_PATH] [-h]\n" + "where CONFIG_FILE is the configuration XML, " + "and SIMULATION_PATH is either\n" + "the simulation's root folder or it's " + "packed form in a jar file.";
-
-    /**
-	 * Prevent this utility class from being instantiated.
-	 */
 private:
     Siafu()
     {
     }
+
+public:
+    /**
+	 * Siafu's version.
+	 */
+    std::string RELEASE = "1.0.4";
+
+    /**
+	 * The string with the command line syntax.
+	 */
+    std::string SYNTAX =
+        "Command line arguments: [--config=CONFIG_FILE] [--simulation=SIMULATION_PATH] [-h]\nwhere CONFIG_FILE is the configuration XML, and SIMULATION_PATH is either\nthe simulation's root folder or it's packed form in a jar file.";
 
     /**
 	 * Start Siafu by parsing the command line arguments and starting the
@@ -50,6 +49,6 @@ public:
             }
         }
 
-        //new Controller(configPath, simulationPath);
+        new Controller(configPath, simulationPath);
     }
 };
