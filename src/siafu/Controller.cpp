@@ -1,4 +1,4 @@
-#include "Controller.h"
+#include <siafu/Controller.h>
 #include <iostream>
 #include <string>
 
@@ -23,7 +23,7 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	if (!simulationPath.empty())
 	{
 		// Printout to the Console
-		//progress = new ConsoleProgress();
+		progress = new ConsoleProgress();
 
 		// Start the simulation without a GUI
 		simulation = new Simulation(simulationPath, this);
@@ -37,19 +37,18 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 		exit(1);
 	}
 }
-// static Progress getProgress() {
-// 	return progress;
-// }
 
-/**
-	 * Request for the simulation to stop. note that this doesn't kill the GUI
-	 * (if it is being used).
-	 * 
-	 */
-/*synchronized*/ void Controller::stopSimulation()
+Progress* Controller::getProgress() {
+	return progress;
+}
+
+/*synchronized*/
+void Controller::stopSimulation()
 {
+	mutex.lock();
 	simulation->die();
 	simulation = NULL;
+	mutex.unlock();
 }
 
 void Controller::startSimulation(std::string simulationPath)
@@ -57,17 +56,17 @@ void Controller::startSimulation(std::string simulationPath)
 	simulation = new Simulation(simulationPath, this);
 }
 
-void Controller::setPaused(const bool state)
-{
-	//simulation->setPaused(state);
-}
+// void Controller::setPaused(const bool state)
+// {
+// 	simulation->setPaused(state);
+// }
 
-bool Controller::isPaused()
-{
-	return simulation->isPaused();
-}
+// bool Controller::isPaused()
+// {
+// 	return simulation->isPaused();
+// }
 
-World getWorld() {
+World Controller::getWorld() {
 	return simulation->getWorld();
 }
 
@@ -75,15 +74,17 @@ World getWorld() {
 // 	return simulation.getSimulationData();
 // }
 
-/*synchronized*/ void Controller::endSimulator()
+/*synchronized*/
+void Controller::endSimulator()
 {
-
-	// if (simulation != null) {
-	// 	simulation.die();
-	// }
+	mutex.lock();
+	if (simulation != NULL) {
+		simulation->die();
+	}
+	mutex.unlock();
 }
 
 bool Controller::isSimulationRunning()
 {
-	//return simulation != null && simulation.isSimulationRunning();
+	return simulation != NULL && simulation->isSimulationRunning();
 }

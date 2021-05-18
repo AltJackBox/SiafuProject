@@ -1,8 +1,8 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "Simulation.h"
-#include "Controller.h"
+#include <siafu/Simulation.h>
+#include <siafu/Controller.h>
 #include <unistd.h>
 #include <vector>
 #include <set>
@@ -89,6 +89,8 @@ public:
 
     // USEFUL ?
     bool shouldPrefillCache();
+
+    World();
 
     World(Simulation* simulation /*, SimulationData simData*/);
 

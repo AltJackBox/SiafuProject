@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include "Controller.h"
+#include <siafu/Controller.h>
 
 class Siafu
 {

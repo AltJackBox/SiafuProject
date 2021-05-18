@@ -1,4 +1,4 @@
-#include "Simulation.h"
+#include <siafu/Simulation.h>
 #include <string>
 
 Simulation::Simulation(std::string simulationPath, Controller* control)
@@ -31,6 +31,7 @@ Simulation::Simulation(std::string simulationPath, Controller* control)
 
 /*synchronized*/ bool Simulation::isEnded()
 {
+	std::lock_guard<std::mutex> lg(lock);
 	return ended;
 }
 
@@ -86,8 +87,10 @@ bool Simulation::isSimulationRunning()
 	return simulationRunning;
 }
 
-/*synchronized*/ bool Simulation::isPaused()
+/*synchronized*/ 
+bool Simulation::isPaused()
 {
+	std::lock_guard<std::mutex> lg(lock);
 	return paused;
 }
 

@@ -1,8 +1,8 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
-#include "Controller.h"
-#include "model/World.h"
+#include <siafu/Controller.h>
+#include <model/World.h>
 #include <mutex>
 
 
