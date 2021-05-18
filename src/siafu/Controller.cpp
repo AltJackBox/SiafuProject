@@ -26,7 +26,7 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 		//progress = new ConsoleProgress();
 
 		// Start the simulation without a GUI
-		//simulation = new Simulation(simulationPath, this);
+		simulation = new Simulation(simulationPath, this);
 	}
 	else
 	{
@@ -48,28 +48,28 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	 */
 /*synchronized*/ void Controller::stopSimulation()
 {
-	//simulation.die();
-	//simulation = NULL;
+	simulation->die();
+	simulation = NULL;
 }
 
 void Controller::startSimulation(std::string simulationPath)
 {
-	//simulation = new Simulation(simulationPath, this);
+	simulation = new Simulation(simulationPath, this);
 }
 
 void Controller::setPaused(const bool state)
 {
-	//simulation.setPaused(state);
+	//simulation->setPaused(state);
 }
 
 bool Controller::isPaused()
 {
-	//return simulation.isPaused();
+	return simulation->isPaused();
 }
 
-// World getWorld() {
-// 	return simulation.getWorld();
-// }
+World getWorld() {
+	return simulation->getWorld();
+}
 
 // SimulationData getSimulationData() {
 // 	return simulation.getSimulationData();

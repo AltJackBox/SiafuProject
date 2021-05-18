@@ -2,6 +2,7 @@
 #define SIMULATION_H
 
 #include "Controller.h"
+#include "model/World.h"
 #include <mutex>
 
 
@@ -14,7 +15,7 @@ private:
     bool ended;
     //SimulationData simData;
     bool paused;
-    //World world;
+    World world;
     //Calendar time;
     //BaseAgentModel agentModel;
     //BaseWorldModel worldModel;
@@ -31,10 +32,10 @@ private:
 
 public:
     Simulation();
-    Simulation(std::string simulationPath, Controller control);
+    Simulation(std::string simulationPath, Controller* control);
     //void run();
     bool isSimulationRunning();
-    // World getWorld(); 
+    World getWorld(); 
     /*synchronized*/ bool isPaused();
     void die();
     //SimulationData getSimulationData();

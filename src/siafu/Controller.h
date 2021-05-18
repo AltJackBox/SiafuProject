@@ -35,7 +35,7 @@ private:
     /**
 	 * The simulation <code>Runnable</code>.
 	 */
-    Simulation simulation;
+    Simulation* simulation;
     /**
 	 * The Progress object that displays simulation load status.
 	 */

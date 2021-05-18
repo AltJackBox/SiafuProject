@@ -1,7 +1,7 @@
 #include "Simulation.h"
 #include <string>
 
-Simulation::Simulation(std::string simulationPath, Controller control)
+Simulation::Simulation(std::string simulationPath, Controller* control)
 {
 	// this->simData = SimulationData.getInstance(simulationPath);
 	// this->siafuConfig = control.getSiafuConfig();
@@ -77,9 +77,9 @@ void Simulation::tickTime()
 // 	Controller.getProgress().reportSimulationEnded();
 // }
 
-// World getWorld(); {
-// 	return world;
-// }
+World Simulation::getWorld() {
+	return world;
+}
 
 bool Simulation::isSimulationRunning()
 {
