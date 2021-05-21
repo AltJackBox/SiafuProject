@@ -50,7 +50,7 @@ public:
         }
         else
         {
-            std::cout << "Important: I'm storing place " << "gradients in\n" << Controller::DEFAULT_GRADIENT_PATH << "\nIt might take some 10MB!\n";
+            std::cout << "Important: I'm storing place " << "gradients in\n" << DEFAULT_GRADIENT_PATH << "\nIt might take some 10MB!\n";
         }
     }
     virtual void reportCacheElementLoaded(){
