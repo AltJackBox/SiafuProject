@@ -14,7 +14,9 @@ static const std::string separator = "/";
  *            C:\Users\<user>\AppData\Roaming\Siafu (Vista, 7)
  *   Unix:    /home/<user>/.Siafu
  */
-static const std::string CONFIG_PATH = "/home/" + separator + getlogin() + "/.Siafu"; // Unix version
+static const std::string ABSOLUTE_PATH = "/home/" + separator + getlogin(); // Unix version
+
+static const std::string CONFIG_PATH = ABSOLUTE_PATH + "/.Siafu"; // Unix version
 /** Default value for the gradient path. */
 static const std::string DEFAULT_GRADIENT_PATH = CONFIG_PATH + separator + "CalculatedGradients" + separator;
 /** Default config file location. */

@@ -1,91 +1,51 @@
 #include <model/SimulationData.h>
+#include <model/DirectorySimulationData.h>
 #include <utils.h>
-#include <fstream>
-#include <iostream>
 
-SimulationData SimulationData::getInstance(const std::string pathString)
+SimulationData* SimulationData::getInstance(const std::string pathString)
 {
-    std::ifstream file{pathString};
+    std::ifstream file{pathString + "config.xml"};
     if (!file)
     {
         std::cerr << "The simulation data at " + pathString + " does not exist\n";
         return;
-    }
-    // if (!givenPath.exists())
-    // {
-    // 	//throw new RuntimeException("The simulation data at " + pathString + " does not exist");
-    // }
-    if (ends_with(pathString, ".jar"))
-    {
-        //return new JarSimulationData(givenPath);
-    }
+    }		
     else
     {
-        std::cerr << "Invalid simulation data (" + pathString + "). Please provide a supported type " + "(currently a folder or jar file\n";
-        //throw new RuntimeException("Invalid simulation data (" + pathString + "). Please provide a supported type " + "(currently a folder or jar file");
+        return new DirectorySimulationData(pathString);    
     }
 }
 
-// Look for rapidXML
-// Class < ? extends BaseAgentModel > getAgentModelClass()
+
+// AgentModel getAgentModelClass()
 // {
-//     try
-//     {
-//         return Class.forName(simulationConfig
-//                                  .getString("models.agentmodel"),
-//                              true, classLoader)
-//             .asSubclass(BaseAgentModel.class);
-//     }
-//     // catch (Exception e)
-//     // {
-//     //     throw new RuntimeException(e);
-//     // }
+//    return new AgentModel();
 // }
 
-// Class < ? extends BaseContextModel > getContextModelClass()
+// ContextModel getContextModelClass()
 // {
-//     try
-//     {
-//         return Class.forName(simulationConfig
-//                                  .getString("models.contextmodel"),
-//                              true, classLoader)
-//             .asSubclass(BaseContextModel.class);
-//     }
-//     catch (Exception e)
-//     {
-//         throw new RuntimeException(e);
-//     }
+//    return new ContextModel();
 // }
 
 // Class < ? extends BaseWorldModel > getWorldModelClass()
 // {
-//     try
-//     {
-//         return Class.forName(simulationConfig
-//                                  .getString("models.worldmodel"),
-//                              true, classLoader)
-//             .asSubclass(BaseWorldModel.class);
-//     }
-//     catch (Exception e)
-//     {
-//         throw new RuntimeException(e);
-//     }
+//    return new WorldModel();
 // }
 
-// HashMap<std::string, InputStream> getPlaceFiles()
-// {
-//     return getFilesByPath(PLACES_PATH);
-// }
+std::unordered_map<std::string, std::ifstream> SimulationData::getPlaceFiles()
+{
+    return getFilesByPath(PLACES_PATH);
+}
 
-// HashMap<String, InputStream> getOverlayFiles()
+// std::unordered_map<std::string, InputStream> SimulationData::getOverlayFiles()
 // {
 //     return getFilesByPath(OVERLAYS_PATH);
 // }
 
-// InputStream getWallsFile()
-// {
-//     return getFile(WALLS_FILE);
-// }
+std::ifstream SimulationData::getWallsFile()
+{
+    return getFile(WALLS_FILE);
+}
 
 // XMLConfiguration getConfigFile()
 // {
@@ -105,17 +65,7 @@ SimulationData SimulationData::getInstance(const std::string pathString)
 //     return simulationConfig;
 // }
 
-// SimulationData(final File givenPath)
-// {
-//     try
-//     {
-//         classLoader =
-//             new URLClassLoader(new URL[]{givenPath.toURI()
-//                                              .toURL()});
-//     }
-//     catch (MalformedURLException e)
-//     {
-//         // TODO Auto-generated catch block
-//         e.printStackTrace();
-//     }
-// }
+SimulationData::SimulationData(std::string givenPath)
+{
+    path = givenPath;
+}

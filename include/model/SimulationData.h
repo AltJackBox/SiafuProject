@@ -1,9 +1,14 @@
 #ifndef SIMULATIONDATA_H
 #define SIMULATIONDATA_H
 #include <string>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 
-static const std::string OVERLAYS_PATH = "overlays";
+//static const std::string OVERLAYS_PATH = "overlays";
 
 static const std::string PLACES_PATH = "places";
 
@@ -17,13 +22,14 @@ class SimulationData
 {
 
 protected:
+	std::string path;
 	//URLClassLoader classLoader;
 
 	//private:
 	//XMLConfiguration simulationConfig;
 
 public:
-	static SimulationData getInstance(const std::string pathString);
+	static SimulationData* getInstance(const std::string pathString);
 
 	//Class < ? extends BaseAgentModel > getAgentModelClass();
 
@@ -31,22 +37,22 @@ public:
 
 	//Class < ? extends BaseWorldModel > getWorldModelClass();
 
-	//HashMap<std::string, InputStream> getPlaceFiles();
+	std::unordered_map<std::string, std::ifstream> getPlaceFiles();
 
-	//HashMap<String, InputStream> getOverlayFiles();
+	//std::unordered_map<String, InputStream> getOverlayFiles();
 
-	//InputStream getWallsFile();
+	std::ifstream getWallsFile();
 
 	//XMLConfiguration getConfigFile();
 
 protected:
-	//SimulationData(final File givenPath);
+	SimulationData(std::string givenPath);
 
-	//virtual InputStream getFile(const std::string path);
+	virtual std::ifstream getFile(std::string path);
 
-	//virtual HashMap<std::string, InputStream> getFilesByPath(const std::string path);
+	virtual std::unordered_map<std::string, std::ifstream> getFilesByPath(const std::string path);
 
-	//virtual ArrayList<std::string> getFileNamesByPath(const std::string path);
+	virtual std::vector<std::string> getFileNamesByPath(const std::string path);
 };
 
 #endif

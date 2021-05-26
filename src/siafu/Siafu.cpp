@@ -1,6 +1,6 @@
 #include <string>
 #include <iostream>
-#include <siafu/Controller.h>
+//#include <siafu/Controller.h>
 
 class Siafu
 {
@@ -11,23 +11,12 @@ private:
     }
 
 public:
-    /**
-	 * Siafu's version.
-	 */
+
     std::string RELEASE = "1.0.4";
 
-    /**
-	 * The string with the command line syntax.
-	 */
     std::string SYNTAX =
         "Command line arguments: [--config=CONFIG_FILE] [--simulation=SIMULATION_PATH] [-h]\nwhere CONFIG_FILE is the configuration XML, and SIMULATION_PATH is either\nthe simulation's root folder or it's packed form in a jar file.";
 
-    /**
-	 * Start Siafu by parsing the command line arguments and starting the
-	 * controller.
-	 * 
-	 * @param args the command line args
-	 */
 public:
     void main(int argc, char *argv[])
     {
@@ -49,6 +38,6 @@ public:
             }
         }
 
-        new Controller(configPath, simulationPath);
+        //new Controller(configPath, simulationPath);
     }
 };
