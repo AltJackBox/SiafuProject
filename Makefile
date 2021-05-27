@@ -1,24 +1,36 @@
 # Directories.
-export SRCDIR   = $(CURDIR)/src
-export HDRDIR   = $(CURDIR)/include
+SRC_DIR=$(CURDIR)/src
+HDR_DIR=$(CURDIR)/include
+OBJ_DIR=$(CURDIR)/obj
+BIN_DIR=$(CURDIR)/bin
 
 CC=gcc
 CXX=g++
 RM=rm -f
-CPPFLAGS=-g $(shell root-config --cflags)
-LDFLAGS=-g $(shell root-config --ldflags)
-LDLIBS=$(shell root-config --libs)
 
-SRCS=SRCDIR/siafu/Siafu.cpp
-OBJS=$(subst .cpp,.o,$(SRCS))
+CPPFLAGS= -Iinclude -MMD -MP # -I is a preprocessor flag, not a compiler flag
+CFLAFLGS= -Wall              # some warnings about bad code
+LDFLAGS= -Llib              # -L is a linker flag
+LDLIBS= -lm                # Left empty if no libs are needed
 
-all: main
+SRCS=$(SRC_DIR)/siafu/Siafu.cpp
+OBJS=$(patsubst $(SRC_DIR)/siafu/Siafu.cpp, $(OBJ_DIR)/%.o, $(SRCS))
 
-main: $(OBJS)
-    $(CXX) $(LDFLAGS) -o main $(OBJS) $(LDLIBS)
+EXE=$(BIN_DIR)/main
 
-main.o: Siafu.cpp
-    g++ $(CPPFLAGS) -c Siafu.cpp
+.PHONY: all clean
+
+all: $(EXE)
+
+$(EXE): $(OBJ)
+    $(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
+    $(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+
+$(BIN_DIR) $(OBJ_DIR):
+    mkdir -p $@ #creates directory if it does not exists
 
 clean:
-    $(RM) $(OBJS)
+    @$(RM) -rv $(BIN_DIR) $(OBJ_DIR) # The @ disables the echoing of the command
+
