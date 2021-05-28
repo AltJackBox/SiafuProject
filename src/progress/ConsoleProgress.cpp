@@ -1,4 +1,5 @@
 #include <progress/ConsoleProgress.h>
+#include <siafu/Controller.h>
 
 
 void ConsoleProgress::reportWorldCreation(std::string worldName)

@@ -1,7 +1,6 @@
 #ifndef PROGRESS_H
 #define PROGRESS_H
 
-#include <siafu/Controller.h>
 #include <string>
 #include <iostream>
 

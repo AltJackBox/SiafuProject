@@ -1,10 +1,11 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-#include <siafu/Simulation.h>
-#include <progress/Progress.h>
+//#include <siafu/Simulation.h>
+//#include <progress/ConsoleProgress.h>
 #include <unistd.h>
 #include <mutex>
+#include <string>
 
 static const std::string separator = "/";
 /**
@@ -33,21 +34,21 @@ class Controller
 {
 
 private:
-    Simulation *simulation;
-    Progress *progress;
+    // Simulation *simulation;
+    // Progress *progress;
     std::mutex mutex;
 
 public:
     Controller();
     Controller(std::string configPath, std::string simulationPath);
-    Progress *getProgress();
-    void stopSimulation();
-    void startSimulation(std::string simulationPath);
-    // void setPaused(const bool state);
-    // bool isPaused();
-    World getWorld();
-    // SimulationData getSimulationData();
-    void endSimulator();
-    bool isSimulationRunning();
+    // Progress *getProgress();
+    // void stopSimulation();
+    // void startSimulation(std::string simulationPath);
+    // // void setPaused(const bool state);
+    // // bool isPaused();
+    // World getWorld();
+    // // SimulationData getSimulationData();
+    // void endSimulator();
+    // bool isSimulationRunning();
 };
 #endif

@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <siafu/Controller.h>
 
 std::string RELEASE = "1.0.4";
 
@@ -26,7 +27,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    //new Controller(configPath, simulationPath);
+    new Controller(configPath, simulationPath);
     std::cout << "Main method executed\n";
     return 0;
 }

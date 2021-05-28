@@ -15,9 +15,9 @@ CFLAFLGS= -Wall              # some warnings about bad code
 LDFLAGS= -Llib              # -L is a linker flag
 LDLIBS= -lm                # Left empty if no libs are needed
 
-SRCS=$(SRC_DIR)/siafu/Siafu.cpp
-OBJS=$(OBJ_DIR)/Siafu.o
-HDRS=$(HDR_DIR)/siafu/Siafu.h
+SRCS=$(SRC_DIR)/siafu/Siafu.cpp $(SRC_DIR)/siafu/Controller.cpp
+OBJS=$(OBJ_DIR)/Controller.o $(OBJ_DIR)/Siafu.o
+HDRS=$(HDR_DIR)/siafu/Controller.h
 
 EXE=$(BIN_DIR)/programme
 
@@ -25,17 +25,15 @@ EXE=$(BIN_DIR)/programme
 
 all: $(EXE)
 
-$(EXE): $(OBJS) 
+$(EXE): $(OBJS)
 	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(EXE) $(OBJS) 
 
 $(OBJS): $(SRCS)
-	$(CXX) $(CPPFLAGS) -c $(SRCS) -o $@
-
-$(BIN_DIR) $(OBJ_DIR):
-	mkdir -p $@ #creates directory if it does not exists
+	$(CXX) $(CPPFLAGS) -c $(SRC_DIR)/siafu/Controller.cpp -o $(OBJ_DIR)/Controller.o
+	$(CXX) $(CPPFLAGS) -c $(SRC_DIR)/siafu/Siafu.cpp -o $(OBJ_DIR)/Siafu.o
 
 clean:
-	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/* # The @ disables the echoing of the command
+	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/*
 
 
 
