@@ -4,33 +4,38 @@ HDR_DIR=$(CURDIR)/include
 OBJ_DIR=$(CURDIR)/obj
 BIN_DIR=$(CURDIR)/bin
 
+#g++ -I../runtime/src main.cpp -o main
+
 CC=gcc
 CXX=g++
 RM=rm -f
 
-CPPFLAGS= -Iinclude -MMD -MP # -I is a preprocessor flag, not a compiler flag
+CPPFLAGS= -I$(HDR_DIR) -MMD -MP # -I is a preprocessor flag, not a compiler flag
 CFLAFLGS= -Wall              # some warnings about bad code
 LDFLAGS= -Llib              # -L is a linker flag
 LDLIBS= -lm                # Left empty if no libs are needed
 
 SRCS=$(SRC_DIR)/siafu/Siafu.cpp
-OBJS=$(patsubst $(SRC_DIR)/siafu/Siafu.cpp, $(OBJ_DIR)/%.o, $(SRCS))
+OBJS=$(OBJ_DIR)/Siafu.o
+HDRS=$(HDR_DIR)/siafu/Siafu.h
 
-EXE=$(BIN_DIR)/main
+EXE=$(BIN_DIR)/programme
 
 .PHONY: all clean
 
 all: $(EXE)
 
-$(EXE): $(OBJ)
-    $(CXX) $(LDFLAGS) $^ $(LDLIBS) -o $@
+$(EXE): $(OBJS) 
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(EXE) $(OBJS) 
 
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_DIR)
-    $(CC) $(CPPFLAGS) $(CFLAGS) -c $< -o $@
+$(OBJS): $(SRCS)
+	$(CXX) $(CPPFLAGS) -c $(SRCS) -o $@
 
 $(BIN_DIR) $(OBJ_DIR):
-    mkdir -p $@ #creates directory if it does not exists
+	mkdir -p $@ #creates directory if it does not exists
 
 clean:
-    @$(RM) -rv $(BIN_DIR) $(OBJ_DIR) # The @ disables the echoing of the command
+	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/* # The @ disables the echoing of the command
+
+
 
