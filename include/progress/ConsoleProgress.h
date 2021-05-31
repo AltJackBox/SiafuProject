@@ -1,9 +1,11 @@
 #ifndef CONSOLEPROGRESS_H
 #define CONSOLEPROGRESS_H
 
-#include <progress/Progress.h>
+#include <string>
+#include <iostream>
 
-class ConsoleProgress : public Progress
+
+class ConsoleProgress
 {
 public:
 
@@ -11,29 +13,29 @@ public:
 
     ~ConsoleProgress();
 
-    void reportWorldCreation(std::string worldName) override;
+    void reportWorldCreation(std::string worldName);
 
-    void reportCachePrefill(int amountOfElements) override;
+    void reportCachePrefill(int amountOfElements) ;
 
-    void reportCacheElementLoaded() override;
+    void reportCacheElementLoaded() ;
 
-    void reportCachePrefillEnded() override;
+    void reportCachePrefillEnded() ;
 
-    void reportPlacesFound(std::string type, int amount) override;
+    void reportPlacesFound(std::string type, int amount) ;
 
-    void reportPlaceCreated(std::string type) override;
+    void reportPlaceCreated(std::string type) ;
 
-    void reportCreatingAgents() override;
+    void reportCreatingAgents() ;
 
-    void reportSimulationStarted() override;
+    void reportSimulationStarted() ;
 
-    void reportSimulationEnded() override;
+    void reportSimulationEnded() ;
 
-    void reportBackgroundCreationStart(int amount) override;
+    void reportBackgroundCreationStart(int amount) ;
 
-    void reportBackgroundCreated() override;
+    void reportBackgroundCreated() ;
 
-    void reportBackgroundCreationEnd() override;
+    void reportBackgroundCreationEnd() ;
 };
 
 #endif

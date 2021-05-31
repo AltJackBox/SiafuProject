@@ -3,7 +3,7 @@
 
 void test1(){
     Controller* controller = new Controller("","1");
-    Progress* progress = controller->getProgress();
+    ConsoleProgress* progress = controller->getProgress();
     assert(progress != NULL);
     std::cout << "Test 1 passed\n";
 }

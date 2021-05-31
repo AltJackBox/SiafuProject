@@ -25,7 +25,7 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	std::cout << "Controller created\n";
 }
 
-Progress* Controller::getProgress() {
+ConsoleProgress* Controller::getProgress() {
 	return progress;
 }
 

@@ -1,7 +1,7 @@
 #include <progress/ConsoleProgress.h>
 #include <siafu/Controller.h>
 
-ConsoleProgress::ConsoleProgress() : Progress() {}
+ConsoleProgress::ConsoleProgress() {}
 
 ConsoleProgress::~ConsoleProgress() {}
 

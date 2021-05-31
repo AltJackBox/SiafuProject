@@ -35,13 +35,13 @@ class Controller
 
 private:
     // Simulation *simulation;
-    Progress *progress;
+    ConsoleProgress *progress;
     std::mutex mutex;
 
 public:
     Controller();
     Controller(std::string configPath, std::string simulationPath);
-    Progress *getProgress();
+    ConsoleProgress *getProgress();
     // void stopSimulation();
     // void startSimulation(std::string simulationPath);
     // void setPaused(const bool state);
