@@ -17,11 +17,11 @@ LDLIBS= -lm                # Left empty if no libs are needed
 
 SRCS=$(SRC_DIR)/siafu/Siafu.cpp $(SRC_DIR)/siafu/Controller.cpp
 OBJS=$(OBJ_DIR)/Controller.o $(OBJ_DIR)/Siafu.o
-HDRS=$(HDR_DIR)/siafu/Controller.h
+HDRS=$(HDR_DIR)/siafu/Controller.h 
 
 EXE=$(BIN_DIR)/programme
 
-.PHONY: all clean
+.PHONY: all test clean
 
 all: $(EXE)
 
@@ -31,6 +31,9 @@ $(EXE): $(OBJS)
 $(OBJS): $(SRCS)
 	$(CXX) $(CPPFLAGS) -c $(SRC_DIR)/siafu/Controller.cpp -o $(OBJ_DIR)/Controller.o
 	$(CXX) $(CPPFLAGS) -c $(SRC_DIR)/siafu/Siafu.cpp -o $(OBJ_DIR)/Siafu.o
+
+test: 
+	cd $(SRC_DIR) && $(MAKE) test
 
 clean:
 	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/*

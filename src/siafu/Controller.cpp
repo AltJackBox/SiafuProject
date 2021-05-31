@@ -11,23 +11,23 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	// 	verifiedConfigPath = DEFAULT_CONFIG_FILE;
 	// }
 
-	// Start the simulation without a GUI
-	// if (!simulationPath.empty())
-	// {
-	//	//progress = new ConsoleProgress();
-	// 	//simulation = new Simulation(simulationPath, this);
-	// }
-	// else
-	// {
-	// 	std::cout << "You need to provide a simulation at the command line.\n";
-	// 	exit(1);
-	// }
+	//Start the simulation without a GUI
+	if (!simulationPath.empty())
+	{
+		progress = new ConsoleProgress();
+		//simulation = new Simulation(simulationPath, this);
+	}
+	else
+	{
+		std::cout << "You need to provide a simulation at the command line.\n";
+		exit(1);
+	}
 	std::cout << "Controller created\n";
 }
 
-// Progress* Controller::getProgress() {
-// 	return progress;
-// }
+Progress* Controller::getProgress() {
+	return progress;
+}
 
 // /*synchronized*/
 // void Controller::stopSimulation()
