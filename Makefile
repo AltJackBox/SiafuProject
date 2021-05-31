@@ -1,19 +1,19 @@
 # Directories.
-SRC_DIR=$(CURDIR)/src
-HDR_DIR=$(CURDIR)/include
-OBJ_DIR=$(CURDIR)/obj
-BIN_DIR=$(CURDIR)/bin
+export SRC_DIR=$(CURDIR)/src
+export HDR_DIR=$(CURDIR)/include
+export OBJ_DIR=$(CURDIR)/obj
+export BIN_DIR=$(CURDIR)/bin
 
 #g++ -I../runtime/src main.cpp -o main
 
-CC=gcc
-CXX=g++
-RM=rm -f
+export CC=gcc
+export CXX=g++
+export RM=rm -f
 
-CPPFLAGS= -I$(HDR_DIR) -MMD -MP # -I is a preprocessor flag, not a compiler flag
-CFLAFLGS= -Wall              # some warnings about bad code
-LDFLAGS= -Llib              # -L is a linker flag
-LDLIBS= -lm                # Left empty if no libs are needed
+export CPPFLAGS= -I$(HDR_DIR) -MMD -MP # -I is a preprocessor flag, not a compiler flag
+export CFLAFLGS= -Wall              # some warnings about bad code
+export LDFLAGS= -Llib              # -L is a linker flag
+export LDLIBS= -lm                # Left empty if no libs are needed
 
 SRCS=$(SRC_DIR)/siafu/Siafu.cpp $(SRC_DIR)/siafu/Controller.cpp
 OBJS=$(OBJ_DIR)/Controller.o $(OBJ_DIR)/Siafu.o

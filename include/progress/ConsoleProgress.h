@@ -6,6 +6,11 @@
 class ConsoleProgress : public Progress
 {
 public:
+
+    ConsoleProgress();
+
+    ~ConsoleProgress();
+
     void reportWorldCreation(std::string worldName) override;
 
     void reportCachePrefill(int amountOfElements) override;

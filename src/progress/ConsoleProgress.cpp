@@ -1,6 +1,10 @@
 #include <progress/ConsoleProgress.h>
 #include <siafu/Controller.h>
 
+ConsoleProgress::ConsoleProgress() : Progress() {}
+
+ConsoleProgress::~ConsoleProgress() {}
+
 
 void ConsoleProgress::reportWorldCreation(std::string worldName)
 {

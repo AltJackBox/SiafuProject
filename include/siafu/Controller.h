@@ -44,10 +44,10 @@ public:
     Progress *getProgress();
     // void stopSimulation();
     // void startSimulation(std::string simulationPath);
-    // // void setPaused(const bool state);
-    // // bool isPaused();
+    // void setPaused(const bool state);
+    // bool isPaused();
     // World getWorld();
-    // // SimulationData getSimulationData();
+    // SimulationData getSimulationData();
     // void endSimulator();
     // bool isSimulationRunning();
 };

@@ -8,6 +8,11 @@ class Progress
 {
 
 public:
+
+    Progress() {};
+
+    virtual ~Progress() {};
+
     virtual void reportWorldCreation(std::string worldName);
 
     virtual void reportCachePrefill(int amountOfElements);
