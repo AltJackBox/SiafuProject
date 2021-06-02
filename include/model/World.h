@@ -1,10 +1,10 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <siafu/Controller.h>
 #include <unistd.h>
 #include <vector>
 #include <set>
+#include <string>
 
 class Simulation;
 

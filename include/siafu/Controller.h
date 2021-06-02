@@ -3,6 +3,8 @@
 
 //#include <siafu/Simulation.h>
 #include <progress/ConsoleProgress.h>
+#include <model/World.h>
+#include <model/SimulationData.h>
 #include <unistd.h>
 #include <mutex>
 #include <string>
@@ -30,25 +32,26 @@ static const int DEFAULT_CACHE_SIZE = 100;
 /** Default value for the UI speed. */
 static const int DEFAULT_UI_SPEED = 50;
 
+class Simulation;
+
 class Controller
 {
 
 private:
-    //Simulation *simulation;
-    ConsoleProgress *progress;
+    Simulation* simulation;
+    ConsoleProgress* progress;
     std::mutex mutex;
 
 public:
     Controller();
     Controller(std::string configPath, std::string simulationPath);
     ConsoleProgress *getProgress();
-    // void stopSimulation();
-    // void startSimulation(std::string simulationPath);
-    // void setPaused(const bool state);
-    // bool isPaused();
-    // World getWorld();
-    // SimulationData getSimulationData();
-    // void endSimulator();
-    // bool isSimulationRunning();
+    void stopSimulation();
+    void startSimulation(std::string simulationPath);
+    bool isPaused();
+    World* getWorld();
+    SimulationData* getSimulationData();
+    void endSimulator();
+    bool isSimulationRunning();
 };
 #endif
