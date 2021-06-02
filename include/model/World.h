@@ -1,11 +1,12 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include <siafu/Simulation.h>
 #include <siafu/Controller.h>
 #include <unistd.h>
 #include <vector>
 #include <set>
+
+class Simulation;
 
 class World
 {
@@ -15,9 +16,7 @@ private:
 
     static const int NEAR_DISTANCE = 15;
 
-    static bool prefillCache;
-
-    //const Random rand = new Random();
+    // static bool prefillCache;
 
     int height;
 
@@ -43,7 +42,7 @@ private:
 
     bool walls[0][0];
 
-    Simulation* simulation;
+    Simulation *simulation;
 
     //SimulationData simData;
 
@@ -85,10 +84,10 @@ protected:
 
 public:
     // USEFUL ?
-    void setShouldPrefillCache(bool prefill);
+    //void setShouldPrefillCache(bool prefill);
 
     // USEFUL ?
-    bool shouldPrefillCache();
+    //bool shouldPrefillCache();
 
     World();
 
@@ -102,7 +101,7 @@ public:
 
     bool isAWall(/*Position pos*/);
 
-    std::set<std::string> getAvailableSprites();
+    //std::set<std::string> getAvailableSprites();
 
     //std::vector<Agent> getPeople();
 

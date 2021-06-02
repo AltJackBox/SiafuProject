@@ -8,6 +8,11 @@ void test1(){
     std::cout << "Test 1 passed\n";
 }
 
+void test2(){
+    Controller* controller = new Controller("","1");
+    ConsoleProgress* progress = controller->getProgress();
+}
+
 int main(){
     test1();
 }

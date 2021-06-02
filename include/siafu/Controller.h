@@ -34,7 +34,7 @@ class Controller
 {
 
 private:
-    // Simulation *simulation;
+    //Simulation *simulation;
     ConsoleProgress *progress;
     std::mutex mutex;
 

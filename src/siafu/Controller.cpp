@@ -1,6 +1,10 @@
 #include <siafu/Controller.h>
+#include <siafu/Simulation.h>
 #include <iostream>
 #include <string>
+
+Controller::Controller(){
+}
 
 Controller::Controller(std::string configPath, std::string simulationPath)
 {

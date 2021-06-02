@@ -1,4 +1,5 @@
 #include <model/World.h>
+#include <siafu/Simulation.h>
 
 // std::vector<Position> World::readPlacePoints(InputStream is) USEFUL, interpretation maps
 // {
@@ -224,15 +225,15 @@ void World::createOverlays()
 // return placesFromImg;
 //}
 
-void World::setShouldPrefillCache(bool prefill)
-{
-    prefillCache = prefill;
-}
+// void World::setShouldPrefillCache(bool prefill)
+// {
+//     this->prefillCache = prefill;
+// }
 
-bool World::shouldPrefillCache()
-{
-    return prefillCache;
-}
+// bool World::shouldPrefillCache()
+// {
+//     return this->prefillCache;
+// }
 
 World::World(Simulation* simulation /*, SimulationData simData*/)
 {
@@ -278,10 +279,11 @@ int World::getWidth()
 bool World::isAWall(/*Position pos*/)
 {
     //return walls[pos.getRow()][pos.getCol()];
+    return true;
 }
 
-std::set<std::string> getAvailableSprites()
-{
+// std::set<std::string> getAvailableSprites()
+// {
     // std::set<std::string> spriteNames = new TreeSet<std::string>();
 
     // for (std::string fileName : simData.getSpriteNames())
@@ -290,7 +292,7 @@ std::set<std::string> getAvailableSprites()
     // }
 
     // return spriteNames;
-}
+//}
 
 // std::vector<Agent> World::getPeople()
 // {

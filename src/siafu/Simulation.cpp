@@ -1,5 +1,6 @@
 #include <siafu/Simulation.h>
-#include <string>
+#include <model/World.h>
+#include <thread>
 
 Simulation::Simulation(std::string simulationPath, Controller* control)
 {
@@ -15,6 +16,9 @@ Simulation::Simulation(std::string simulationPath, Controller* control)
 	// 	"ui.gradientcache.size"));
 
 	// new Thread(this, "Simulation thread").start();
+	Task tsk;
+	std::thread t1(tsk);
+	t1.join();
 }
 
 // SimulatorOutputPrinter createOutputPrinter(final String type) {
@@ -49,36 +53,36 @@ void Simulation::tickTime()
 	//time.add(Calendar.SECOND, iterationStep);
 }
 
-// void run() {
-// 	this.world = new World(this, simData);
-// 	this.time = world.getTime();
-// 	this.iterationStep = simulationConfig.getInt("iterationstep");
-// 	this.agentModel = world.getAgentModel();
-// 	this.worldModel = world.getWorldModel();
-// 	this.contextModel = world.getContextModel();
-// 	this.outputPrinter =
-// 			createOutputPrinter(siafuConfig.getString("output.type"));
+// void Simulation::operator()() {
+	// this->world = new World(this, simData);
+	// this->time = world.getTime();
+	// this->iterationStep = simulationConfig.getInt("iterationstep");
+	// this->agentModel = world.getAgentModel();
+	// this->worldModel = world.getWorldModel();
+	// this->contextModel = world.getContextModel();
+	//this->outputPrinter = createOutputPrinter(siafuConfig.getString("output.type"));
 
-// 	Controller.getProgress().reportSimulationStarted();
-// 	simulationRunning = true;
-// 	while (!isEnded()) {
-// 		if (!isPaused()) {
-// 			tickTime();
-// 			worldModel.doIteration(world.getPlaces());
-// 			agentModel.doIteration(world.getPeople());
-// 			contextModel.doIteration(world.getOverlays());
-// 		}
-// 		moveAgents();
-// 		control.scheduleDrawing();
-// 		outputPrinter.notifyIterationConcluded();
-// 	}
-// 	simulationRunning = false;
+	// Controller.getProgress().reportSimulationStarted();
+	// simulationRunning = true;
+	// while (!isEnded()) {
+	// 	if (!isPaused()) {
+	// 		tickTime();
+	// 		worldModel.doIteration(world.getPlaces());
+	// 		agentModel.doIteration(world.getPeople());
+	// 		contextModel.doIteration(world.getOverlays());
+	// 	}
+	// 	moveAgents();
+	// 	control.scheduleDrawing();
+	// 	outputPrinter.notifyIterationConcluded();
+	// }
+	//simulationRunning = false;
 
-// 	outputPrinter.cleanup();
-// 	Controller.getProgress().reportSimulationEnded();
+	//outputPrinter.cleanup();
+	//Controller.getProgress().reportSimulationEnded();
+// 	std::cout << "Operator method accessed\n";
 // }
 
-World Simulation::getWorld() {
+World* Simulation::getWorld() {
 	return world;
 }
 

@@ -2,12 +2,24 @@
 #define SIMULATION_H
 
 #include <siafu/Controller.h>
-#include <model/World.h>
+//#include <model/World.h>
 #include <mutex>
+#include <string>
 
+class World;
 
+class Task
+{
+ public:
+     Task() { std::cout << "task constructor\n"; }
 
-class Simulation  /*implements Runnable*/
+     void operator()() const
+     {
+        std::cout << "operator()\n";
+     }
+};
+
+class Simulation
 {
 
 private:
@@ -15,7 +27,7 @@ private:
     bool ended;
     //SimulationData simData;
     bool paused;
-    World world;
+    World* world;
     //Calendar time;
     //BaseAgentModel agentModel;
     //BaseWorldModel worldModel;
@@ -33,9 +45,9 @@ private:
 public:
     Simulation();
     Simulation(std::string simulationPath, Controller* control);
-    //void run();
+    //void operator()();
     bool isSimulationRunning();
-    World getWorld(); 
+    World* getWorld(); 
     /*synchronized*/ bool isPaused();
     void die();
     //SimulationData getSimulationData();
