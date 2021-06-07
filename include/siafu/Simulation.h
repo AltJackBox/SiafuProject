@@ -3,6 +3,9 @@
 
 #include <siafu/Controller.h>
 #include <model/SimulationData.h>
+#include <behaviormodels/BaseAgentModel.h>
+#include <behaviormodels/BaseContextModel.h>
+#include <behaviormodels/BaseWorldModel.h>
 #include <mutex>
 #include <string>
 
@@ -18,9 +21,9 @@ private:
     bool paused;
     World* world;
     //Calendar time;
-    //BaseAgentModel agentModel;
-    //BaseWorldModel worldModel;
-    //BaseContextModel contextModel;
+    BaseAgentModel agentModel;
+    BaseWorldModel worldModel;
+    BaseContextModel contextModel;
     int iterationStep;
     //SimulatorOutputPrinter outputPrinter;
     bool simulationRunning;

@@ -1,8 +1,9 @@
 #ifndef BASEAGENTMODEL_H
 #define BASEAGENTMODEL_H
 
-#include <model/World.h>
 #include <vector>
+
+class World;
 
 class BaseAgentModel {
 
@@ -10,7 +11,8 @@ class BaseAgentModel {
      World world;
 
 	public:
-     BaseAgentModel(const World world) {
+	BaseAgentModel();
+    BaseAgentModel(const World world) {
 		this->world = world;
 	}
 

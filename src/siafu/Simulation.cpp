@@ -58,9 +58,9 @@ void Simulation::operator()()
 	this->world = new World(this, simData);
 	// this->time = world.getTime();
 	// this->iterationStep = simulationConfig.getInt("iterationstep");
-	// this->agentModel = world.getAgentModel();
-	// this->worldModel = world.getWorldModel();
-	// this->contextModel = world.getContextModel();
+	this->agentModel = world->getAgentModel();
+	this->worldModel = world->getWorldModel();
+	this->contextModel = world->getContextModel();
 	// this->outputPrinter = createOutputPrinter(siafuConfig.getString("output.type"));
 
 	control->getProgress()->reportSimulationStarted();

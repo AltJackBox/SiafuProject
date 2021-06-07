@@ -1,35 +1,37 @@
 #include <model/World.h>
+#include <model/Position.h>
 #include <siafu/Simulation.h>
 #include <model/SimulationData.h>
 
-// std::vector<Position> World::readPlacePoints(InputStream is) USEFUL, interpretation maps
-// {
-//     ImageData attractorsImgData = new ImageData(is);
-//     ArrayList<Position> placePoints = new ArrayList<Position>();
 
-//     for (int i = 0; i < height; i++)
-//     {
-//         int[] row = new int[width];
-//         attractorsImgData.getPixels(0, i, width, row, 0);
+std::vector<Position> World::readPlacePoints(InputStream is)
+{
+    ImageData attractorsImgData = new ImageData(is);
+    ArrayList<Position> placePoints = new ArrayList<Position>();
 
-//         for (int j = 0; j < width; j++)
-//         {
-//             if (row[j] == 0)
-//             {
-//                 Position attractor;
+    for (int i = 0; i < height; i++)
+    {
+        int[] row = new int[width];
+        attractorsImgData.getPixels(0, i, width, row, 0);
 
-//                 try
-//                 {
-//                     attractor = new Position(i, j);
-//                     placePoints.add(attractor);
-//                 }
-//                 catch (PositionUnreachableException e)
-//                 {
-//                     throw new RuntimeException("Place \"" + i + "," + j + "\" is unreachable. Is it out of " + "the map or on a wall?", e);
-//                 }
-//             }
-//         }
-//     }
+        for (int j = 0; j < width; j++)
+        {
+            if (row[j] == 0)
+            {
+                Position attractor;
+
+                try
+                {
+                    attractor = new Position(i, j);
+                    placePoints.add(attractor);
+                }
+                catch (PositionUnreachableException e)
+                {
+                    throw new RuntimeException("Place \"" + i + "," + j + "\" is unreachable. Is it out of " + "the map or on a wall?", e);
+                }
+            }
+        }
+    }
 
 //     return placePoints;
 // }
@@ -277,10 +279,9 @@ int World::getWidth()
     return width;
 }
 
-bool World::isAWall(/*Position pos*/)
+bool World::isAWall(Position* pos)
 {
-    //return walls[pos.getRow()][pos.getCol()];
-    return true;
+    return walls[pos->getRow()][pos->getCol()];
 }
 
 // std::set<std::string> getAvailableSprites()
@@ -507,17 +508,17 @@ void World::addPlaceType(const std::string placeType)
     placeTypes.insert(placeType);
 }
 
-// BaseAgentModel World::getAgentModel()
-// {
-//     return agentModel;
-// }
+BaseAgentModel World::getAgentModel()
+{
+    return agentModel;
+}
 
-// BaseContextModel World::getContextModel()
-// {
-//     return contextModel;
-// }
+BaseContextModel World::getContextModel()
+{
+    return contextModel;
+}
 
-// BaseWorldModel World::getWorldModel()
-// {
-//     return worldModel;
-// }
+BaseWorldModel World::getWorldModel()
+{
+    return worldModel;
+}

@@ -1,7 +1,8 @@
 #ifndef BASECONTEXTMODEL_H
 #define BASECONTEXTMODEL_H
 
-#include <model/World.h>
+
+class World;
 
 class BaseContextModel {
 	
@@ -9,6 +10,7 @@ class BaseContextModel {
      World world;
 
 	public:
+	BaseContextModel();
     BaseContextModel(const World world) {
 		this->world = world;
 	}

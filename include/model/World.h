@@ -1,6 +1,9 @@
 #ifndef WORLD_H
 #define WORLD_H
 
+#include <behaviormodels/BaseAgentModel.h>
+#include <behaviormodels/BaseContextModel.h>
+#include <behaviormodels/BaseWorldModel.h>
 #include <unistd.h>
 #include <vector>
 #include <set>
@@ -8,6 +11,7 @@
 
 class Simulation;
 class SimulationData;
+class Position;
 
 class World
 {
@@ -33,11 +37,11 @@ private:
 
     //Calendar time; look for time.h
 
-    //BaseAgentModel agentModel;
+    BaseAgentModel agentModel;
 
-    //BaseWorldModel worldModel;
+    BaseWorldModel worldModel;
 
-    //BaseContextModel contextModel;
+    BaseContextModel contextModel;
 
     //std::unordered_map <std::string, Agent> people;
 
@@ -100,7 +104,7 @@ public:
 
     int getWidth();
 
-    bool isAWall(/*Position pos*/);
+    bool isAWall(Position* pos);
 
     //std::set<std::string> getAvailableSprites();
 
@@ -138,11 +142,11 @@ public:
 
     void addPlaceType(const std::string placeType);
 
-    //BaseAgentModel getAgentModel();
+    BaseAgentModel getAgentModel();
 
-    //BaseContextModel getContextModel();
+    BaseContextModel getContextModel();
 
-    //BaseWorldModel getWorldModel();
+    BaseWorldModel getWorldModel();
 };
 
 #endif

@@ -1,7 +1,8 @@
 #ifndef BASEWORLDMODEL_H
 #define BASEWORLDMODEL_H
 
-#include <model/World.h>
+
+class World;
 
 class BaseWorldModel {
 	
@@ -9,6 +10,7 @@ class BaseWorldModel {
     World world;
 
 	public:
+	BaseWorldModel();
     BaseWorldModel(const World world) {
 		this->world = world;
 	}
