@@ -1,5 +1,6 @@
 #include <model/World.h>
 #include <siafu/Simulation.h>
+#include <model/SimulationData.h>
 
 // std::vector<Position> World::readPlacePoints(InputStream is) USEFUL, interpretation maps
 // {
@@ -235,10 +236,10 @@ void World::createOverlays()
 //     return this->prefillCache;
 // }
 
-World::World(Simulation* simulation /*, SimulationData simData*/)
+World::World(Simulation* simulation , SimulationData* simData)
 {
     this->simulation = simulation;
-    //this->simData = simData;
+    this->simData = simData;
     //this->simulationConfig = simData.getConfigFile();
     //this->worldName = simulationConfig.getstd::string("worldname");
 
@@ -246,19 +247,19 @@ World::World(Simulation* simulation /*, SimulationData simData*/)
 
     //Controller.getProgress().reportWorldCreation(worldName);
 
-    buildWalls();
+    // buildWalls();
 
-    initializeCoordinates();
+    // initializeCoordinates();
 
-    createTime();
+    // createTime();
 
-    createPlaces();
+    // createPlaces();
 
-    createPeople();
+    // createPeople();
 
     //freezeInfoFields();
 
-    createOverlays();
+    // createOverlays();
 }
 
 std::string World::getWorldName()

@@ -12,7 +12,7 @@ class Simulation
 {
 
 private:
-    const Controller* control;
+    Controller* control;
     bool ended;
     SimulationData* simData;
     bool paused;
@@ -34,6 +34,7 @@ private:
 public:
     Simulation();
     Simulation(std::string simulationPath, Controller* control);
+    void launchSimulation();
     bool isSimulationRunning();
     World* getWorld(); 
     /*synchronized*/ bool isPaused();

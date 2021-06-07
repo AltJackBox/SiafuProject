@@ -18,8 +18,9 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	//Start the simulation without a GUI
 	if (!simulationPath.empty())
 	{
-		progress = new ConsoleProgress();
+		progress = new Progress();
 		simulation = new Simulation(simulationPath, this);
+		simulation->launchSimulation();
 	}
 	else
 	{
@@ -28,7 +29,7 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	}
 }
 
-ConsoleProgress* Controller::getProgress() {
+Progress* Controller::getProgress() {
 	return progress;
 }
 
@@ -62,9 +63,10 @@ SimulationData* Controller::getSimulationData() {
 void Controller::endSimulator()
 {
 	mutex.lock();
-	if (simulation != NULL) {
-		simulation->die();
+	if (this->simulation != NULL) {
+		this->simulation->die();
 	}
+	std::cout<< "been through endsimulator\n";
 	mutex.unlock();
 }
 

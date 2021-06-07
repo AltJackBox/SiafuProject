@@ -1,9 +1,9 @@
 #ifndef SIMULATIONDATA_H
 #define SIMULATIONDATA_H
 
+#include <iostream>
 #include <string>
 #include <fstream>
-#include <iostream>
 #include <unordered_map>
 #include <vector>
 

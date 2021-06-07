@@ -2,7 +2,7 @@
 #define CONTROLLER_H
 
 //#include <siafu/Simulation.h>
-#include <progress/ConsoleProgress.h>
+#include <progress/Progress.h>
 #include <model/World.h>
 #include <model/SimulationData.h>
 #include <unistd.h>
@@ -39,13 +39,13 @@ class Controller
 
 private:
     Simulation* simulation;
-    ConsoleProgress* progress;
+    Progress* progress;
     std::mutex mutex;
 
 public:
     Controller();
     Controller(std::string configPath, std::string simulationPath);
-    ConsoleProgress *getProgress();
+    Progress *getProgress();
     void stopSimulation();
     void startSimulation(std::string simulationPath);
     bool isPaused();

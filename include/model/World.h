@@ -7,6 +7,7 @@
 #include <string>
 
 class Simulation;
+class SimulationData;
 
 class World
 {
@@ -44,7 +45,7 @@ private:
 
     Simulation *simulation;
 
-    //SimulationData simData;
+    SimulationData *simData;
 
     //std::vector <Position> readPlacePoints(InputStream is);
 
@@ -91,7 +92,7 @@ public:
 
     World();
 
-    World(Simulation* simulation /*, SimulationData simData*/);
+    World(Simulation* simulation , SimulationData* simData);
 
     std::string getWorldName();
 

@@ -1,17 +1,14 @@
-#include <progress/ConsoleProgress.h>
+#include <progress/Progress.h>
 #include <siafu/Controller.h>
 
-ConsoleProgress::ConsoleProgress() {}
+Progress::Progress() {}
 
-ConsoleProgress::~ConsoleProgress() {}
-
-
-void ConsoleProgress::reportWorldCreation(std::string worldName)
+void Progress::reportWorldCreation(std::string worldName)
 {
     std::cout << "Creating the world: " << worldName << "\n";
 }
 
-void ConsoleProgress::reportCachePrefill(int amountOfElements) 
+void Progress::reportCachePrefill(int amountOfElements) 
 {
     if (amountOfElements > 0)
     {
@@ -25,52 +22,52 @@ void ConsoleProgress::reportCachePrefill(int amountOfElements)
     }
 }
 
-void ConsoleProgress::reportCacheElementLoaded()
+void Progress::reportCacheElementLoaded()
 {
     std::cout << ".";
 }
 
-void ConsoleProgress::reportCachePrefillEnded()
+void Progress::reportCachePrefillEnded()
 {
     std::cout << "\n";
 }
 
-void ConsoleProgress::reportPlacesFound(std::string type, int amount)
+void Progress::reportPlacesFound(std::string type, int amount)
 {
     std::cout << "Creating Places: " << type << " (" << amount << ")\n";
 }
 
-void ConsoleProgress::reportPlaceCreated(std::string type)
+void Progress::reportPlaceCreated(std::string type)
 {
     // Do nothing
 }
 
-void ConsoleProgress::reportCreatingAgents()
+void Progress::reportCreatingAgents()
 {
     std::cout << "Creating agents\n";
 }
 
-void ConsoleProgress::reportSimulationStarted()
+void Progress::reportSimulationStarted()
 {
     std::cout << "Starting the simulation\n";
 }
 
-void ConsoleProgress::reportSimulationEnded()
+void Progress::reportSimulationEnded()
 {
     std::cout << "Simulation ended\n";
 }
 
-void ConsoleProgress::reportBackgroundCreationStart(int amount)
+void Progress::reportBackgroundCreationStart(int amount)
 {
     std::cout << "Preparing backgrounds\n";
 }
 
-void ConsoleProgress::reportBackgroundCreated()
+void Progress::reportBackgroundCreated()
 {
     std::cout << ".";
 }
 
-void ConsoleProgress::reportBackgroundCreationEnd()
+void Progress::reportBackgroundCreationEnd()
 {
     std::cout << "\n";
 }

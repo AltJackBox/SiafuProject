@@ -1,9 +1,6 @@
 #include <model/SimulationData.h>
-
-class DirectorySimulationData : public SimulationData {
-    public:
-    DirectorySimulationData(std::string path);
-};
+#include <experimental/filesystem>
+#include <utility>
 
 SimulationData *SimulationData::getInstance(const std::string pathString)
 {
