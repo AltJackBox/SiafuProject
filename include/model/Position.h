@@ -4,6 +4,7 @@
 #include <string>
 
 class World;
+class CoordinateTools;
 
 class Position
 {
@@ -15,7 +16,7 @@ private:
 
     static bool initialized;
 
-    //static CoordinateTools coordinateTools;
+    static CoordinateTools* coordinateTool;
 
     static int width;
 
@@ -36,7 +37,9 @@ public:
 
     Position(const int i, const int j);
 
-    // Position(const double lat, const double lon); USES COORDINATE TOOL
+    Position(const double lat, const double lon);
+
+    Position(Position *p);
 
     std::string toString();
 
@@ -50,7 +53,7 @@ public:
 
     bool isNear(const Position* pos, const int radius);
 
-    // double[] getCoordinates();
+    double* getCoordinates();
 
     int getRow();
 

@@ -51,7 +51,7 @@ private:
 
     SimulationData *simData;
 
-    //std::vector <Position> readPlacePoints(InputStream is);
+    // std::vector <Position> readPlacePoints(InputStream is);
 
     void buildWalls();
 

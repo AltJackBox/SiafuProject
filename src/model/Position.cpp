@@ -1,5 +1,6 @@
 #include <model/Position.h>
 #include <model/World.h>
+#include <model/CoordinateTools.h>
 #include <iostream>
 #include <cmath>
 
@@ -12,7 +13,7 @@ void Position::initialize(World *worldObj, const double topRight[], const double
     world = worldObj;
     width = world->getWidth();
     height = world->getHeight();
-    // coordinateTools = new CoordinateTools(height, width, topRight, bottomRight, bottomLeft);
+    coordinateTool = new CoordinateTools(height, width, topRight, bottomRight, bottomLeft);
     initialized = true;
 }
 
@@ -32,10 +33,15 @@ Position::Position(const int i, const int j)
     this->j = j;
 }
 
-// Position::Position(const double lat, const double lon)
-//     {
-//         this(coordinateTools.coordinatesToLocal(lat, lon));
-//     }
+Position::Position(const double lat, const double lon)
+{
+    Position(coordinateTool->coordinatesToLocal(lat, lon));
+}
+
+Position::Position(Position *p)
+{
+    Position(p->i, p->j);
+}
 
 std::string Position::toString()
 {
@@ -121,10 +127,10 @@ bool Position::isNear(const Position *pos, const int radius)
     return true;
 }
 
-// double[] getCoordinates()
-// {
-//     return coordinateTools.localToCoordinates(this);
-// }
+double *Position::getCoordinates()
+{
+    return coordinateTool->localToCoordinates(this);
+}
 
 int Position::getRow()
 {
