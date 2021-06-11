@@ -21,9 +21,9 @@ private:
     bool paused;
     World* world;
     //Calendar time;
-    BaseAgentModel agentModel;
-    BaseWorldModel worldModel;
-    BaseContextModel contextModel;
+    // BaseAgentModel agentModel;
+    // BaseWorldModel worldModel;
+    // BaseContextModel contextModel;
     int iterationStep;
     //SimulatorOutputPrinter outputPrinter;
     bool simulationRunning;
