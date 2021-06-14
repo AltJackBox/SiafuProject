@@ -58,6 +58,8 @@ class Place : public Publishable {
 	int pointFrom(Position* targetPos, int preferedDir);
 
 	int distanceFrom(Position* targetPos);
+
+	bool equals(Place* p);
 };
 
 #endif

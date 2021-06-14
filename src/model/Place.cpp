@@ -121,3 +121,7 @@ int Place::distanceFrom(Position* targetPos)
 {
     return getGradient()->distanceFrom(targetPos);
 }
+
+bool Place::equals(Place* p){
+    return (this->getPos()->equals(p->getPos())) && (this->getName().compare(p->getName()));
+}
