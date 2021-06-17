@@ -31,7 +31,7 @@ SimulationData *SimulationData::getInstance(const std::string pathString)
 //    return new WorldModel();
 // }
 
-std::unordered_map<std::string, std::ifstream> SimulationData::getPlaceFiles()
+std::vector<std::string> SimulationData::getPlaceFiles()
 {
     return getFilesByPath(PLACES_PATH);
 }
@@ -41,9 +41,9 @@ std::unordered_map<std::string, std::ifstream> SimulationData::getPlaceFiles()
 //     return getFilesByPath(OVERLAYS_PATH);
 // }
 
-std::ifstream SimulationData::getWallsFile()
+std::string SimulationData::getWallsFile()
 {
-    return getFile(WALLS_FILE);
+    return WALLS_FILE;
 }
 
 // XMLConfiguration getConfigFile()
@@ -69,7 +69,7 @@ SimulationData::SimulationData(std::string givenPath)
     path = givenPath;
 }
 
-std::unordered_map<std::string, std::ifstream> SimulationData::getFilesByPath(const std::string dirPath)
+std::vector<std::string> SimulationData::getFilesByPath(const std::string dirPath)
 {
 //     std::unordered_map<std::string, std::ifstream> foundFiles;
 

@@ -37,11 +37,11 @@ public:
 
 	//Class < ? extends BaseWorldModel > getWorldModelClass();
 
-	std::unordered_map<std::string, std::ifstream> getPlaceFiles();
+	std::vector<std::string> getPlaceFiles();
 
 	//std::unordered_map<String, InputStream> getOverlayFiles();
 
-	std::ifstream getWallsFile();
+	std::string getWallsFile();
 
 	//XMLConfiguration getConfigFile();
 
@@ -50,7 +50,7 @@ protected:
 
 	virtual std::ifstream getFile(std::string path);
 
-	virtual std::unordered_map<std::string, std::ifstream> getFilesByPath(const std::string path);
+	virtual std::vector<std::string> getFilesByPath(const std::string path);
 
 	virtual std::vector<std::string> getFileNamesByPath(const std::string path);
 };

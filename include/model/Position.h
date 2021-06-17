@@ -35,6 +35,8 @@ private:
 public:
     void initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[]);
 
+    Position();
+
     Position(const int i, const int j);
 
     Position(const double lat, const double lon);

@@ -9,9 +9,11 @@
 class Simulation;
 class SimulationData;
 class Position;
-// class BaseAgentModel;
-// class BaseContextModel;
-// class BaseWorldModel;
+class BaseAgentModel;
+class BaseContextModel;
+class BaseWorldModel;
+class Place;
+class Agent;
 
 class World
 {
@@ -29,29 +31,27 @@ private:
 
     std::string worldName;
 
-    //SortedMap<String, Overlay> overlays;
+    std::vector <Place*> places;
 
-    //std::vector <Place> places;
-
-    std::set<std::string> placeTypes /*= new HashSet<String>()*/;
+    std::set<std::string> placeTypes;
 
     //Calendar time; look for time.h
 
-    // BaseAgentModel* agentModel;
+    BaseAgentModel* agentModel;
 
-    // BaseWorldModel* worldModel;
+    BaseWorldModel* worldModel;
 
-    // BaseContextModel* contextModel;
+    BaseContextModel* contextModel;
 
-    //std::unordered_map <std::string, Agent> people;
+    std::unordered_map <std::string, Agent*> people;
 
-    bool walls[0][0];
+    bool *walls;
 
     Simulation *simulation;
 
     SimulationData *simData;
 
-    // std::vector <Position> readPlacePoints(InputStream is);
+    std::vector<Position*> World::readPlacePoints(std::string filename);
 
     void buildWalls();
 
@@ -67,25 +67,8 @@ private:
 
     void createOverlays();
 
-    // ArrayList<Overlay> createOverlaysFromImages()
-    // {
-    //     ArrayList<Overlay> overlaysFromImages = new ArrayList<Overlay>();
-    //     Map<String, InputStream> fileList = simData.getOverlayFiles();
-    //     Iterator<String> listIt = fileList.keySet().iterator();
-
-    //     while (listIt.hasNext())
-    //     {
-    //         String name = listIt.next();
-    //         InputStream overlayIS = fileList.get(name);
-    //         overlaysFromImages.add(Overlay.getOverlay(name, overlayIS,
-    //                                                   simulationConfig));
-    //     }
-
-    //     return overlaysFromImages;
-    // }
-
 protected:
-    //std::vector<Place> createPlacesFromImages();
+    std::vector<Place> createPlacesFromImages();
 
 public:
     // USEFUL ?
@@ -142,11 +125,11 @@ public:
 
     void addPlaceType(const std::string placeType);
 
-    // BaseAgentModel* getAgentModel();
+    BaseAgentModel* getAgentModel();
 
-    // BaseContextModel* getContextModel();
+    BaseContextModel* getContextModel();
 
-    // BaseWorldModel* getWorldModel();
+    BaseWorldModel* getWorldModel();
 };
 
 #endif

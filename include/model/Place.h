@@ -35,6 +35,8 @@ class Place : public Publishable {
 
 	void initialize(World* newWorld);
 
+	Place();
+
 	Place(std::string type, Position* pos, World* world);
 
 	Place(std::string type, Position* pos, World* world, std::string name, Position* relevantPosition);
