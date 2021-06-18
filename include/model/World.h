@@ -3,6 +3,7 @@
 
 #include <unistd.h>
 #include <vector>
+#include <unordered_map>
 #include <set>
 #include <string>
 
@@ -19,9 +20,26 @@ class World
 {
 
 private:
+
     static const int COLOR_WHITE = 0xFFFFFF;
 
     static const int NEAR_DISTANCE = 15;
+
+    // Values available in Simulation's config.xml file in original Java project
+
+    static const double TOPRIGHT_LATITUDE = 49.003535;
+
+    static const double TOPRIGHT_LONGITUDE = 8.006958;
+
+    static const double BOTTOMRIGHT_LATITUDE = 49.003535;
+
+    static const double BOTTOMRIGHT_LONGITUDE = 8.006958;
+
+    static const double BOTTOMLEFT_LATITUDE = 49.003410;
+
+    static const double BOTTOMLEFT_LONGITUDE = 8.006800;
+
+
 
     // static bool prefillCache;
 
@@ -31,19 +49,19 @@ private:
 
     std::string worldName;
 
-    std::vector <Place*> places;
+    std::vector<Place *> places;
 
     std::set<std::string> placeTypes;
 
     //Calendar time; look for time.h
 
-    BaseAgentModel* agentModel;
+    BaseAgentModel *agentModel;
 
-    BaseWorldModel* worldModel;
+    BaseWorldModel *worldModel;
 
-    BaseContextModel* contextModel;
+    BaseContextModel *contextModel;
 
-    std::unordered_map <std::string, Agent*> people;
+    std::unordered_map<std::string, Agent *> people;
 
     bool *walls;
 
@@ -51,7 +69,7 @@ private:
 
     SimulationData *simData;
 
-    std::vector<Position*> World::readPlacePoints(std::string filename);
+    std::vector<Position *> World::readPlacePoints(std::string filename);
 
     void buildWalls();
 
@@ -61,14 +79,14 @@ private:
 
     void createTime();
 
-    //void freezeInfoFields();
+    void freezeInfoFields();
 
     void createPlaces();
 
     void createOverlays();
 
 protected:
-    std::vector<Place> createPlacesFromImages();
+    std::vector<Place *> createPlacesFromImages();
 
 public:
     // USEFUL ?
@@ -79,7 +97,7 @@ public:
 
     World();
 
-    World(Simulation* simulation , SimulationData* simData);
+    World(Simulation *simulation, SimulationData *simData);
 
     std::string getWorldName();
 
@@ -87,13 +105,11 @@ public:
 
     int getWidth();
 
-    bool isAWall(Position* pos);
+    bool isAWall(Position *pos);
 
-    //std::set<std::string> getAvailableSprites();
+    std::vector<Agent *> getPeople();
 
-    //std::vector<Agent> getPeople();
-
-    //std::vector<Place> getPlaces();
+    std::vector<Place *> getPlaces();
 
     //Calendar getTime();
 
@@ -111,25 +127,23 @@ public:
 
     //std::vector<Trackable> findAllNearOutOf(Position pos, final Collection<? extends Trackable> candidates, final int distance, final boolean visibleOnly);
 
-    //Place getPlaceByName(std::string name);
+    Place *getPlaceByName(std::string name);
 
-    //Place getPlaceByPosition(const Position pos);
+    Place *getPlaceByPosition(Position *pos);
 
-    //Collection<Place> getPlacesOfType(const std::tring type);
+    std::vector<Place *> World::getPlacesOfType(std::string type);
 
-    //Place getNearestPlaceOfType(const std::string type, const Position pos);
-
-    //SortedMap<String, Overlay> getOverlays();
+    Place* getNearestPlaceOfType(const std::string type, Position *pos);
 
     std::set<std::string> getPlaceTypes();
 
     void addPlaceType(const std::string placeType);
 
-    BaseAgentModel* getAgentModel();
+    BaseAgentModel *getAgentModel();
 
-    BaseContextModel* getContextModel();
+    BaseContextModel *getContextModel();
 
-    BaseWorldModel* getWorldModel();
+    BaseWorldModel *getWorldModel();
 };
 
 #endif

@@ -19,19 +19,6 @@ void Place::basicChecks(World *thisPlacesWorld)
     }
 }
 
-void Place::initialize(World *newWorld)
-{
-    world = newWorld;
-    // Allow the old value to be garbage
-    // collected before the next is created
-    // gradients = null;
-
-    // gradients =
-    //     new SiafuGradientCache(Controller.DEFAULT_GRADIENT_PATH,
-    //                            world.getWorldName(), World.getCacheSize(),
-    //                            World.shouldPrefillCache());
-}
-
 Place::Place(std::string type, Position *pos, World *world)
 {
     Place(type, pos, world, type + "-" + pos->toString(), NULL);

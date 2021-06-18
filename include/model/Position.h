@@ -2,6 +2,7 @@
 #define POSITION_H
 
 #include <string>
+#include <model/CoordinateTools.h>
 
 class World;
 class CoordinateTools;
@@ -16,7 +17,7 @@ private:
 
     static bool initialized;
 
-    static CoordinateTools* coordinateTool;
+    static CoordinateTools *coordinateTool;
 
     static int width;
 
@@ -26,14 +27,26 @@ private:
 
     static const int DIRECTIONS = 8;
 
-    const int COMPASS[8][2] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
+    static const int COMPASS[8][2];
 
     int i;
 
     int j;
 
 public:
-    void initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[]);
+
+    static void Position::initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
+    {
+        if (worldObj == NULL)
+        {
+            std::cerr << "Null world received!";
+        }
+        world = worldObj;
+        width = world->getWidth();
+        height = world->getHeight();
+        coordinateTool = new CoordinateTools(height, width, topRight, bottomRight, bottomLeft);
+        initialized = true;
+    }
 
     Position();
 
@@ -49,13 +62,13 @@ public:
 
     bool equals(Position *p);
 
-    int compareTo(const Position* p);
+    int compareTo(const Position *p);
 
-    bool isNear(const Position* pos);
+    bool isNear(const Position *pos);
 
-    bool isNear(const Position* pos, const int radius);
+    bool isNear(const Position *pos, const int radius);
 
-    double* getCoordinates();
+    double *getCoordinates();
 
     int getRow();
 

@@ -16,9 +16,9 @@ class BaseAgentModel {
 		this->world = world;
 	}
 
-	//virtual std::vector<Agent> createAgents();
+	virtual std::vector<Agent*> createAgents();
 
-	//virtual void doIteration(final Collection<Agent> agents);
+	virtual void doIteration(std::vector<Agent*> agents);
 };
 
 #endif

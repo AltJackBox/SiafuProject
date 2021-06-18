@@ -7,9 +7,6 @@
 #include <unordered_map>
 #include <vector>
 
-
-//static const std::string OVERLAYS_PATH = "overlays";
-
 static const std::string PLACES_PATH = "places";
 
 static const std::string WALLS_FILE = "map/walls.png";
@@ -23,13 +20,23 @@ class SimulationData
 
 protected:
 	std::string path;
-	//URLClassLoader classLoader;
 
-	//private:
-	//XMLConfiguration simulationConfig;
 
 public:
-	static SimulationData* getInstance(const std::string pathString);
+
+	static SimulationData *getInstance(const std::string pathString)
+	{
+		std::ifstream file{pathString + "config.xml"};
+		if (!file)
+		{
+			std::cerr << "The simulation data at " + pathString + " does not exist\n";
+			return NULL;
+		}
+		else
+		{
+			return new SimulationData(pathString);
+		}
+	}
 
 	//Class < ? extends BaseAgentModel > getAgentModelClass();
 
@@ -39,11 +46,7 @@ public:
 
 	std::vector<std::string> getPlaceFiles();
 
-	//std::unordered_map<String, InputStream> getOverlayFiles();
-
 	std::string getWallsFile();
-
-	//XMLConfiguration getConfigFile();
 
 protected:
 	SimulationData(std::string givenPath);

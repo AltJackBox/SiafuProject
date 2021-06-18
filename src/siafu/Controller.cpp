@@ -29,10 +29,6 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 	}
 }
 
-Progress* Controller::getProgress() {
-	return progress;
-}
-
 
 void Controller::stopSimulation()
 {

@@ -5,15 +5,6 @@
 #include <exception>
 #include <stdlib.h>
 
-Place *Agent::getDefaultPlace(Position *pos, World *world)
-{
-    if (DEFAULT_DESTINATION == NULL)
-    {
-        DEFAULT_DESTINATION = new Place("StartingPosition", pos, world);
-    }
-    return DEFAULT_DESTINATION;
-}
-
 void Agent::basicChecks(World *thisAgentsWorld)
 {
     if (world == NULL)
@@ -24,12 +15,6 @@ void Agent::basicChecks(World *thisAgentsWorld)
     {
         std::cerr << "All your users must belong to the same world\n";
     }
-}
-
-void Agent::resetAgents()
-{
-    infoFieldsLocked = false;
-    INFO_FIELDS.empty();
 }
 
 Agent::Agent(std::string name, Position *start, World *world)
@@ -46,11 +31,6 @@ Agent::Agent(std::string name, Position *start, World *world, int zPriority)
     this->destination = getDefaultPlace(start, world);
     this->atDestination = true;
     this->zPriority = zPriority;
-}
-
-void Agent::lockInfoFields()
-{
-    infoFieldsLocked = true;
 }
 
 bool Agent::isAtDestination()
@@ -296,11 +276,6 @@ void Agent::wander(int soberness)
 //     this->visible = visible;
 // }
 
-void Agent::initialize(World *agentsWorld)
-{
-    world = agentsWorld;
-    infoFieldsLocked = false;
-}
 
 bool Agent::equals(Agent* agent)
 {

@@ -4,18 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-void Position::initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
-{
-    if (worldObj == NULL)
-    {
-        std::cerr << "Null world received!";
-    }
-    world = worldObj;
-    width = world->getWidth();
-    height = world->getHeight();
-    coordinateTool = new CoordinateTools(height, width, topRight, bottomRight, bottomLeft);
-    initialized = true;
-}
+const int Position::COMPASS[8][2] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 
 Position::Position(const int i, const int j)
 {

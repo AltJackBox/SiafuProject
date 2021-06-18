@@ -4,7 +4,7 @@
 
 Simulation::Simulation(std::string simulationPath, Controller *control)
 {
-	this->simData = simData->getInstance(simulationPath);
+	this->simData = SimulationData::getInstance(simulationPath);
 	// this->simulationConfig = simData.getConfigFile();
 	this->control = control;
 	ended = false;

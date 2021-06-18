@@ -2,19 +2,6 @@
 #include <experimental/filesystem>
 #include <utility>
 
-SimulationData *SimulationData::getInstance(const std::string pathString)
-{
-    std::ifstream file{pathString + "config.xml"};
-    if (!file)
-    {
-        std::cerr << "The simulation data at " + pathString + " does not exist\n";
-        return NULL;
-    }
-    else
-    {
-        return new SimulationData(pathString);
-    }
-}
 
 // AgentModel getAgentModelClass()
 // {

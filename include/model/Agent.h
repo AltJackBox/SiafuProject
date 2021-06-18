@@ -18,7 +18,14 @@ class Agent
 private:
     static Place *DEFAULT_DESTINATION;
 
-    Place *getDefaultPlace(Position *pos, World *world);
+    static Place *Agent::getDefaultPlace(Position *pos, World *world)
+    {
+        if (DEFAULT_DESTINATION == NULL)
+        {
+            DEFAULT_DESTINATION = new Place("StartingPosition", pos, world);
+        }
+        return DEFAULT_DESTINATION;
+    }
 
     static const int WANDER_TURN = 3;
 
@@ -28,7 +35,7 @@ private:
 
     static World *world;
 
-    bool infoFieldsLocked = false;
+    static bool infoFieldsLocked /* = false*/;
 
     static std::set<std::string> INFO_FIELDS;
 
@@ -48,10 +55,6 @@ private:
 
     Place *destination;
 
-    //private std::string image;
-
-    //private std::string previousImage;
-
     std::map<std::string, Publishable *> info;
 
     //bool visible = true;
@@ -61,13 +64,20 @@ private:
     void basicChecks(World *thisAgentsWorld);
 
 public:
-    void resetAgents();
+    static void resetAgents()
+    {
+        infoFieldsLocked = false;
+        INFO_FIELDS.empty();
+    }
 
     Agent(std::string name, Position *start, World *world);
 
     Agent(std::string name, Position *start, World *world, int zPriority);
 
-    void lockInfoFields();
+    static void Agent::lockInfoFields()
+    {
+        infoFieldsLocked = true;
+    }
 
     bool isAtDestination();
 
@@ -113,19 +123,23 @@ public:
 
     void wanderAround(Place *place, int radius, int soberness);
 
-    void wanderAround( Place* place,  int radius);
+    void wanderAround(Place *place, int radius);
 
     void wander();
 
-    void wander( int soberness);
+    void wander(int soberness);
 
     // bool isVisible();
 
     // void setVisible( bool visible);
 
-    void initialize( World* agentsWorld);
+    static void initialize(World *agentsWorld)
+    {
+        world = agentsWorld;
+        infoFieldsLocked = false;
+    }
 
-    bool equals(Agent* Agent);
+    bool equals(Agent *Agent);
 };
 
 #endif

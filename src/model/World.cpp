@@ -1,4 +1,5 @@
 #include <model/World.h>
+#include <model/Agent.h>
 #include <model/Position.h>
 #include <siafu/Simulation.h>
 #include <model/SimulationData.h>
@@ -90,45 +91,41 @@ void World::buildWalls()
 
 void World::initializeCoordinates()
 {
-    // double[] topRight = new double[]{
-    //     simulationConfig.getDouble("calibration.topright[@latitude]"),
-    //     simulationConfig.getDouble("calibration.topright[@longitude]")};
+    double topRight[2] = { TOPRIGHT_LATITUDE , TOPRIGHT_LONGITUDE };
 
-    // double[] bottomLeft = new double[]{
-    //     simulationConfig.getDouble("calibration." + "bottomleft[@latitude]"),
-    //     simulationConfig.getDouble("calibration." + "bottomleft[@longitude]")};
-    // double[] bottomRight = new double[]{
-    //     simulationConfig.getDouble("calibration." + "bottomright[@latitude]"),
-    //     simulationConfig.getDouble("calibration." + "bottomright[@longitude]")};
+    double bottomLeft[2] = { BOTTOMLEFT_LATITUDE , BOTTOMLEFT_LONGITUDE };
 
-    // Position.initialize(this, topRight, bottomRight, bottomLeft);
+    double bottomRight[2] = { BOTTOMRIGHT_LATITUDE , BOTTOMRIGHT_LONGITUDE };
+
+    Position::initialize(this, topRight, bottomRight, bottomLeft);
 }
 
 void World::createPeople()
 {
-    // people = new HashMap<std::string, Agent>();
+    try
+    {
+        // agentModel = (BaseAgentModel)simData.getAgentModelClass()
+        //                  .getConstructor(new Class[]{this.getClass()})
+        //                  .newInstance(new Object[]{this});
 
-    // try
-    // {
-    //     agentModel = (BaseAgentModel)simData.getAgentModelClass()
-    //                      .getConstructor(new Class[]{this.getClass()})
-    //                      .newInstance(new Object[]{this});
-    // }
-    // catch (Exception e)
-    // {
-    //     throw new RuntimeException("Can't instantiate the agent model", e);
-    // }
+        // agentModel = Simulation-Office.agentModel
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "RuntimeException : Can't instantiate the agent model\n";
+    }
 
-    // Agent.initialize(this);
-    // Controller.getProgress().reportCreatingAgents();
-    // ArrayList<Agent> peopleList = agentModel.createAgents();
-    // Iterator<Agent> peopleIt = peopleList.iterator();
-
-    // while (peopleIt.hasNext())
-    // {
-    //     Agent p = peopleIt.next();
-    //     people.put(p.getName(), p);
-    // }
+    Agent::initialize(this);
+    Controller::getProgress()->reportCreatingAgents();
+    std::vector<Agent *> peopleList = agentModel->createAgents();
+    int index = 0;
+    while (index != peopleList.size())
+    {
+        Agent *p = peopleList[index];
+        std::pair<std::string, Agent *> pair(p->getName(), p);
+        people.insert(pair);
+        index++;
+    }
 }
 
 void World::createTime()
@@ -142,352 +139,339 @@ void World::createTime()
     //          0);
 }
 
-// void freezeInfoFields()
-// {
-//     Iterator<Agent> peopleIt = people.values().iterator();
+void World::freezeInfoFields()
+{
+    for (std::pair<std::string, Agent *> element : people)
+    {
+        Agent *p = element.second;
 
-//     while (peopleIt.hasNext())
-//     {
-//         Agent p = peopleIt.next();
+        if (!p->checkAllInfoFieldsPresent())
+        {
+            std::cerr << "RuntimeException : Agent " + p->getName() + " is missing at least one field that other agents have.\n";
+        }
+    }
 
-//         if (!p.checkAllInfoFieldsPresent())
-//         {
-//             throw new RuntimeException(
-//                 "Agent " + p.getName() + " is missing at least one field that other agents have.");
-//         }
-//     }
-
-//     Agent.lockInfoFields();
-// }
+    Agent::lockInfoFields();
+}
 
 void World::createPlaces()
 {
-    // try
-    // {
-    //     worldModel = (BaseWorldModel)simData.getWorldModelClass()
-    //                      .getConstructor(new Class[]{this.getClass()})
-    //                      .newInstance(new Object[]{this});
-    // }
-    // catch (Exception e)
-    // {
-    //     throw new RuntimeException("Can't instantiate the world model", e);
-    // }
-    // places = createPlacesFromImages();
-    // worldModel.createPlaces(places);
+    try
+    {
+
+        //worldModel = Simulation.Office.worldModel
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "RuntimeException Can't instantiate the world model\n";
+    }
+    places = createPlacesFromImages();
+    worldModel->createPlaces(places);
 }
 
-std::vector<Place*> World::createPlacesFromImages()
+std::vector<Place *> World::createPlacesFromImages()
 {
-    Place place;
-    place.initialize(this);
+    Place::initialize(this);
     std::vector<Place *> placesFromImg;
     std::vector<std::string> fileList = simData->getPlaceFiles();
     int index = 0;
     while (index != fileList.size())
     {
         std::string filename = fileList[index];
-        std::vector<Position*> placePoints = readPlacePoints(filename);
-        Iterator<Position> it = placePoints.iterator();
-        //total += placePoints.size();
-        Controller.getProgress().reportPlacesFound(type, placePoints.size());
+        std::vector<Position *> placePoints = readPlacePoints(filename);
+        int indexVec = 0;
+        Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
-        while (it.hasNext())
+        while (indexVec != placePoints.size())
         {
-            Position pos = (Position)it.next();
-            Place place;
+            Position *pos = placePoints[indexVec];
+            Place *place;
             try
             {
-                place = new Place(type, pos, this);
+                place = new Place(filename, pos, this);
             }
-            catch (PositionOnAWallException e)
+            catch (std::exception &e)
             {
-                throw new RuntimeException("One of your \"" + type + "\" places, at " + pos + " is on a wall");
+                std::cerr << "RuntimeException : One of your " + filename + " places, at " + pos->toString() + " is on a wall";
             }
-            Controller.getProgress().reportPlaceCreated(type);
-            placesFromImg.add(place);
+            Controller::getProgress()->reportPlaceCreated(filename);
+            placesFromImg.push_back(place);
+            indexVec++;
         }
+        index++;
     }
 
-    // return placesFromImg;
-    //}
+    return placesFromImg;
+}
 
-    // void World::setShouldPrefillCache(bool prefill)
-    // {
-    //     this->prefillCache = prefill;
-    // }
+// void World::setShouldPrefillCache(bool prefill)
+// {
+//     this->prefillCache = prefill;
+// }
 
-    // bool World::shouldPrefillCache()
-    // {
-    //     return this->prefillCache;
-    // }
+// bool World::shouldPrefillCache()
+// {
+//     return this->prefillCache;
+// }
 
-    World::World(Simulation * simulation, SimulationData * simData)
+World::World(Simulation *simulation, SimulationData *simData)
+{
+    this->simulation = simulation;
+    this->simData = simData;
+    // this->simulationConfig = simData->getConfigFile();
+    this->worldName = "Siafu Offices, Heidelberg, Germany";
+
+    Agent::resetAgents();
+
+    Controller::getProgress()->reportWorldCreation(worldName);
+
+    buildWalls();
+
+    initializeCoordinates();
+
+    createTime();
+
+    createPlaces();
+
+    createPeople();
+
+    freezeInfoFields();
+}
+
+std::string World::getWorldName()
+{
+    return worldName;
+}
+
+int World::getHeight()
+{
+    return height;
+}
+
+int World::getWidth()
+{
+    return width;
+}
+
+bool World::isAWall(Position *pos)
+{
+    return walls[pos->getCol() * width + pos->getRow()];
+}
+
+std::vector<Agent *> World::getPeople()
+{
+    std::vector<Agent *> agents;
+    for (std::pair<std::string, Agent *> element : people)
     {
-        this->simulation = simulation;
-        this->simData = simData;
-        //this->simulationConfig = simData.getConfigFile();
-        //this->worldName = simulationConfig.getstd::string("worldname");
-
-        //Agent.resetAgents();
-
-        //Controller.getProgress().reportWorldCreation(worldName);
-
-        // buildWalls();
-
-        // initializeCoordinates();
-
-        // createTime();
-
-        // createPlaces();
-
-        // createPeople();
-
-        //freezeInfoFields();
+        agents.push_back(element.second);
     }
+    return agents;
+}
 
-    std::string World::getWorldName()
+std::vector<Place *> World::getPlaces()
+{
+    return places;
+}
+
+// Calendar World::getTime()
+// {
+//     return time;
+// }
+
+//TRACKABLE FUNCTIONS : NEED DEEPER INVESTIGATION TO DETERMINE UTILITY OF THESE FUNCTIONS
+
+// Trackable World::findAnythingNear(Position pos, bool visibleOnly) throws NothingNearException
+// {
+//     try
+//     {
+//         return findAgentNear(pos, visibleOnly);
+//     }
+//     catch (NothingNearException e)
+//     {
+//         return findPlaceNear(pos, visibleOnly);
+//     }
+// }
+
+// Trackable World::findAgentNear(Position pos, bool visibleOnly)
+//     throws NothingNearException
+// {
+//     return findNearOutOf(pos, people.values(), NEAR_DISTANCE, visibleOnly);
+// }
+
+// Trackable World::findPlaceNear(Position pos, bool visibleOnly)
+//     throws NothingNearException
+// {
+//     return findNearOutOf(pos, places, NEAR_DISTANCE, visibleOnly);
+// }
+
+// Trackable findNearOutOf(Position pos,
+// 			final Collection<? extends Trackable> candidates,
+// 			final int distance, final boolean visibleOnly)
+// 			throws NothingNearException
+// {
+//     Trackable target = null;
+//     Trackable candidate = null;
+
+//     Iterator < ? extends Trackable > candidateIt = candidates.iterator();
+
+//     while ((target == null) && candidateIt.hasNext())
+//     {
+//         candidate = (Trackable)candidateIt.next();
+
+//         if ((!visibleOnly || candidate.isVisible()) && candidate.getPos().isNear(pos, distance))
+//         {
+//             target = candidate;
+//             if (visibleOnly && !((Trackable)candidate).isVisible())
+//             {
+//                 target = null;
+//             }
+//         }
+//     }
+
+//     if (target == null)
+//     {
+//         throw new NothingNearException();
+//     }
+//     else
+//     {
+//         return target;
+//     }
+// }
+
+// std::vector<Trackable> findAllAgentsNear(Position pos, int distance, bool visibleOnly)
+//     throws NothingNearException
+// {
+//     return findAllNearOutOf(pos, people.values(), distance, visibleOnly);
+// }
+
+// std::vector<Trackable> findAllNearOutOf(Position pos, final Collection<? extends Trackable> candidates, final int distance, final boolean visibleOnly)
+// 			throws NothingNearException
+// {
+//     std::vector<Trackable> targets = new std::vector<Trackable>();
+//     Trackable candidate;
+
+//     Iterator < ? extends Trackable > candidatesIt = candidates.iterator();
+
+//     while (candidatesIt.hasNext())
+//     {
+//         candidate = (Trackable)candidatesIt.next();
+
+//         if ((!visibleOnly || candidate.isVisible()) && candidate.getPos().isNear(pos, distance))
+//         {
+//             targets.add(candidate);
+//         }
+//     }
+
+//     if (targets.isEmpty())
+//     {
+//         throw new NothingNearException();
+//     }
+//     else
+//     {
+//         return targets;
+//     }
+// }
+
+Place *World::getPlaceByName(std::string name)
+{
+    int index = 0;
+    while (index != places.size())
     {
-        return worldName;
+        Place *p = places[index];
+
+        if (p->getName().compare(name) == 0)
+        {
+            return p;
+        }
+        index++;
     }
 
-    int World::getHeight()
+    std::cerr << "PlaceNotFoundException : " + name;
+}
+
+Place *World::getPlaceByPosition(Position *pos)
+{
+    int index = 0;
+    while (index != places.size())
     {
-        return height;
-    }
+        Place *p = places[index];
 
-    int World::getWidth()
+        if (p->getPos()->equals(pos))
+        {
+            return p;
+        }
+        index++;
+    }
+    std::cerr << "PlaceNotFoundException : at " + pos->toString();
+}
+
+std::vector<Place *> World::getPlacesOfType(std::string type)
+{
+    if (placeTypes.find(type) == placeTypes.end())
     {
-        return width;
+        std::cerr << "PlaceTypeUndefinedException : " + type;
     }
 
-    bool World::isAWall(Position * pos)
+    std::vector<Place *> selection;
+    int index = 0;
+
+    while (index != places.size())
     {
-        return walls[pos->getRow()][pos->getCol()];
+        Place *p = places[index];
+
+        if (p->getType().compare(type) == 0)
+        {
+            selection.push_back(p);
+        }
+        index++;
     }
 
-    // std::vector<Agent> World::getPeople()
-    // {
-    //     std::vector<Agent> agents;
-    //     agents.reserve(people.size());
-    //     for (auto kv : map)
-    //     {
-    //         agents.push_back(kv.second);
-    //     }
-    //     return agents;
-    // }
+    return selection;
+}
 
-    // std::vector<Place> World::getPlaces()
-    // {
-    //     return places;
-    // }
-
-    // Calendar World::getTime()
-    // {
-    //     return time;
-    // }
-
-    //TRACKABLE FUNCTIONS : NEED DEEPER INVESTIGATION TO DETERMINE UTILITY OF THESE FUNCTIONS
-
-    // Trackable World::findAnythingNear(Position pos, bool visibleOnly) throws NothingNearException
-    // {
-    //     try
-    //     {
-    //         return findAgentNear(pos, visibleOnly);
-    //     }
-    //     catch (NothingNearException e)
-    //     {
-    //         return findPlaceNear(pos, visibleOnly);
-    //     }
-    // }
-
-    // Trackable World::findAgentNear(Position pos, bool visibleOnly)
-    //     throws NothingNearException
-    // {
-    //     return findNearOutOf(pos, people.values(), NEAR_DISTANCE, visibleOnly);
-    // }
-
-    // Trackable World::findPlaceNear(Position pos, bool visibleOnly)
-    //     throws NothingNearException
-    // {
-    //     return findNearOutOf(pos, places, NEAR_DISTANCE, visibleOnly);
-    // }
-
-    // Trackable findNearOutOf(Position pos,
-    // 			final Collection<? extends Trackable> candidates,
-    // 			final int distance, final boolean visibleOnly)
-    // 			throws NothingNearException
-    // {
-    //     Trackable target = null;
-    //     Trackable candidate = null;
-
-    //     Iterator < ? extends Trackable > candidateIt = candidates.iterator();
-
-    //     while ((target == null) && candidateIt.hasNext())
-    //     {
-    //         candidate = (Trackable)candidateIt.next();
-
-    //         if ((!visibleOnly || candidate.isVisible()) && candidate.getPos().isNear(pos, distance))
-    //         {
-    //             target = candidate;
-    //             if (visibleOnly && !((Trackable)candidate).isVisible())
-    //             {
-    //                 target = null;
-    //             }
-    //         }
-    //     }
-
-    //     if (target == null)
-    //     {
-    //         throw new NothingNearException();
-    //     }
-    //     else
-    //     {
-    //         return target;
-    //     }
-    // }
-
-    // std::vector<Trackable> findAllAgentsNear(Position pos, int distance, bool visibleOnly)
-    //     throws NothingNearException
-    // {
-    //     return findAllNearOutOf(pos, people.values(), distance, visibleOnly);
-    // }
-
-    // std::vector<Trackable> findAllNearOutOf(Position pos, final Collection<? extends Trackable> candidates, final int distance, final boolean visibleOnly)
-    // 			throws NothingNearException
-    // {
-    //     ArrayList<Trackable> targets = new ArrayList<Trackable>();
-    //     Trackable candidate;
-
-    //     Iterator < ? extends Trackable > candidatesIt = candidates.iterator();
-
-    //     while (candidatesIt.hasNext())
-    //     {
-    //         candidate = (Trackable)candidatesIt.next();
-
-    //         if ((!visibleOnly || candidate.isVisible()) && candidate.getPos().isNear(pos, distance))
-    //         {
-    //             targets.add(candidate);
-    //         }
-    //     }
-
-    //     if (targets.isEmpty())
-    //     {
-    //         throw new NothingNearException();
-    //     }
-    //     else
-    //     {
-    //         return targets;
-    //     }
-    // }
-
-    // Place World::getPlaceByName(std::string name)
-    //     throws PlaceNotFoundException
-    // {
-    //     Iterator<Place> placesIt = places.iterator();
-
-    //     while (placesIt.hasNext())
-    //     {
-    //         Place p = placesIt.next();
-
-    //         if (p.getName().equals(name))
-    //         {
-    //             return p;
-    //         }
-    //     }
-
-    //     throw new PlaceNotFoundException(name);
-    // }
-
-    // Place World::getPlaceByPosition(Position pos)
-    //         throws PlaceNotFoundException
-    //     {
-    //         Iterator<Place> placesIt = places.iterator();
-
-    //         while (placesIt.hasNext())
-    //         {
-    //             Place p = placesIt.next();
-
-    //             if (p.getPos().equals(pos))
-    //             {
-    //                 return p;
-    //             }
-    //         }
-
-    //         throw new PlaceNotFoundException("at " + pos.toString());
-    //     }
-
-    // Collection<Place> World::getPlacesOfType(final String type)
-    //     throws PlaceTypeUndefinedException
-    // {
-    //     if (!placeTypes.contains(type))
-    //     {
-    //         throw new PlaceTypeUndefinedException(type);
-    //     }
-
-    //     ArrayList<Place> selection = new ArrayList<Place>();
-    //     Iterator<Place> it = places.iterator();
-
-    //     while (it.hasNext())
-    //     {
-    //         Place p = (Place)it.next();
-
-    //         if (p.getType().equals(type))
-    //         {
-    //             selection.add(p);
-    //         }
-    //     }
-
-    //     return selection;
-    // }
-
-    // Place World::getNearestPlaceOfType(final std::tring type, final Position pos)
-    //     throws PlaceTypeUndefinedException
-    // {
-    //     Place nearest = null;
-    //     double minDistance = -1;
-    //     Iterator<Place> pIt = getPlacesOfType(type).iterator();
-
-    //     while (pIt.hasNext())
-    //     {
-    //         Place p = pIt.next();
-    //         double distance = p.distanceFrom(pos);
-
-    //         if ((distance < minDistance) || (nearest == null))
-    //         {
-    //             nearest = p;
-    //             minDistance = distance;
-    //         }
-    //     }
-
-    //     return nearest;
-    // }
-
-    // SortedMap<String, Overlay> getOverlays()
-    // {
-    //     return overlays;
-    // }
-
-    std::set<std::string> World::getPlaceTypes()
+Place *World::getNearestPlaceOfType(const std::string type, Position *pos)
+{
+    Place *nearest = nullptr;
+    double minDistance = -1;
+    std::vector<Place *> placesSelected = getPlacesOfType(type);
+    int index = 0;
+    while (index != placesSelected.size())
     {
-        return placeTypes;
+        Place *p = placesSelected[index];
+        double distance = p->distanceFrom(pos);
+
+        if ((distance < minDistance) || (nearest == nullptr))
+        {
+            nearest = p;
+            minDistance = distance;
+        }
+        index++;
     }
 
-    void World::addPlaceType(const std::string placeType)
-    {
-        placeTypes.insert(placeType);
-    }
+    return nearest;
+}
 
-    BaseAgentModel *World::getAgentModel()
-    {
-        return agentModel;
-    }
+std::set<std::string> World::getPlaceTypes()
+{
+    return placeTypes;
+}
 
-    BaseContextModel *World::getContextModel()
-    {
-        return contextModel;
-    }
+void World::addPlaceType(const std::string placeType)
+{
+    placeTypes.insert(placeType);
+}
 
-    BaseWorldModel *World::getWorldModel()
-    {
-        return worldModel;
-    }
+BaseAgentModel *World::getAgentModel()
+{
+    return agentModel;
+}
+
+BaseContextModel *World::getContextModel()
+{
+    return contextModel;
+}
+
+BaseWorldModel *World::getWorldModel()
+{
+    return worldModel;
+}
