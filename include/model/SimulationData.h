@@ -51,7 +51,7 @@ public:
 protected:
 	SimulationData(std::string givenPath);
 
-	virtual std::ifstream getFile(std::string path);
+	virtual std::string getFile(std::string path);
 
 	virtual std::vector<std::string> getFilesByPath(const std::string path);
 

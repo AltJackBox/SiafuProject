@@ -57,7 +57,7 @@ void Simulation::operator()()
 {
 	this->world = new World(this, simData);
 	// this->time = world.getTime();
-	// this->iterationStep = simulationConfig.getInt("iterationstep");
+	this->iterationStep = 10;
 	// this->agentModel = world->getAgentModel();
 	// this->worldModel = world->getWorldModel();
 	// this->contextModel = world->getContextModel();
