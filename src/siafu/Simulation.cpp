@@ -1,5 +1,12 @@
 #include <siafu/Simulation.h>
+#include <siafu/Controller.h>
 #include <model/World.h>
+#include <model/SimulationData.h>
+#include <model/Agent.h>
+#include <Calendar.h>
+#include <behaviormodels/BaseAgentModel.h>
+#include <behaviormodels/BaseWorldModel.h>
+#include <behaviormodels/BaseContextModel.h>
 #include <thread>
 
 Simulation::Simulation(std::string simulationPath, Controller *control)
@@ -39,24 +46,15 @@ bool Simulation::isEnded()
 	return ended;
 }
 
-void Simulation::moveAgents()
-{
-	// for (Agent a : world.getPeople()) {
-	// 	if (!isPaused() || !a.isOnAuto()) {
-	// 		a.moveTowardsDestination();
-	// 	}
-	// }
-}
-
 void Simulation::tickTime()
 {
-	//time.add(Calendar.SECOND, iterationStep);
+	time->add(iterationStep);
 }
 
 void Simulation::operator()()
 {
 	this->world = new World(this, simData);
-	// this->time = world.getTime();
+	this->time = world->getTime();
 	this->iterationStep = 10;
 	// this->agentModel = world->getAgentModel();
 	// this->worldModel = world->getWorldModel();
@@ -68,20 +66,16 @@ void Simulation::operator()()
 	while (!isEnded())
 	{
 		control->endSimulator();
-		// 	if (!isPaused())
-		// 	{
-		// 		tickTime();
-		// 		worldModel.doIteration(world.getPlaces());
-		// 		agentModel.doIteration(world.getPeople());
-		// 		contextModel.doIteration(world.getOverlays());
-		// 	}
-		// 	moveAgents();
-		// 	control.scheduleDrawing();
-		// 	outputPrinter.notifyIterationConcluded();
+			if (!isPaused())
+			{
+				tickTime();
+				worldModel->doIteration(world->getPlaces());
+				agentModel->doIteration(world->getPeople());
+				//contextModel->doIteration(world->getOverlays());
+			}
 	}
-	// simulationRunning = false;
+	simulationRunning = false;
 
-	// outputPrinter.cleanup();
 	control->getProgress()->reportSimulationEnded();
 }
 

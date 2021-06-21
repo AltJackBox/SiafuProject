@@ -2,8 +2,10 @@
 #include <model/Agent.h>
 #include <model/Position.h>
 #include <siafu/Simulation.h>
+#include <siafu/Controller.h>
 #include <model/SimulationData.h>
 #include <model/Place.h>
+#include <Calendar.h>
 #include <behaviormodels/BaseAgentModel.h>
 #include <behaviormodels/BaseContextModel.h>
 #include <behaviormodels/BaseWorldModel.h>
@@ -137,6 +139,8 @@ void World::createTime()
     //          Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
     //          6,
     //          0);
+
+    time = new Calendar();
 }
 
 void World::freezeInfoFields()
@@ -273,10 +277,10 @@ std::vector<Place *> World::getPlaces()
     return places;
 }
 
-// Calendar World::getTime()
-// {
-//     return time;
-// }
+Calendar* World::getTime()
+{
+    return time;
+}
 
 Place *World::getPlaceByName(std::string name)
 {

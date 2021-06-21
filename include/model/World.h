@@ -15,6 +15,7 @@ class BaseContextModel;
 class BaseWorldModel;
 class Place;
 class Agent;
+class Calendar;
 
 class World
 {
@@ -53,7 +54,7 @@ private:
 
     std::set<std::string> placeTypes;
 
-    //Calendar time; look for time.h
+    Calendar* time;
 
     BaseAgentModel *agentModel;
 
@@ -111,7 +112,7 @@ public:
 
     std::vector<Place *> getPlaces();
 
-    //Calendar getTime();
+    Calendar* getTime();
 
     //Trackable findAnythingNear(Position pos, bool visibleOnly);
 

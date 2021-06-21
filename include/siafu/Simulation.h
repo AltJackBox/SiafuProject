@@ -1,15 +1,16 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 
-#include <siafu/Controller.h>
-#include <model/SimulationData.h>
-#include <behaviormodels/BaseAgentModel.h>
-#include <behaviormodels/BaseContextModel.h>
-#include <behaviormodels/BaseWorldModel.h>
 #include <mutex>
 #include <string>
 
 class World;
+class Calendar;
+class SimulationData;
+class Controller;
+class BaseAgentModel;
+class BaseWorldModel;
+class BaseContextModel;
 
 class Simulation
 {
@@ -20,10 +21,10 @@ private:
     SimulationData* simData;
     bool paused;
     World* world;
-    //Calendar time;
-    // BaseAgentModel agentModel;
-    // BaseWorldModel worldModel;
-    // BaseContextModel contextModel;
+    Calendar* time;
+    BaseAgentModel* agentModel;
+    BaseWorldModel* worldModel;
+    BaseContextModel* contextModel;
     int iterationStep;
     //SimulatorOutputPrinter outputPrinter;
     bool simulationRunning;
@@ -31,7 +32,6 @@ private:
     std::mutex lock; 
 
     /*synchronized*/ bool isEnded();
-    void moveAgents();
     void tickTime();
 
 public:

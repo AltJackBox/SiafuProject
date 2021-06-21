@@ -7,42 +7,16 @@
 class EasyTime : public Publishable
 {
 
-    /** Minutes per hour. */
 private:
     static const int MINS_PER_HOUR = 60;
 
     static const int HOURS_PER_DAY = 24;
 
-    static const int SECONDS_PER_MINUTE = 60;
-
-    static const int SECONDS_PER_DAY = 86400;
-
-    //Random rand = new Random();
-
     int hour;
 
     int minute;
 
-    int seconds;
-
-    void normalize()                    // CHECK THIS AGAIN
-    {
-        hour += minute / MINS_PER_HOUR;
-        if (minute < 0)
-        {
-            minute %= MINS_PER_HOUR;
-            minute += MINS_PER_HOUR;
-            hour--;
-        }
-        minute %= MINS_PER_HOUR;
-
-        if (hour < 0)
-        {
-            hour %= HOURS_PER_DAY;
-            hour += HOURS_PER_DAY;
-        }
-        hour %= HOURS_PER_DAY;
-    }
+    void normalize();
 
 public:
     EasyTime(EasyTime* time);
