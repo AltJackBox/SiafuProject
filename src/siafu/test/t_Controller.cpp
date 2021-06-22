@@ -1,4 +1,5 @@
 #include <siafu/Controller.h>
+#include <iostream>
 #include <assert.h>
 
 void test1(){

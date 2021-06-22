@@ -1,8 +1,6 @@
 #include <progress/Progress.h>
 #include <siafu/Controller.h>
 
-Progress::Progress() {}
-
 void Progress::reportWorldCreation(std::string worldName)
 {
     std::cout << "Creating the world: " << worldName << "\n";

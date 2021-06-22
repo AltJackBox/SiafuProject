@@ -1,5 +1,7 @@
 #include <siafu/Simulation.h>
+#include <siafu/Controller.h>
 #include <assert.h>
+#include <iostream>
 
 void test1(){
     Controller* controller = new Controller("","1");

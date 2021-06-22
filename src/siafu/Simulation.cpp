@@ -1,5 +1,6 @@
 #include <siafu/Simulation.h>
 #include <siafu/Controller.h>
+#include <progress/Progress.h>
 #include <model/World.h>
 #include <model/SimulationData.h>
 #include <model/Agent.h>

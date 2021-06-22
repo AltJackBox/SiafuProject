@@ -5,6 +5,7 @@
 #include <siafu/Controller.h>
 #include <model/SimulationData.h>
 #include <model/Place.h>
+#include <progress/Progress.h>
 #include <Calendar.h>
 #include <behaviormodels/BaseAgentModel.h>
 #include <behaviormodels/BaseContextModel.h>
@@ -39,7 +40,7 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
     if (!success)
     {
         std::cout << "Error loading image\n";
-        return;
+        exit(EXIT_FAILURE);
     }
     size_t index;
     for (int y = 0; y < height; y++)
@@ -297,6 +298,7 @@ Place *World::getPlaceByName(std::string name)
     }
 
     std::cerr << "PlaceNotFoundException : " + name;
+    exit(EXIT_FAILURE);
 }
 
 Place *World::getPlaceByPosition(Position *pos)
@@ -313,6 +315,7 @@ Place *World::getPlaceByPosition(Position *pos)
         index++;
     }
     std::cerr << "PlaceNotFoundException : at " + pos->toString();
+    exit(EXIT_FAILURE);
 }
 
 std::vector<Place *> World::getPlacesOfType(std::string type)

@@ -1,16 +1,17 @@
 #ifndef AGENT_H
 #define AGENT_H
 
+#include <model/Place.h>
 #include <set>
 #include <map>
 #include <string>
 #include <iostream>
 #include <iterator>
 
-class Place;
-class World;
-class Position;
-class Publishable;
+//class Place;
+//class World;
+//class Position;
+//class Publishable;
 
 class Agent
 {
@@ -18,7 +19,7 @@ class Agent
 private:
     static Place *DEFAULT_DESTINATION;
 
-    static Place *Agent::getDefaultPlace(Position *pos, World *world)
+    static Place *getDefaultPlace(Position *pos, World *world)
     {
         if (DEFAULT_DESTINATION == NULL)
         {
@@ -74,7 +75,7 @@ public:
 
     Agent(std::string name, Position *start, World *world, int zPriority);
 
-    static void Agent::lockInfoFields()
+    static void lockInfoFields()
     {
         infoFieldsLocked = true;
     }

@@ -12,7 +12,7 @@ export RM=rm -f
 
 export CPPFLAGS= -I$(HDR_DIR) -MMD -MP -g# -I is a preprocessor flag, not a compiler flag
 export CFLAFLGS= -Wall              # some warnings about bad code
-export LDFLAGS= -Llib              # -L is a linker flag
+export LDFLAGS= -L/usr/lib              # -L is a linker flag
 export LDLIBS= -lm                # Left empty if no libs are needed
 
 SRCS=$(SRC_DIR)/siafu/Siafu.cpp $(SRC_DIR)/siafu/Controller.cpp

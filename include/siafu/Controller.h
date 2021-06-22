@@ -1,10 +1,6 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
-//#include <siafu/Simulation.h>
-#include <progress/Progress.h>
-#include <model/World.h>
-#include <model/SimulationData.h>
 #include <unistd.h>
 #include <mutex>
 #include <string>
@@ -33,6 +29,9 @@ static const int DEFAULT_CACHE_SIZE = 100;
 static const int DEFAULT_UI_SPEED = 50;
 
 class Simulation;
+class Progress;
+class World;
+class SimulationData;
 
 class Controller
 {

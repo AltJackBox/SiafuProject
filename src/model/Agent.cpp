@@ -1,5 +1,4 @@
 #include <model/Agent.h>
-#include <model/Place.h>
 #include <model/World.h>
 #include <model/Position.h>
 #include <exception>

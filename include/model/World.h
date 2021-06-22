@@ -17,31 +17,28 @@ class Place;
 class Agent;
 class Calendar;
 
+static const int COLOR_WHITE = 0xFFFFFF;
+
+static const int NEAR_DISTANCE = 15;
+
+// Values available in Simulation's config.xml file in original Java project
+
+static const double TOPRIGHT_LATITUDE = 49.003535;
+
+static const double TOPRIGHT_LONGITUDE = 8.006958;
+
+static const double BOTTOMRIGHT_LATITUDE = 49.003535;
+
+static const double BOTTOMRIGHT_LONGITUDE = 8.006958;
+
+static const double BOTTOMLEFT_LATITUDE = 49.003410;
+
+static const double BOTTOMLEFT_LONGITUDE = 8.006800;
+
 class World
 {
 
 private:
-
-    static const int COLOR_WHITE = 0xFFFFFF;
-
-    static const int NEAR_DISTANCE = 15;
-
-    // Values available in Simulation's config.xml file in original Java project
-
-    static const double TOPRIGHT_LATITUDE = 49.003535;
-
-    static const double TOPRIGHT_LONGITUDE = 8.006958;
-
-    static const double BOTTOMRIGHT_LATITUDE = 49.003535;
-
-    static const double BOTTOMRIGHT_LONGITUDE = 8.006958;
-
-    static const double BOTTOMLEFT_LATITUDE = 49.003410;
-
-    static const double BOTTOMLEFT_LONGITUDE = 8.006800;
-
-
-
     // static bool prefillCache;
 
     int height;
@@ -54,7 +51,7 @@ private:
 
     std::set<std::string> placeTypes;
 
-    Calendar* time;
+    Calendar *time;
 
     BaseAgentModel *agentModel;
 
@@ -70,7 +67,7 @@ private:
 
     SimulationData *simData;
 
-    std::vector<Position *> World::readPlacePoints(std::string filename);
+    std::vector<Position *> readPlacePoints(std::string filename);
 
     void buildWalls();
 
@@ -112,7 +109,7 @@ public:
 
     std::vector<Place *> getPlaces();
 
-    Calendar* getTime();
+    Calendar *getTime();
 
     //Trackable findAnythingNear(Position pos, bool visibleOnly);
 
@@ -132,9 +129,9 @@ public:
 
     Place *getPlaceByPosition(Position *pos);
 
-    std::vector<Place *> World::getPlacesOfType(std::string type);
+    std::vector<Place *> getPlacesOfType(std::string type);
 
-    Place* getNearestPlaceOfType(const std::string type, Position *pos);
+    Place *getNearestPlaceOfType(const std::string type, Position *pos);
 
     std::set<std::string> getPlaceTypes();
 

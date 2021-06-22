@@ -32,7 +32,7 @@ private:
 public:
 	std::string name;
 
-	static void Place::initialize(World *newWorld)
+	static void initialize(World *newWorld)
 	{
 		world = newWorld;
 		// Allow the old value to be garbage

@@ -76,8 +76,8 @@ std::vector<std::string> SimulationData::getFilesByPath(const std::string dirPat
                 foundFiles.push_back(name);
             }
         }
-        return foundFiles;
     }
+    return foundFiles;
 }
 
 std::string SimulationData::getFile(std::string path)
@@ -87,7 +87,7 @@ std::string SimulationData::getFile(std::string path)
     if (!file)
     {
         std::cerr << "Your simulation data is missing " + path + ". Perhaps you opened the wrong directory?\n";
-        return;
+        exit(EXIT_FAILURE);
     }
     return path;
 }

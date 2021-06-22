@@ -35,7 +35,7 @@ private:
 
 public:
 
-    static void Position::initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
+    static void initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
     {
         if (worldObj == NULL)
         {
