@@ -4,9 +4,17 @@
 #include <exception>
 #include <stdlib.h>
 
+Place *Agent::DEFAULT_DESTINATION;
+
+World *Agent::world;
+
+bool Agent::infoFieldsLocked = false;
+
+std::set<std::string> Agent::INFO_FIELDS;
+
 void Agent::basicChecks(World *thisAgentsWorld)
 {
-    if (world == NULL)
+    if (world == nullptr)
     {
         std::cerr << "You need to initialize the agents.\n";
     }
@@ -275,8 +283,7 @@ void Agent::wander(int soberness)
 //     this->visible = visible;
 // }
 
-
-bool Agent::equals(Agent* agent)
+bool Agent::equals(Agent *agent)
 {
     if (this == agent)
         return true;

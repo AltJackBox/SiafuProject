@@ -8,7 +8,7 @@ export BIN_DIR=$(CURDIR)/bin
 
 export CC=gcc
 export CXX=g++
-export RM=rm -f
+export RM=rm -rvf
 
 export CPPFLAGS= -I$(HDR_DIR) -MMD -MP -g# -I is a preprocessor flag, not a compiler flag
 export CFLAFLGS= -Wall              # some warnings about bad code

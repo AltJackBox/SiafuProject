@@ -1,4 +1,6 @@
 #include <siafu/Controller.h>
+#include <progress/Progress.h>
+#include <model/World.h>
 #include <iostream>
 #include <assert.h>
 

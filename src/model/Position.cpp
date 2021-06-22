@@ -4,6 +4,16 @@
 #include <iostream>
 #include <cmath>
 
+bool Position::initialized;
+
+CoordinateTools *Position::coordinateTool;
+
+int Position::width;
+
+int Position::height;
+
+World *Position::world;
+
 const int Position::COMPASS[8][2] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 
 Position::Position(const int i, const int j)

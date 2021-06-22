@@ -6,6 +6,8 @@
 #include <iostream>
 #include <string>
 
+Progress* Controller::progress;
+
 Controller::Controller(){
 }
 

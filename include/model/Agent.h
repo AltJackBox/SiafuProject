@@ -8,10 +8,10 @@
 #include <iostream>
 #include <iterator>
 
-//class Place;
-//class World;
-//class Position;
-//class Publishable;
+class Place;
+class World;
+class Position;
+class Publishable;
 
 class Agent
 {
@@ -21,7 +21,7 @@ private:
 
     static Place *getDefaultPlace(Position *pos, World *world)
     {
-        if (DEFAULT_DESTINATION == NULL)
+        if (DEFAULT_DESTINATION == nullptr)
         {
             DEFAULT_DESTINATION = new Place("StartingPosition", pos, world);
         }

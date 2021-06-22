@@ -2,7 +2,6 @@
 #define SIMULATIONDATA_H
 
 #include <iostream>
-#include <string>
 #include <fstream>
 #include <unordered_map>
 #include <vector>
@@ -55,7 +54,6 @@ protected:
 
 	virtual std::vector<std::string> getFilesByPath(const std::string path);
 
-	virtual std::vector<std::string> getFileNamesByPath(const std::string path);
 };
 
 #endif

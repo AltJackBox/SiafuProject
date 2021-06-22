@@ -7,6 +7,8 @@
 #include <iostream>
 #include <utility>
 
+World *Place::world;
+
 void Place::basicChecks(World *thisPlacesWorld)
 {
     // if (gradients == null) {
@@ -93,6 +95,7 @@ Gradient* Place::getGradient()
     {
         return temporaryGradient;
     }
+    return nullptr;
     // else
     // {
         // return (Gradient)gradients.get(pos.tostd::string());

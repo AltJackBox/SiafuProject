@@ -1,7 +1,8 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include <string>
+#include <iostream>
+#include <model/World.h>
 #include <model/CoordinateTools.h>
 
 class World;
