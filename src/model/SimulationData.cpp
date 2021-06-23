@@ -55,7 +55,7 @@ std::vector<std::string> SimulationData::getFilesByPath(const std::string dirPat
 {
     std::vector<std::string> foundFiles;
 
-    std::string pathString = path + "/" + dirPath;
+    std::string pathString = path + dirPath;
 
     std::string ext(".png");
     std::string name;
@@ -82,12 +82,12 @@ std::vector<std::string> SimulationData::getFilesByPath(const std::string dirPat
 
 std::string SimulationData::getFile(std::string path)
 {
-
-    std::ifstream file{path};
+    std::string pathString = this->path + path;
+    std::ifstream file{pathString};
     if (!file)
     {
-        std::cerr << "Your simulation data is missing " + path + ". Perhaps you opened the wrong directory?\n";
+        std::cerr << "Your simulation data is missing " + pathString + ". Perhaps you opened the wrong directory?\n";
         exit(EXIT_FAILURE);
     }
-    return path;
+    return pathString;
 }

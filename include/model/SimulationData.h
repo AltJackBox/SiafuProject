@@ -6,11 +6,11 @@
 #include <unordered_map>
 #include <vector>
 
-static const std::string PLACES_PATH = "places";
+static const std::string DEFAULT_PATH = "../../ressources/Simulation-Office/";
+
+static const std::string PLACES_PATH = "places/";
 
 static const std::string WALLS_FILE = "map/walls.png";
-
-static const std::string BACKGROUND_FILE = "map/background.png";
 
 static const std::string CONFIG_FILE = "config.xml";
 
@@ -25,15 +25,19 @@ public:
 
 	static SimulationData *getInstance(const std::string pathString)
 	{
+		//std::string defaultFilePath = DEFAULT_PATH + "config.xml";
 		std::ifstream file{pathString + "config.xml"};
+		//std::ifstream file{defaultFilePath};
 		if (!file)
 		{
 			std::cerr << "The simulation data at " + pathString + " does not exist\n";
-			return NULL;
+			//std::cerr << "The simulation data at " + defaultFilePath + " does not exist\n";
+			return nullptr;
 		}
 		else
 		{
 			return new SimulationData(pathString);
+			//return new SimulationData(DEFAULT_PATH);
 		}
 	}
 
