@@ -1,6 +1,7 @@
 #include <model/SimulationData.h>
 
 void test1(){
+
     SimulationData* sm = SimulationData::getInstance("./ressources/Simulation-Office/");
     
     std::vector<std::string> places = sm->getPlaceFiles();

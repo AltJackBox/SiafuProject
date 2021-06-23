@@ -6,7 +6,7 @@
 #include <unordered_map>
 #include <vector>
 
-static const std::string DEFAULT_PATH = "../../ressources/Simulation-Office/";
+static const std::string DEFAULT_PATH = "./ressources/Simulation-Office/";
 
 static const std::string PLACES_PATH = "places/";
 

@@ -67,6 +67,15 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
     return placePoints;
 }
 
+void showPlacePoints(std::vector<Position*> pos, std::string name) {
+        std::cout<< name + "\n";
+        int index = 0;
+		while (index != pos.size()) {
+            std::cout<< pos[index]->toString() + " ";
+		}
+        std::cout<< "\n";	
+}
+
 void World::buildWalls()
 {
     int width, height;
@@ -161,17 +170,17 @@ void World::freezeInfoFields()
 
 void World::createPlaces()
 {
-    try
-    {
+    // try
+    // {
 
         //worldModel = Simulation.Office.worldModel
-    }
-    catch (std::exception &e)
-    {
-        std::cerr << "RuntimeException Can't instantiate the world model\n";
-    }
+    // }
+    // catch (std::exception &e)
+    // {
+    //     std::cerr << "RuntimeException Can't instantiate the world model\n";
+    // }
     places = createPlacesFromImages();
-    worldModel->createPlaces(places);
+    //worldModel->createPlaces(places);
 }
 
 std::vector<Place *> World::createPlacesFromImages()
@@ -184,6 +193,7 @@ std::vector<Place *> World::createPlacesFromImages()
     {
         std::string filename = fileList[index];
         std::vector<Position *> placePoints = readPlacePoints(filename);
+        showPlacePoints(placePoints, filename);
         int indexVec = 0;
         Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
@@ -226,7 +236,7 @@ World::World(Simulation *simulation, SimulationData *simData)
     // this->simulationConfig = simData->getConfigFile();
     this->worldName = "Siafu Offices, Heidelberg, Germany";
 
-    Agent::resetAgents();
+    // Agent::resetAgents();
 
     Controller::getProgress()->reportWorldCreation(worldName);
 
@@ -234,13 +244,13 @@ World::World(Simulation *simulation, SimulationData *simData)
 
     initializeCoordinates();
 
-    createTime();
+    // createTime();
 
     createPlaces();
 
-    createPeople();
+    // createPeople();
 
-    freezeInfoFields();
+    // freezeInfoFields();
 }
 
 std::string World::getWorldName()

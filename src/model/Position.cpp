@@ -4,7 +4,7 @@
 #include <iostream>
 #include <cmath>
 
-bool Position::initialized;
+bool Position::initialized = false;
 
 CoordinateTools *Position::coordinateTool;
 

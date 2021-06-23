@@ -23,11 +23,16 @@ TEST2_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DI
 
 TEST3=t_SimulationData
 TEST3_DEP=$(OBJ_DIR)/model/SimulationData.o $(OBJ_DIR)/model/test/t_SimulationData.o
+
+TEST4=t_World
+TEST4_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
+	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
+	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/model/test/t_World.o
 	
 
 all: build test
 
-test: $(OBJS) $(BIN_DIR)/$(TEST3)
+test: $(OBJS) $(BIN_DIR)/$(TEST3) $(BIN_DIR)/$(TEST4)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
@@ -44,6 +49,10 @@ $(BIN_DIR)/$(TEST2) : $(TEST2_DEP)
 $(BIN_DIR)/$(TEST3) : $(TEST3_DEP)
 	@mkdir -p $(@D)
 	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST3) $^ -lstdc++fs
+
+$(BIN_DIR)/$(TEST4) : $(TEST4_DEP)
+	@mkdir -p $(@D)
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST4) $^ -lstdc++fs -lpthread
 
 -include $(DEPENDENCIES)
 
