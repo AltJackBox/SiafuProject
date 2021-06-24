@@ -55,7 +55,7 @@ void Simulation::tickTime()
 void Simulation::operator()()
 {
 	this->world = new World(this, simData);
-	this->time = world->getTime();
+	// this->time = world->getTime();
 	this->time = new Calendar();
 	this->iterationStep = 10;
 	// this->agentModel = world->getAgentModel();
@@ -68,12 +68,11 @@ void Simulation::operator()()
 	int day = 0;
 	while (!isEnded())
 	{
-		
 		if (!isPaused())
 		{
 			// worldModel->doIteration(world->getPlaces());
 			// agentModel->doIteration(world->getPeople());
-			//contextModel->doIteration(world->getOverlays());
+			// contextModel->doIteration(world->getOverlays());
 			if (time->getMin() == 0 && time->getSec() == 0){
 				std::cout << time->getHour() << ":" << time->getMin() << "\n";
 				if (time->getHour() == 0)
