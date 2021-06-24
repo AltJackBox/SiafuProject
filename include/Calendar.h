@@ -1,6 +1,8 @@
 #ifndef CALENDAR_H
 #define CALENDAR_H
 
+#include <iostream>
+
 class Calendar
 {
 
@@ -31,6 +33,8 @@ public:
     int getMin();
 
     int getHour();
+
+    std::string toString();
 };
 
 #endif

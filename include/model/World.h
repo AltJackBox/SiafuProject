@@ -111,20 +111,6 @@ public:
 
     Calendar *getTime();
 
-    //Trackable findAnythingNear(Position pos, bool visibleOnly);
-
-    // Trackable findAgentNear(final Position pos, final boolean visibleOnly);
-
-    //Trackable findPlaceNear(final Position pos, final boolean visibleOnly);
-
-    //Trackable findNearOutOf(Position pos, final Collection<? extends Trackable> candidates, final int distance, final boolean visibleOnly);
-
-    //std::vector<Trackable> findAllAgentsNear(Position pos, int distance, bool visibleOnly);
-
-    //std::vector<Trackable> findAllPlacesNear(Position pos, int distance, bool visibleOnly);
-
-    //std::vector<Trackable> findAllNearOutOf(Position pos, final Collection<? extends Trackable> candidates, final int distance, final boolean visibleOnly);
-
     Place *getPlaceByName(std::string name);
 
     Place *getPlaceByPosition(Position *pos);

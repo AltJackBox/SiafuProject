@@ -44,7 +44,7 @@ Position::Position(Position *p)
 
 std::string Position::toString()
 {
-    return i + "." + j;
+    return std::to_string(i) + "." + std::to_string(j);
 }
 
 Position *Position::calculateMove(const int rawDir)

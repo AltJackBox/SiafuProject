@@ -67,15 +67,15 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
     return placePoints;
 }
 
-// void showPlacePoints(std::vector<Position*> pos, std::string name) {
-//         std::cout<< name + "\n";
-//         int index = 0;
-// 		while (index != pos.size()) {
-//             std::cout<< pos[index]->getRow() << "." << pos[index]->getCol() << " ";
-//             index++;
-// 		}
-//         std::cout<< "\n";	
-// }
+void showPlacePoints(std::vector<Position*> pos, std::string name) {
+        std::cout<< name + "\n";
+        int index = 0;
+		while (index != pos.size()) {
+            std::cout<< pos[index]->toString() << " ";
+            index++;
+		}
+        std::cout<< "\n";	
+}
 
 void World::buildWalls()
 {
@@ -197,7 +197,7 @@ std::vector<Place *> World::createPlacesFromImages()
     {
         std::string filename = fileList[index];
         std::vector<Position *> placePoints = readPlacePoints(filename);
-        // showPlacePoints(placePoints, filename);
+        showPlacePoints(placePoints, filename);
         int indexVec = 0;
         Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
@@ -240,7 +240,7 @@ World::World(Simulation *simulation, SimulationData *simData)
     // this->simulationConfig = simData->getConfigFile();
     this->worldName = "Siafu Offices, Heidelberg, Germany";
 
-    // Agent::resetAgents();
+    Agent::resetAgents();
 
     Controller::getProgress()->reportWorldCreation(worldName);
 
@@ -248,7 +248,7 @@ World::World(Simulation *simulation, SimulationData *simData)
 
     initializeCoordinates();
 
-    // createTime();
+    createTime();
 
     createPlaces();
 

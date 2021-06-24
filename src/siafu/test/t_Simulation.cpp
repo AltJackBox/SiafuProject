@@ -4,8 +4,8 @@
 #include <iostream>
 
 void test1(){
-    Controller* controller = new Controller("","1");
-    Simulation* simulation = new Simulation("1",controller);
+    Controller* controller = new Controller("","./ressources/Simulation-Office/");
+    //Simulation* simulation = new Simulation("1",controller);
     std::cout << "Test 1 passed\n";
 }   
 

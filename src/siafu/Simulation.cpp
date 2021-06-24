@@ -21,10 +21,10 @@ Simulation::Simulation(std::string simulationPath, Controller *control)
 
 	// World.setCacheSize(control.getSiafuConfig().getInt(
 	// 	"ui.gradientcache.size"));
-
 }
 
-void Simulation::launchSimulation(){
+void Simulation::launchSimulation()
+{
 	std::thread t1(&Simulation::operator(), this);
 	t1.join();
 }
@@ -56,6 +56,7 @@ void Simulation::operator()()
 {
 	this->world = new World(this, simData);
 	this->time = world->getTime();
+	this->time = new Calendar();
 	this->iterationStep = 10;
 	// this->agentModel = world->getAgentModel();
 	// this->worldModel = world->getWorldModel();
@@ -64,23 +65,37 @@ void Simulation::operator()()
 
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;
+	int day = 0;
 	while (!isEnded())
 	{
-		control->endSimulator();
-			if (!isPaused())
-			{
-				tickTime();
-				worldModel->doIteration(world->getPlaces());
-				agentModel->doIteration(world->getPeople());
-				//contextModel->doIteration(world->getOverlays());
+		
+		if (!isPaused())
+		{
+			// worldModel->doIteration(world->getPlaces());
+			// agentModel->doIteration(world->getPeople());
+			//contextModel->doIteration(world->getOverlays());
+			if (time->getMin() == 0 && time->getSec() == 0){
+				std::cout << time->getHour() << ":" << time->getMin() << "\n";
+				if (time->getHour() == 0)
+				{
+					std::cout << "DAY " << day << "\n";
+					day++;
+				}
 			}
+			tickTime();
+			if (day > 2)
+			{
+				std::cout << day << "\n";
+				control->endSimulator();
+			}
+		}
 	}
 	simulationRunning = false;
 
 	control->getProgress()->reportSimulationEnded();
 }
 
-World* Simulation::getWorld()
+World *Simulation::getWorld()
 {
 	return world;
 }

@@ -32,7 +32,7 @@ TEST4_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DI
 
 all: build test
 
-test: $(OBJS) $(BIN_DIR)/$(TEST3) $(BIN_DIR)/$(TEST4)
+test: $(OBJS) $(BIN_DIR)/$(TEST2)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)

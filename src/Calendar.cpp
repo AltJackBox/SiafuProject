@@ -44,3 +44,7 @@ int Calendar::getMin(){
 int Calendar::getHour(){
     return hour;
 }
+
+std::string Calendar::toString() {
+    return std::to_string(hour) + ":" + std::to_string(minute) + ":" + std::to_string(second);
+}
