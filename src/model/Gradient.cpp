@@ -18,31 +18,31 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     {
         for (int j = 0; j < w; j++)
         {
-            distance[i * h + j] = UNREACHABLE;
+            distance[i * w + j] = UNREACHABLE;
         }
     }
     std::set<Position *> pending;
 
     std::set<Position *> next;
 
-    distance[center->getRow() * h + center->getCol()] = 0;
+    distance[center->getRow() * w + center->getCol()] = 0;
     pending.insert(center);
 
     while (!doneCalculating)
     {
         for (Position *pos : pending)
         {
-            int distanceStraight = distance[pos->getRow() * h + pos->getCol()] + STRAIGHT_DISTANCE;
-            int distanceDiagonal = distance[pos->getRow() * h + pos->getCol()] + DIAGONAL_DISTANCE;
+            int distanceStraight = distance[pos->getRow() * w + pos->getCol()] + STRAIGHT_DISTANCE;
+            int distanceDiagonal = distance[pos->getRow() * w + pos->getCol()] + DIAGONAL_DISTANCE;
 
             for (int dir = 0; dir < POSSIBLE_DIRS; dir += 2)
             {
                 try
                 {
                     Position *newPos = pos->calculateMove(dir);
-                    if (distanceStraight < distance[newPos->getRow() * h + newPos->getCol()])
+                    if (distanceStraight < distance[newPos->getRow() * w + newPos->getCol()])
                     {
-                        distance[newPos->getRow() * h + newPos->getCol()] = distanceStraight;
+                        distance[newPos->getRow() * w + newPos->getCol()] = distanceStraight;
                         next.insert(newPos);
                     }
                 }
@@ -57,9 +57,9 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                 try
                 {
                     Position *newPos = pos->calculateMove(dir);
-                    if (distanceDiagonal < distance[newPos->getRow() * h + newPos->getCol()])
+                    if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()])
                     {
-                        distance[newPos->getRow() * h + newPos->getCol()] = distanceDiagonal;
+                        distance[newPos->getRow() * w + newPos->getCol()] = distanceDiagonal;
                         next.insert(newPos);
                     }
                 }
@@ -122,7 +122,7 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
 {
 
     std::vector<int> optimalDirs(POSSIBLE_DIRS);
-    int min = distance[pos->getRow() * h + pos->getCol()];
+    int min = distance[pos->getRow() * w + pos->getCol()];
     int grad;
 
     if (min == 0)
@@ -137,7 +137,7 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
         try
         {
             aux = pos->calculateMove(dir);
-            grad = distance[aux->getRow() * h + aux->getCol()];
+            grad = distance[aux->getRow() * w + aux->getCol()];
             if (grad == min)
             {
                 optimalDirs.push_back(dir);
@@ -167,5 +167,5 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
 
 int Gradient::distanceFrom(Position *pos)
 {
-    return distance[pos->getRow() * h + pos->getCol()];
+    return distance[pos->getRow() * w + pos->getCol()];
 }
