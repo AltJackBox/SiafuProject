@@ -47,13 +47,13 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
     {
         for (int x = 0; x < width; x++)
         {
-            index = (x * width + y);
+            index = (y * width + x);
             if (image[index] == 0)
             {
                 Position *attractor;
                 try
                 {
-                    attractor = new Position(x, y);
+                    attractor = new Position(y, x);
                     placePoints.push_back(attractor);
                 }
                 catch (std::exception const &e)
@@ -67,14 +67,15 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
     return placePoints;
 }
 
-void showPlacePoints(std::vector<Position*> pos, std::string name) {
-        std::cout<< name + "\n";
-        int index = 0;
-		while (index != pos.size()) {
-            std::cout<< pos[index]->toString() + " ";
-		}
-        std::cout<< "\n";	
-}
+// void showPlacePoints(std::vector<Position*> pos, std::string name) {
+//         std::cout<< name + "\n";
+//         int index = 0;
+// 		while (index != pos.size()) {
+//             std::cout<< pos[index]->getRow() << "." << pos[index]->getCol() << " ";
+//             index++;
+// 		}
+//         std::cout<< "\n";	
+// }
 
 void World::buildWalls()
 {
@@ -88,6 +89,9 @@ void World::buildWalls()
         return;
     }
 
+    this->width = width;
+    this->height = height;
+
     walls = new bool[height * width];
 
     size_t index;
@@ -95,7 +99,7 @@ void World::buildWalls()
     {
         for (int x = 0; x < width; x++)
         {
-            index = (x * width + y);
+            index = (y * width + x);
             walls[index] = (image[index] == COLOR_WHITE);
         }
     }
@@ -193,7 +197,7 @@ std::vector<Place *> World::createPlacesFromImages()
     {
         std::string filename = fileList[index];
         std::vector<Position *> placePoints = readPlacePoints(filename);
-        showPlacePoints(placePoints, filename);
+        // showPlacePoints(placePoints, filename);
         int indexVec = 0;
         Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
@@ -270,7 +274,7 @@ int World::getWidth()
 
 bool World::isAWall(Position *pos)
 {
-    return walls[pos->getCol() * width + pos->getRow()];
+    return walls[pos->getRow() * width + pos->getCol()];
 }
 
 std::vector<Agent *> World::getPeople()
