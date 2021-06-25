@@ -1,17 +1,20 @@
 #ifndef BASEWORLDMODEL_H
 #define BASEWORLDMODEL_H
 
+#include <vector>
+
 
 class World;
+class Place;
 
 class BaseWorldModel {
 	
 	protected:
-    World world;
+    World* world;
 
 	public:
 	BaseWorldModel();
-    BaseWorldModel(const World world) {
+    BaseWorldModel(World* world) {
 		this->world = world;
 	}
 

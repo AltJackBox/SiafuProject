@@ -72,14 +72,14 @@ Position *Place::getPos()
     return pos;
 }
 
-void Place::set(std::string key, Publishable value)
+void Place::set(std::string key, Publishable* value)
 {
-    std::pair<std::string, Publishable> pair;
+    std::pair<std::string, Publishable*> pair;
     pair = std::make_pair(key, value);
     info.insert(pair);
 }
 
-Publishable Place::get(std::string key)
+Publishable* Place::get(std::string key)
 {
     if (info.find(key) == info.end())
     {

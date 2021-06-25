@@ -60,8 +60,9 @@ public:
 
     int getTimeInSeconds();
 
-
     std::string toString();
+
+    std::string getType() override;
 
 };
 

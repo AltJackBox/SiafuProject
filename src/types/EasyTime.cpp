@@ -94,3 +94,8 @@ std::string EasyTime::toString()
 {
     return hour + ":" + minute;
 }
+
+std::string EasyTime::getType()
+{
+    return "EasyType";
+}

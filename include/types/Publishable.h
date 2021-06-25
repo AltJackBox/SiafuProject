@@ -1,9 +1,12 @@
 #ifndef PUBLISHABLE_H
 #define PUBLISHABLE_H
 
+#include <string>
+
 class Publishable
 {
-    // Empty interface, we do not need flatten() method
+    public:
+    virtual std::string getType();
 };
 
 #endif

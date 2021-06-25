@@ -25,7 +25,7 @@ private:
 
 	bool visible = true;
 
-	std::map<std::string, Publishable> info;
+	std::map<std::string, Publishable*> info;
 
 	void basicChecks(World *thisPlacesWorld);
 
@@ -61,9 +61,9 @@ public:
 
 	Position *getPos();
 
-	void set(std::string key, Publishable value);
+	void set(std::string key, Publishable* value);
 
-	Publishable get(std::string key);
+	Publishable* get(std::string key);
 
 	Gradient *getGradient();
 
