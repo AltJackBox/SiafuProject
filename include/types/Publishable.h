@@ -7,6 +7,7 @@ class Publishable
 {
     public:
     virtual std::string getType();
+    virtual std::string toString();
 };
 
 #endif

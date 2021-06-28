@@ -4,21 +4,24 @@
 #include <vector>
 
 class World;
+class Agent;
 
-class BaseAgentModel {
+class BaseAgentModel
+{
 
-	protected:
-     World world;
+protected:
+	World *world;
 
-	public:
+public:
 	BaseAgentModel();
-    BaseAgentModel(const World world) {
+	BaseAgentModel(World *world)
+	{
 		this->world = world;
 	}
 
-	virtual std::vector<Agent*> createAgents();
+	virtual std::vector<Agent *> createAgents();
 
-	virtual void doIteration(std::vector<Agent*> agents);
+	virtual void doIteration(std::vector<Agent *> agents);
 };
 
 #endif

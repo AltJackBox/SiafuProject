@@ -15,7 +15,7 @@ class BooleanType : public Publishable {
     
     BooleanType(const bool val);
 
-    std::string toString();
+    std::string toString() override;
 
 	bool getValue();
 

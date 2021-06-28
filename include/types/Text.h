@@ -13,7 +13,7 @@ private:
 public:
     Text(const std::string text);
 
-    std::string toString();
+    std::string toString() override;
 
     std::string getText();
 

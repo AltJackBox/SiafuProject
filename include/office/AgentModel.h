@@ -7,13 +7,12 @@
 class Place;
 class World;
 
-
 class AgentModel : public BaseAgentModel
 {
 
 private:
     std::string lastHandleInfectionExecution;
-    std::string path = System.getProperty("user.home");
+    //std::string path = System.getProperty("user.home");
 
     std::string healthy = "Healthy";
     std::string infected = "Infected";
@@ -24,464 +23,31 @@ private:
     int day = 1;
 
     /** The door to the places. */
-    Place* restHomeDoor;
+    Place *restHomeDoor;
     // Place apartmentOneDoor;
     // Place apartmentTwoDoor;
-    Place* apartmentThreeDoor;
-    Place* houseDoor;
+    Place *apartmentThreeDoor;
+    Place *houseDoor;
 
-    /**
-	 * Instantiates this agent model.
-	 * 
-	 * @param world the simulation's world
-	 */
-public:
-    AgentModel(const World* world)
-    {
-        super(world);
-        try
-        {
-            restHomeDoor = world.getPlacesOfType("RestHomeEntrance").iterator().next();
-            //apartmentOneDoor = world.getPlacesOfType("ApartmentOneEntrance").iterator().next();
-            //apartmentTwoDoor = world.getPlacesOfType("ApartmentTwoEntrance").iterator().next();
-            //apartmentThreeDoor = world.getPlacesOfType("ApartmentThreeEntrance").iterator().next();
-            //houseDoor = world.getPlacesOfType("HouseEntrance").iterator().next();
-        }
-        catch (PlaceTypeUndefinedException e)
-        {
-            throw new RuntimeException("One or more doors are undefined", e);
-        }
-    }
+    void createWorker(const std::vector<Agent *> people, const std::string type, const std::string bedLocation, const std::string seatLocation);
 
-    /**
-	 * Create the agents for the simulation. 
-	 * 
-	 * @return the created agents.
-	 */
-    @Override public ArrayList<Agent> createAgents()
-    {
-        ArrayList<Agent> people = new ArrayList<Agent>(POPULATION);
-        createWorker(people, "RestHomeResident", "RestHomeBeds", "RestHomeSeats");
-        //createWorker(people, "Student", "StudentDesk");
-        return people;
-    }
+    void handleInfection(std::vector<Agent *> agents, EasyTime *now);
 
-    /**
-	 * This method creates all the people for the simulation.
-	 * 
-	 * @param people the array where you need to put your created people
-	 * @param type the type of person
-	 * @param bedLocation the location of bed 
-	 * @param seatLocation the location of seat
-	 */
-private
-    void createWorker(final ArrayList<Agent> people, final std::string type, final std::string bedLocation, final std::string seatLocation)
-    {
-        Iterator<Place> bedIt;
-        Iterator<Place> seatIt;
-        try
-        {
-            bedIt = world.getPlacesOfType(bedLocation).iterator();
-            seatIt = world.getPlacesOfType(seatLocation).iterator();
-        }
-        catch (PlaceTypeUndefinedException e)
-        {
-            throw new RuntimeException("No beds or seats defined", e);
-        }
+    void handlePersonBodySensors(Agent *a);
 
-        int i = 0;
-        while (bedIt.hasNext() && seatIt.hasNext())
-        {
-            Place desk = bedIt.next();
-            Place seat = seatIt.next();
+    void handlePerson(Agent *a, EasyTime *now);
 
-            Agent a = new Agent(type + " - " + (i + 1), desk.getPos(), "HumanBlue", world);
-            a.setVisible(true);
-            EasyTime wakeUpTime = new EasyTime(AVERAGE_WAKE_UP_TIME).blur(WAKE_UP_START_BLUR);
-            EasyTime sleepTime = new EasyTime(wakeUpTime).shift(AVERAGE_WAKE_HOURS, 0).blur(SLEEP_END_BLUR);
-            EasyTime toiletInterval = new EasyTime(AVERAGE_TOILET_INTERVAL).blur(TOILET_BLUR);
+    void beAtGlobalMeeting(Agent *a);
 
-            a.set(TYPE, new Text(type));
-            a.set(SEAT, seat);
-            a.set(DESK, desk);
-            a.set(WAKE_UP_TIME, wakeUpTime);
-            a.set(SLEEP_TIME, sleepTime);
-            a.set(ACTIVITY, Activity.LEAVING_WORK);
-            a.set(TOILET_INTERVAL, toiletInterval);
-            a.set(NEXT_TOILET_VISIT, new EasyTime(wakeUpTime).shift(toiletInterval));
-            a.set(DESIRED_TOILET, new Text("None"));
-            a.set(NEXT_EVENT_TIME, new Text("None"));
-            a.set(TOILET_DURATION, new Text("None"));
-            a.set(WAITING_PLACE, new Text("None"));
-            a.set(EVENT, new Text("None"));
-            a.set(TEMPORARY_DESTINATION, new Text("None"));
+    void goToGlobalMeeting(Agent *a);
 
-            a.set(BODYTEMPERATURE, new Text("36.5"));   // ºC
-            a.set(BLOODPRESSURE, new Text("120 / 80")); // mmHg / mmHg
-            a.set(BLOODOXYGEN, new Text("95.3"));       // %
-            //a.set(GLUCOSE, new Text("90.1")); // mg/dL
-            //a.set(PACEMAKERACTIVE, new Text("0"));
+    void handleEvent(Agent *a);
 
-            a.set(FEVER, boolSort(FEVER));
-            a.set(FEVER_DURATION, intSort(FEVER_DURATION));
+    void beAtToilet(Agent *a, EasyTime *now);
 
-            a.set(SYMPTOMS, boolSort(SYMPTOMS));
-            a.set(SYMPTOMS_DURATION, intSort(SYMPTOMS_DURATION));
-            a.set(SYMPTOMS_DAYS_TO_START, intSort(SYMPTOMS_DAYS_TO_START));
+    void arriveAtToilet(Agent *a, EasyTime* now);
 
-            a.set(ABFC_USE_OF_N95_MASK, boolSort(ABFC_USE_OF_N95_MASK));
-            a.set(AAFC_USE_OF_N95_MASK, boolSort(AAFC_USE_OF_N95_MASK));
-
-            a.set(ABFC_USE_OF_OTHER_MASK, boolSort(ABFC_USE_OF_OTHER_MASK));
-            a.set(AAFC_USE_OF_OTHER_MASK, boolSort(AAFC_USE_OF_OTHER_MASK));
-
-            a.set(ABFC_USE_OF_EYE_PROTECTION, boolSort(ABFC_USE_OF_EYE_PROTECTION));
-            a.set(AAFC_USE_OF_EYE_PROTECTION, boolSort(AAFC_USE_OF_EYE_PROTECTION));
-
-            a.set(ABFC_WASH_HANDS, boolSort(ABFC_WASH_HANDS));
-            a.set(AAFC_WASH_HANDS, boolSort(AAFC_WASH_HANDS));
-
-            a.set(ABFC_PHYSICAL_DISTANCE, intSort(ABFC_PHYSICAL_DISTANCE));
-            a.set(AAFC_PHYSICAL_DISTANCE, intSort(AAFC_PHYSICAL_DISTANCE));
-
-            a.set(SITUATION, new Text(healthy));
-            a.set(INFECTION_DETECTED, new Text(std::string.valueOf(false)));
-            a.set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(0)));
-            a.set(INFECTION_TIME, new Text(std::string.valueOf("")));
-
-            a.setSpeed(DEFAULT_SPEED);
-            people.add(a);
-            i++;
-        }
-    }
-
-    /**
-	 * Handle the agents by checking if they need to respond to an event, go
-	 * to the toilet or go/come home.
-	 * 
-	 * @param agents the people in the simulation
-	 */
-    @Override public void doIteration(final Collection<Agent> agents)
-    {
-        Calendar time = world.getTime();
-        EasyTime now = new EasyTime(time.get(Calendar.HOUR_OF_DAY), time.get(Calendar.MINUTE));
-
-        handleInfection(agents, now);
-
-        Iterator<Agent> peopleIt = agents.iterator();
-        while (peopleIt.hasNext())
-        {
-            Agent a = peopleIt.next();
-            handlePerson(a, now);
-            handlePersonBodySensors(a);
-        }
-    }
-
-    /**
-	 * Handle the people in the simulation.
-	 * 
-	 * @param agents the agents to handle
-	 * @param now the current time
-	 */
-private
-    void handleInfection(Collection<Agent> agents, EasyTime now)
-    {
-
-        if (lastHandleInfectionExecution == null)
-        {
-            printDayInfo();
-            Iterator<Agent> peopleIt = agents.iterator();
-            while (peopleIt.hasNext())
-            {
-                Agent a = peopleIt.next();
-                if (agentName(a).equals("2"))
-                {
-                    print("Agent 2 is infected", now);
-                    infect(a, now, -1);
-                }
-            }
-        }
-
-        if (lastHandleInfectionExecution == null || !lastHandleInfectionExecution.equals(now.tostd::string()))
-        {
-
-            if (now.tostd::string().equals(new EasyTime(0, 0).tostd::string()))
-            {
-                day++;
-                writeDailyData(agents);
-                printDayInfo();
-            }
-
-            //The 1 day delay is due to the exams
-            isInfectionDetected(agents, now);
-
-            increaseDaysAfterInfection(agents, now);
-
-            infectingOthers(agents, now);
-            cure(agents, now);
-
-            //writeData(agents, now);
-
-            Agent[] aa = agents.toArray(new Agent[agents.size()]);
-            for (int i = 0; i < aa.length; i++)
-            {
-                for (int j = i + 1; j < aa.length; j++)
-                {
-                    if (agentCanInfectOthers(aa[i]) && agentCanBeInfected(aa[j]))
-                    {
-                        willTheAgentBeInfected(aa[i], aa[j], now);
-                    }
-                    else if (agentCanInfectOthers(aa[j]) && agentCanBeInfected(aa[i]))
-                    {
-                        willTheAgentBeInfected(aa[j], aa[i], now);
-                    }
-                }
-            }
-            lastHandleInfectionExecution = now.tostd::string();
-        }
-    }
-
-    /**
-	 * Handle the body sensors in the simulation.
-	 * 
-	 * @param a the agent to handle
-	 */
-private
-    void handlePersonBodySensors(final Agent a)
-    {
-
-        //The studied medical model that was proposed by health professionals must be developed.
-        //Health values must be changed following the proposed standards.
-        //Remember that asymptomatics have no significant changes.
-        //Remember the probability of fever and others.
-
-        Random rand = new Random();
-
-        double bloodOxygen = Double.parseDouble(a.get(BLOODOXYGEN).tostd::string().replace(',', '.'));
-        bloodOxygen = bloodOxygen < 95 ? bloodOxygen + rand.nextDouble() : bloodOxygen - rand.nextDouble();
-        a.set(BLOODOXYGEN, new Text(std::string.format("%.2f", bloodOxygen)));
-
-        double bodytemperature = Double.parseDouble(a.get(BODYTEMPERATURE).tostd::string().replace(',', '.'));
-        bodytemperature = bodytemperature < 36.5 ? bodytemperature + rand.nextDouble() : bodytemperature - rand.nextDouble();
-        a.set(BODYTEMPERATURE, new Text(std::string.format("%.2f", bodytemperature)));
-
-        //double glucose = Double.parseDouble(a.get(GLUCOSE).tostd::string().replace(',', '.'));
-        //glucose = glucose < 95 ? glucose + rand.nextDouble() : glucose - rand.nextDouble();
-        //a.set(GLUCOSE, new Text(std::string.format("%.2f",glucose)));
-    }
-
-    /**
-	 * Handle the people in the simulation.
-	 * 
-	 * @param a the agent to handle
-	 * @param now the current time
-	 */
-private
-    void handlePerson(final Agent a, final EasyTime now)
-    {
-        if (!a.isOnAuto())
-        {
-            return; // This guy's being managed by the user interface
-        }
-        try
-        {
-            switch ((Activity)a.get(ACTIVITY))
-            {
-            case RESTING:
-                if (now.isAfter((EasyTime)a.get(WAKE_UP_TIME)) && now.isBefore((EasyTime)a.get(SLEEP_TIME)))
-                {
-                    goToDesk(a);
-                    a.set(NEXT_TOILET_VISIT, new EasyTime(((EasyTime)a.get(WAKE_UP_TIME))).shift((EasyTime)a.get(TOILET_INTERVAL)));
-                }
-                break;
-            case LEAVING_WORK:
-                if (a.isAtDestination())
-                {
-                    goToSleep(a);
-                }
-                break;
-            case GOING_2_DESK:
-                if (a.isAtDestination())
-                {
-                    beAtDesk(a);
-                }
-                break;
-            case GOING_2_TOILET:
-                if (a.isAtDestination())
-                {
-                    lineInToilet(a, now);
-                }
-                break;
-            case GOING_2_GLOBAL_LUNCH:
-                if (a.isAtDestination())
-                {
-                    beAtGlobalMeeting(a);
-                }
-                break;
-            case AT_DESK:
-                //a.wanderAround((Place) (a.get(WAITING_PLACE)), INLINE_WANDER);
-                if (now.isAfter((EasyTime)a.get(SLEEP_TIME)) || now.isIn(new TimePeriod(new EasyTime(0, 0), (EasyTime)a.get(WAKE_UP_TIME))))
-                {
-                    goHome(a);
-                }
-                handleEvent(a);
-                if (isTimeForToilet(a, now))
-                {
-                    goToToilet(a);
-                }
-                break;
-            case ENTERING_TOILET:
-                if (a.isAtDestination())
-                {
-                    arriveAtToilet(a, now);
-                }
-                break;
-
-            case IN_TOILET:
-                beAtToilet(a, now);
-                break;
-            default:
-                throw new RuntimeException("Unknown Activity");
-            }
-        }
-        catch (InfoUndefinedException e)
-        {
-            throw new RuntimeException("Unknown info requested for " + a, e);
-        }
-    }
-
-    /**
-	 * Make the agent stay in the room.
-	 * 
-	 * @param a the agent that's in the meeting
-	 */
-private
-    void beAtGlobalMeeting(final Agent a)
-    {
-        if (((Text)a.get(EVENT)).tostd::string().equalsIgnoreCase("GlobalMeetingEnded"))
-        {
-            a.set(EVENT, new Text("None"));
-            goToDesk(a);
-        }
-    }
-
-    /**
-	 * Head for the event in the meeting room.
-	 * 
-	 * @param a the agent that should go
-	 */
-private
-    void goToGlobalMeeting(final Agent a)
-    {
-        //a.setImage("HumanYellow");
-        a.setDestination((Place)a.get("TemporaryDestination"));
-        a.set(ACTIVITY, Activity.GOING_2_GLOBAL_LUNCH);
-    }
-
-    /**
-	 * See if the agent has an event, and react to it.
-	 * 
-	 * @param a the agent we need to check
-	 */
-private
-    void handleEvent(final Agent a)
-    {
-        Object e = a.get(EVENT);
-        if (e.equals(new Text("None")))
-        {
-            return;
-        }
-
-        std::string event = e.tostd::string();
-        if (event.equalsIgnoreCase("ConferenceRoomMeeting"))
-        {
-            goToGlobalMeeting(a);
-        }
-    }
-
-    /**
-	 * Have the agent spend some time in the toilet.
-	 * 
-	 * @param a the agent in need
-	 * @param now the current simulation time
-	 */
-private
-    void beAtToilet(final Agent a, final EasyTime now)
-    {
-        if (now.isAfter((EasyTime)(a.get(NEXT_EVENT_TIME))))
-        {
-            goToDesk(a);
-            ((Place)a.get(DESIRED_TOILET)).set("Busy", new boolType(false));
-        }
-    }
-
-    /**
-	 * Mark the agent as having reached the toilet.
-	 * 
-	 * @param a the agent in need
-	 * @param now the current simulation time
-	 */
-private
-    void arriveAtToilet(final Agent a, final EasyTime now)
-    {
-        a.set(ACTIVITY, Activity.IN_TOILET);
-        Random rand = new Random();
-        EasyTime nextEventTime = new EasyTime(now).shift(0, rand.nextInt(TOILET_VISIT_DURATION) + 1);
-        if (nextEventTime.tostd::string().equals(new EasyTime(23, 59).tostd::string()))
-        {
-            nextEventTime.shift(0, -1);
-        }
-        a.set(NEXT_EVENT_TIME, nextEventTime);
-    }
-
-    /**
-	 * Make the agent queue to enter the toilet.
-	 * 
-	 * @param a the agent in need
-	 * @param now the current time
-	 */
-private
-    void lineInToilet(final Agent a, final EasyTime now)
-    {
-        Publishable info = a.get(DESIRED_TOILET);
-        Place toilet;
-
-        if (!(info instanceof Place))
-        {
-            //try {
-            toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
-            //toilet = world.getNearestPlaceOfType("RestHomeBathroom", a.getPos());
-            //} catch (PlaceNotFoundException e) {
-            //	throw new RuntimeException(e);
-            //}
-            a.set(DESIRED_TOILET, toilet);
-            a.set(NEXT_EVENT_TIME, new EasyTime(now).shift(new EasyTime(0, MAX_WAIT_TIME)));
-        }
-        else
-        {
-            //toilet = (Place) info;
-            toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
-            a.set(DESIRED_TOILET, toilet);
-            a.set(NEXT_EVENT_TIME, new EasyTime(now).shift(new EasyTime(0, MAX_WAIT_TIME)));
-        }
-
-        if (now.isAfter((EasyTime)a.get(NEXT_EVENT_TIME)))
-        {
-            a.set(NEXT_TOILET_VISIT, new EasyTime(now).shift(0, 2 * TOILET_RETRY_BLUR).blur(TOILET_RETRY_BLUR));
-            goToDesk(a);
-        }
-        bool busy = ((boolType)toilet.get("Busy")).getValue();
-        if (busy)
-        {
-            a.wanderAround((Place)(a.get(WAITING_PLACE)), INLINE_WANDER);
-        }
-        else
-        {
-            toilet.set("Busy", new boolType(true));
-            a.setDestination(toilet);
-            a.set(ACTIVITY, Activity.ENTERING_TOILET);
-        }
-    }
+    void lineInToilet(Agent *a, EasyTime* now);
 
     /**
 	 * Return the nearest toilet from the agent.
@@ -490,7 +56,7 @@ private
 	 * @param bathroomName the name of the place
 	 */
 private
-    Place getNearestBathroomNotBusy(final Agent a, final std::string bathroomName)
+    Place* getNearestBathroomNotBusy(Agent *a, std::string bathroomName)
     {
         Iterator<Place> bathRoomIt;
         try
@@ -526,7 +92,7 @@ private
 	 * @param a the agent that just has to go
 	 */
 private
-    void goToToilet(final Agent a)
+    void goToToilet(Agent *a)
     {
         try
         {
@@ -548,7 +114,7 @@ private
 	 * @return true if the agent has to go
 	 */
 private
-    bool isTimeForToilet(final Agent a, final EasyTime now)
+    bool isTimeForToilet(Agent *a, EasyTime now)
     {
         EasyTime nextVisit = (EasyTime)a.get(NEXT_TOILET_VISIT);
         if (nextVisit.isBefore((EasyTime)a.get(WAKE_UP_TIME)))
@@ -574,7 +140,7 @@ private
 	 * @param a the lucky agent
 	 */
 private
-    void goHome(final Agent a)
+    void goHome(Agent *a)
     {
         a.setDestination((Place)a.get(DESK));
         a.set(ACTIVITY, Activity.LEAVING_WORK);
@@ -586,7 +152,7 @@ private
 	 * @param a the agent 
 	 */
 private
-    void goToSleep(final Agent a)
+    void goToSleep(Agent *a)
     {
         a.set(ACTIVITY, Activity.RESTING);
         //a.setVisible(true);
@@ -598,7 +164,7 @@ private
 	 * @param a the agent
 	 */
 private
-    void goToDesk(final Agent a)
+    void goToDesk(Agent *a)
     {
         a.set(ACTIVITY, Activity.GOING_2_DESK);
         //a.setImage("HumanBlue");
@@ -613,7 +179,7 @@ private
 	 * @param a the hardworking agent
 	 */
 private
-    void beAtDesk(final Agent a)
+    void beAtDesk(Agent *a)
     {
         a.set(ACTIVITY, Activity.AT_DESK);
     }
@@ -708,7 +274,7 @@ private
 	 * 
 	 */
 private
-    double distanceBetweenAgents(Agent a, Agent b)
+    double distanceBetweenAgents(Agent *a, Agent b)
     {
         return Math.sqrt(Math.pow(a.getPos().getRow() - b.getPos().getRow(), 2) + Math.pow(a.getPos().getCol() - b.getPos().getCol(), 2));
     }
@@ -719,7 +285,7 @@ private
 	 * @param a the agent
 	 */
 private
-    std::string agentName(Agent a)
+    std::string agentName(Agent *a)
     {
         return a.getName().substd::string(a.getName().lastIndexOf(' ') + 1);
     }
@@ -736,7 +302,7 @@ private
         Iterator<Agent> peopleIt = agents.iterator();
         while (peopleIt.hasNext())
         {
-            Agent a = peopleIt.next();
+            Agent *a = peopleIt.next();
             if (agentCanInfectOthers(a) &&
                 Integer.valueOf(a.get(DAYS_AFTER_INFECTION).tostd::string()) >= Integer.valueOf(a.get(SYMPTOMS_DAYS_TO_START).tostd::string()) &&
                 !bool.valueOf(a.get(INFECTION_DETECTED).tostd::string()))
@@ -755,7 +321,7 @@ private
 	 * @param a the agent
 	 */
 private
-    void isolateAgent(Agent a)
+    void isolateAgent(Agent *a)
     {
         // The proposal is to isolate the agent in the simulated world. For now, if the agent is isolated, he/she does not transmit to others
     }
@@ -767,7 +333,7 @@ private
 	 * @param now the current easy time
 	 */
 private
-    void infect(Agent a, EasyTime now)
+    void infect(Agent *a, EasyTime now)
     {
         a.setImage("HumanYellow");
         a.set(SITUATION, new Text(infected));
@@ -776,7 +342,7 @@ private
     }
 
 private
-    void infect(Agent a, EasyTime now, int daysAfterInfection)
+    void infect(Agent *a, EasyTime now, int daysAfterInfection)
     {
         a.setImage("HumanYellow");
         a.set(SITUATION, new Text(infected));
@@ -796,7 +362,7 @@ private
         Iterator<Agent> peopleIt = agents.iterator();
         while (peopleIt.hasNext())
         {
-            Agent a = peopleIt.next();
+            Agent *a = peopleIt.next();
             if (agentSituation(a, infected) && (Integer.valueOf(a.get(DAYS_AFTER_INFECTION).tostd::string()) == Integer.valueOf(TRANSMISSION_DAYS_TO_START)))
             {
                 a.set(SITUATION, new Text(infecting));
@@ -818,7 +384,7 @@ private
         Iterator<Agent> peopleIt = agents.iterator();
         while (peopleIt.hasNext())
         {
-            Agent a = peopleIt.next();
+            Agent *a = peopleIt.next();
             if (agentSituation(a, infecting) && (Integer.valueOf(a.get(DAYS_AFTER_INFECTION).tostd::string()) == Integer.valueOf(TRANSMISSION_DURATION) + Integer.valueOf(TRANSMISSION_DAYS_TO_START)))
             {
                 a.set(SITUATION, new Text(cured));
@@ -834,7 +400,7 @@ private
 	 * @param a the agent
 	 */
 private
-    bool agentCanInfectOthers(Agent a)
+    bool agentCanInfectOthers(Agent *a)
     {
         return agentSituation(a, infecting); // && !bool.valueOf(a.get(INFECTION_DETECTED).tostd::string());
     }
@@ -845,7 +411,7 @@ private
 	 * @param a the agent
 	 */
 private
-    bool agentCanBeInfected(Agent a)
+    bool agentCanBeInfected(Agent *a)
     {
         return agentSituation(a, healthy);
     }
@@ -857,7 +423,7 @@ private
 	 * @param situation the situation
 	 */
 private
-    bool agentSituation(Agent a, std::string situation)
+    bool agentSituation(Agent *a, std::string situation)
     {
         return a.get(SITUATION).tostd::string().equals(situation);
     }
@@ -962,7 +528,7 @@ private
         Iterator<Agent> peopleIt = agents.iterator();
         while (peopleIt.hasNext())
         {
-            Agent a = peopleIt.next();
+            Agent *a = peopleIt.next();
             if (now.tostd::string().equals(a.get(INFECTION_TIME).tostd::string()) && (agentSituation(a, infected) || agentSituation(a, infecting)))
             {
                 int daysAfterInfection = Integer.parseInt(a.get(DAYS_AFTER_INFECTION).tostd::string());
@@ -1021,7 +587,7 @@ private
             Iterator<Agent> peopleIt = agents.iterator();
             while (peopleIt.hasNext())
             {
-                Agent a = peopleIt.next();
+                Agent *a = peopleIt.next();
                 csvWriter.print(day + ",");
                 csvWriter.print(easyTime.tostd::string() + ",");
                 csvWriter.print(agentName(a) + ","); //id
@@ -1066,7 +632,7 @@ private
             Iterator<Agent> peopleIt = agents.iterator();
             while (peopleIt.hasNext())
             {
-                Agent a = peopleIt.next();
+                Agent *a = peopleIt.next();
                 healthy += agentSituation(a, this.healthy) ? 1 : 0;
                 infected += agentSituation(a, this.infected) ? 1 : 0;
                 infecting += agentSituation(a, this.infecting) ? 1 : 0;
@@ -1115,6 +681,13 @@ private
             e.printStackTrace();
         }
     }
+
+public:
+    AgentModel(World *world);
+
+    std::vector<Agent *> createAgents() override;
+
+    void doIteration(std::vector<Agent *> agents) override;
 };
 
 #endif

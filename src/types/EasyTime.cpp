@@ -1,4 +1,5 @@
 #include <types/EasyTime.h>
+#include <types/TimePeriod.h>
 
 void EasyTime::normalize()
 {
@@ -52,6 +53,27 @@ bool EasyTime::isBefore(EasyTime *t)
     return !isAfter(t);
 }
 
+bool EasyTime::isIn(TimePeriod *tp)
+{
+    EasyTime* start = tp->getStart();
+    EasyTime* end = tp->getEnd();
+
+    if (end->isAfter(start))
+    { // We went over 00h00
+
+        if (isAfter(tp->getStart()) && isBefore(tp->getEnd()))
+        {
+            return true;
+        }
+    }
+    else if (isAfter(tp->getStart()) || isBefore(tp->getEnd()))
+    {
+        return true;
+    }
+
+    return false;
+}
+
 EasyTime *EasyTime::shift(const int hours, const int minutes)
 {
     this->hour += hours;
@@ -97,5 +119,19 @@ std::string EasyTime::toString()
 
 std::string EasyTime::getType()
 {
-    return "EasyType";
+    return "EasyTime";
+}
+
+bool EasyTime::equals(Publishable *o)
+{
+
+    if (!(o->getType().compare("EasyTime") == 0))
+    {
+        return false;
+    }
+    else
+    {
+        EasyTime *et = (EasyTime *)o;
+        return (et->getHour() == hour && et->getMinute() == minute);
+    }
 }

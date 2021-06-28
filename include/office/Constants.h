@@ -3,6 +3,8 @@
 
 #include <types/EasyTime.h>
 #include <types/Publishable.h>
+#include <vector>
+#include <map>
 
 class Constants
 {
@@ -119,19 +121,19 @@ public:
     static const int LUNCH_DURATION_BLUR = 20;
 
     /** Time for the daily snack. */
-    static  EasyTime *SNACK_START;
+    static EasyTime *SNACK_START;
 
     /** Average duration of snack. */
-    static  EasyTime *SNACK_DURATION;
+    static EasyTime *SNACK_DURATION;
 
     /** Blur of the snack duration. */
     static const int SNACK_DURATION_BLUR = 10;
 
     /** Time for the daily dinner. */
-    static  EasyTime *DINNER_START;
+    static EasyTime *DINNER_START;
 
     /** Average duration of dinner. */
-    static  EasyTime *DINNER_DURATION;
+    static EasyTime *DINNER_DURATION;
 
     /** Blur of the dinner duration. */
     static const int DINNER_DURATION_BLUR = 20;
@@ -167,10 +169,10 @@ public:
     static const int WAKE_UP_START_BLUR = 30;
 
     /** The average time at which people wake up. */
-    static const EasyTime *AVERAGE_WAKE_UP_TIME;
+    static EasyTime *AVERAGE_WAKE_UP_TIME;
 
     /** The average interval between toilet visits. */
-    static const EasyTime *AVERAGE_TOILET_INTERVAL;
+    static EasyTime *AVERAGE_TOILET_INTERVAL;
 };
 
 /**
@@ -288,45 +290,38 @@ public:
     static std::string TEMPORARY_DESTINATION;
 };
 
-/**
-	 * List of possible activities. This is implemented as an enum because it
-	 * helps us in switch statements. Like the rest of the constants in this
-	 * class, they could also have been coded directly in the model
-	 */
 class Activity : public Publishable
 {
-    /** Human readable desription of the activity. */
 private:
     std::string description;
-    /**
-		 * Get the description of the activity.
-		 * 
-		 * @return a std::string describing the activity
-		 */
-
-    Activity(const std::string description)
-    {
-        this->description = description;
-    }
 
 public:
-    enum Act
-    {
-        RESTING,
-        LEAVING_WORK,
-        IN_TOILET,
-        GOING_2_TOILET,
-        GOING_2_DESK,
-        GOING_2_GLOBAL_LUNCH,
-        AT_DESK,
-        ENTERING_TOILET,
-        AT_LUNCH,
-        ENTERING_LUNCH
-    };
+    Activity(const std::string description);
 
-    std::string toString()
+    std::string toString();
+};
+
+class ActivityManager
+{
+
+private:
+    static std::map<std::string, Activity *> Activities;
+
+public:
+    static Activity *RESTING;
+    static Activity *LEAVING_WORK;
+    static Activity *IN_TOILET;
+    static Activity *GOING_2_TOILET;
+    static Activity *GOING_2_DESK;
+    static Activity *GOING_2_GLOBAL_LUNCH;
+    static Activity *AT_DESK;
+    static Activity *ENTERING_TOILET;
+    static Activity *AT_LUNCH;
+    static Activity *ENTERING_LUNCH;
+
+    static Publishable *getActivity(std::string description)
     {
-        return description;
+        return Activities.at(description);
     }
 };
 

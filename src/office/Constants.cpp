@@ -9,24 +9,24 @@ EasyTime *Constants::BREAKFAST_DURATION = new EasyTime(0, 30);
 EasyTime *Constants::LUNCH_START = new EasyTime(12, 0);
 
 /** Average duration of lunch. */
- EasyTime *Constants::LUNCH_DURATION = new EasyTime(1, 0);
+EasyTime *Constants::LUNCH_DURATION = new EasyTime(1, 0);
 
 /** Time for the daily snack. */
- EasyTime *Constants::SNACK_START = new EasyTime(16, 0);
+EasyTime *Constants::SNACK_START = new EasyTime(16, 0);
 
 /** Average duration of snack. */
- EasyTime *Constants::SNACK_DURATION = new EasyTime(0, 30);
+EasyTime *Constants::SNACK_DURATION = new EasyTime(0, 30);
 
 /** Time for the daily dinner. */
- EasyTime *Constants::DINNER_START = new EasyTime(20, 0);
+EasyTime *Constants::DINNER_START = new EasyTime(20, 0);
 
 /** Average duration of dinner. */
- EasyTime *Constants::DINNER_DURATION = new EasyTime(1, 0);
+EasyTime *Constants::DINNER_DURATION = new EasyTime(1, 0);
 
-const EasyTime *Constants::AVERAGE_WAKE_UP_TIME = new EasyTime(7, 0);
+EasyTime *Constants::AVERAGE_WAKE_UP_TIME = new EasyTime(7, 0);
 
 /** The average interval between toilet visits. */
-const EasyTime *Constants::AVERAGE_TOILET_INTERVAL = new EasyTime(4, 0);
+EasyTime *Constants::AVERAGE_TOILET_INTERVAL = new EasyTime(4, 0);
 
 /** Agent's gender. */
 std::string Fields::GENDER = "Gender";
@@ -144,3 +144,16 @@ std::string Activity::toString()
 {
     return description;
 }
+
+Activity *ActivityManager::RESTING = new Activity("Resting");
+Activity *ActivityManager::LEAVING_WORK = new Activity("LeavingWork");
+Activity *ActivityManager::IN_TOILET = new Activity("InToilet");
+Activity *ActivityManager::GOING_2_TOILET = new Activity("Going2Toilet");
+Activity *ActivityManager::GOING_2_DESK = new Activity("Going2Desk");
+Activity *ActivityManager::GOING_2_GLOBAL_LUNCH = new Activity("Going2GlobalLunch");
+Activity *ActivityManager::AT_DESK = new Activity("AtDesk");
+Activity *ActivityManager::ENTERING_TOILET = new Activity("EnteringToilet");
+Activity *ActivityManager::AT_LUNCH = new Activity("AtLunch");
+Activity *ActivityManager::ENTERING_LUNCH = new Activity("EnteringLunch");
+
+std::map<std::string, Activity *> ActivityManager::Activities = {{"Resting", RESTING}, {"LEAVING_WORK", LEAVING_WORK}, {"IN_TOILET", IN_TOILET}, {"GOING_2_TOILET", GOING_2_TOILET}, {"GOING_2_DESK", GOING_2_DESK}, {"GOING_2_GLOBAL_LUNCH", GOING_2_GLOBAL_LUNCH}, {"AT_DESK", AT_DESK}, {"ENTERING_TOILET", ENTERING_TOILET}, {"AT_LUNCH", AT_LUNCH}, {"ENTERING_TOILET", ENTERING_TOILET}};

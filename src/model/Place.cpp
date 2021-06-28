@@ -115,3 +115,7 @@ int Place::distanceFrom(Position* targetPos)
 bool Place::equals(Place* p){
     return (this->getPos()->equals(p->getPos())) && (this->getName().compare(p->getName()));
 }
+
+std::string Place::getType(){
+    return "Place";
+}
