@@ -6,6 +6,7 @@
 
 class Place;
 class World;
+class EasyTime;
 
 class AgentModel : public BaseAgentModel
 {
@@ -49,188 +50,21 @@ private:
 
     void lineInToilet(Agent *a, EasyTime* now);
 
-    /**
-	 * Return the nearest toilet from the agent.
-	 * 
-	 * @param a the agent in need
-	 * @param bathroomName the name of the place
-	 */
-private
-    Place* getNearestBathroomNotBusy(Agent *a, std::string bathroomName)
-    {
-        Iterator<Place> bathRoomIt;
-        try
-        {
-            bathRoomIt = world.getPlacesOfType(bathroomName).iterator();
-        }
-        catch (PlaceTypeUndefinedException e)
-        {
-            throw new RuntimeException("No bathroom defined", e);
-        }
-        while (bathRoomIt.hasNext())
-        {
-            Place bathroom = bathRoomIt.next();
-            if (!((boolType)bathroom.get("Busy")).getValue())
-            {
-                return bathroom;
-            }
-        }
+    Place* getNearestBathroomNotBusy(Agent *a, std::string bathroomName);
 
-        try
-        {
-            return world.getNearestPlaceOfType(bathroomName, a.getPos());
-        }
-        catch (PlaceNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        }
-    }
+    void goToToilet(Agent *a);
 
-    /**
-	 * Send the agent to the toilet.
-	 * 
-	 * @param a the agent that just has to go
-	 */
-private
-    void goToToilet(Agent *a)
-    {
-        try
-        {
-            a.setDestination(world.getNearestPlaceOfType("RestHomeBathroomEntrance", a.getPos()));
-        }
-        catch (PlaceNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        }
-        a.set(ACTIVITY, Activity.GOING_2_TOILET);
-        a.set(WAITING_PLACE, a.getDestination());
-    }
+    bool isTimeForToilet(Agent *a, EasyTime* now);
 
-    /**
-	 * Decide if it's time for this agent to pay a visit to the toilet.
-	 * 
-	 * @param a the agent to check
-	 * @param now the current time
-	 * @return true if the agent has to go
-	 */
-private
-    bool isTimeForToilet(Agent *a, EasyTime now)
-    {
-        EasyTime nextVisit = (EasyTime)a.get(NEXT_TOILET_VISIT);
-        if (nextVisit.isBefore((EasyTime)a.get(WAKE_UP_TIME)))
-        {
-            nextVisit.shift((EasyTime)a.get(TOILET_INTERVAL));
-            a.set(NEXT_TOILET_VISIT, nextVisit);
-        }
-        if (now.isAfter((EasyTime)a.get(NEXT_TOILET_VISIT)))
-        {
-            a.set(NEXT_TOILET_VISIT, new EasyTime(now).shift((EasyTime)a.get(TOILET_INTERVAL)));
-            //a.setImage("HumanGreen");
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
+    void goHome(Agent *a);
 
-    /**
-	 * Send the agent home.
-	 * 
-	 * @param a the lucky agent
-	 */
-private
-    void goHome(Agent *a)
-    {
-        a.setDestination((Place)a.get(DESK));
-        a.set(ACTIVITY, Activity.LEAVING_WORK);
-    }
+    void goToSleep(Agent *a);
 
-    /**
-	 * Send the agent to sleep
-	 * 
-	 * @param a the agent 
-	 */
-private
-    void goToSleep(Agent *a)
-    {
-        a.set(ACTIVITY, Activity.RESTING);
-        //a.setVisible(true);
-    }
+    void goToDesk(Agent *a);
 
-    /**
-	 * Send the agent to his desk.
-	 * 
-	 * @param a the agent
-	 */
-private
-    void goToDesk(Agent *a)
-    {
-        a.set(ACTIVITY, Activity.GOING_2_DESK);
-        //a.setImage("HumanBlue");
-        //a.setVisible(true);
-        a.setDestination((Place)a.get(SEAT));
-    }
+    void beAtDesk(Agent *a);
 
-    /**
-	 * Make the agent stay by his desk.
-
-	 * 
-	 * @param a the hardworking agent
-	 */
-private
-    void beAtDesk(Agent *a)
-    {
-        a.set(ACTIVITY, Activity.AT_DESK);
-    }
-
-    /**
-	 * Returns an Text(bool) value
-	 * 
-	 */
-private
-    Text boolSort(std::string op)
-    {
-        Random rand = new Random();
-        bool result = false;
-
-        switch (op)
-        {
-        case FEVER:
-            result = rand.nextDouble() < FEVER_PROBABILITY;
-            break;
-        case SYMPTOMS:
-            result = rand.nextDouble() < SYMPTOMS_PROBABILITY;
-            break;
-        case ABFC_USE_OF_N95_MASK:
-            result = rand.nextDouble() < BFC_USE_OF_N95_MASK;
-            break;
-        case AAFC_USE_OF_N95_MASK:
-            result = rand.nextDouble() < AFC_USE_OF_N95_MASK;
-            break;
-
-        case ABFC_USE_OF_OTHER_MASK:
-            result = rand.nextDouble() < BFC_USE_OF_OTHER_MASK;
-            break;
-        case AAFC_USE_OF_OTHER_MASK:
-            result = rand.nextDouble() < AFC_USE_OF_OTHER_MASK;
-            break;
-
-        case ABFC_USE_OF_EYE_PROTECTION:
-            result = rand.nextDouble() < BFC_USE_OF_EYE_PROTECTION;
-            break;
-        case AAFC_USE_OF_EYE_PROTECTION:
-            result = rand.nextDouble() < AFC_USE_OF_EYE_PROTECTION;
-            break;
-        case ABFC_WASH_HANDS:
-            result = rand.nextDouble() < BFC_WASH_HANDS;
-            break;
-        case AAFC_WASH_HANDS:
-            result = rand.nextDouble() < AFC_WASH_HANDS;
-            break;
-        }
-        return new Text(std::string.valueOf(result));
-    }
+    Text boolSort(std::string op);
 
     /**
 	 * Returns an Text(int) number
@@ -276,7 +110,7 @@ private
 private
     double distanceBetweenAgents(Agent *a, Agent b)
     {
-        return Math.sqrt(Math.pow(a.getPos().getRow() - b.getPos().getRow(), 2) + Math.pow(a.getPos().getCol() - b.getPos().getCol(), 2));
+        return Math.sqrt(Math.pow(a->getPos().getRow() - b.getPos().getRow(), 2) + Math.pow(a->getPos().getCol() - b.getPos().getCol(), 2));
     }
 
     /**
@@ -287,7 +121,7 @@ private
 private
     std::string agentName(Agent *a)
     {
-        return a.getName().substd::string(a.getName().lastIndexOf(' ') + 1);
+        return a->getName().substd::string(a->getName().lastIndexOf(' ') + 1);
     }
 
     /**
@@ -304,11 +138,11 @@ private
         {
             Agent *a = peopleIt.next();
             if (agentCanInfectOthers(a) &&
-                Integer.valueOf(a.get(DAYS_AFTER_INFECTION).tostd::string()) >= Integer.valueOf(a.get(SYMPTOMS_DAYS_TO_START).tostd::string()) &&
-                !bool.valueOf(a.get(INFECTION_DETECTED).tostd::string()))
+                Integer.valueOf(a->get(DAYS_AFTER_INFECTION).tostd::string()) >= Integer.valueOf(a->get(SYMPTOMS_DAYS_TO_START).tostd::string()) &&
+                !bool.valueOf(a->get(INFECTION_DETECTED).tostd::string()))
             {
                 infectionDetected = true;
-                a.set(INFECTION_DETECTED, new Text(std::string.valueOf(true)));
+                a->set(INFECTION_DETECTED, new Text(std::string.valueOf(true)));
                 print("Infection detected in agent " + agentName(a), easyTime);
                 isolateAgent(a);
             }
@@ -335,19 +169,19 @@ private
 private
     void infect(Agent *a, EasyTime now)
     {
-        a.setImage("HumanYellow");
-        a.set(SITUATION, new Text(infected));
-        a.set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(0)));
-        a.set(INFECTION_TIME, new Text(std::string.valueOf(now.shift(23, 55).tostd::string())));
+        a->setImage("HumanYellow");
+        a->set(SITUATION, new Text(infected));
+        a->set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(0)));
+        a->set(INFECTION_TIME, new Text(std::string.valueOf(now.shift(23, 55).tostd::string())));
     }
 
 private
     void infect(Agent *a, EasyTime now, int daysAfterInfection)
     {
-        a.setImage("HumanYellow");
-        a.set(SITUATION, new Text(infected));
-        a.set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(daysAfterInfection)));
-        a.set(INFECTION_TIME, new Text(std::string.valueOf(now.shift(23, 55).tostd::string())));
+        a->setImage("HumanYellow");
+        a->set(SITUATION, new Text(infected));
+        a->set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(daysAfterInfection)));
+        a->set(INFECTION_TIME, new Text(std::string.valueOf(now.shift(23, 55).tostd::string())));
     }
 
     /**
@@ -363,11 +197,11 @@ private
         while (peopleIt.hasNext())
         {
             Agent *a = peopleIt.next();
-            if (agentSituation(a, infected) && (Integer.valueOf(a.get(DAYS_AFTER_INFECTION).tostd::string()) == Integer.valueOf(TRANSMISSION_DAYS_TO_START)))
+            if (agentSituation(a, infected) && (Integer.valueOf(a->get(DAYS_AFTER_INFECTION).tostd::string()) == Integer.valueOf(TRANSMISSION_DAYS_TO_START)))
             {
-                a.set(SITUATION, new Text(infecting));
+                a->set(SITUATION, new Text(infecting));
                 print("Agent " + agentName(a) + " is infecting others", now);
-                a.setImage("HumanMagenta");
+                a->setImage("HumanMagenta");
             }
         }
     }
@@ -385,10 +219,10 @@ private
         while (peopleIt.hasNext())
         {
             Agent *a = peopleIt.next();
-            if (agentSituation(a, infecting) && (Integer.valueOf(a.get(DAYS_AFTER_INFECTION).tostd::string()) == Integer.valueOf(TRANSMISSION_DURATION) + Integer.valueOf(TRANSMISSION_DAYS_TO_START)))
+            if (agentSituation(a, infecting) && (Integer.valueOf(a->get(DAYS_AFTER_INFECTION).tostd::string()) == Integer.valueOf(TRANSMISSION_DURATION) + Integer.valueOf(TRANSMISSION_DAYS_TO_START)))
             {
-                a.set(SITUATION, new Text(cured));
-                a.setImage("HumanGreen");
+                a->set(SITUATION, new Text(cured));
+                a->setImage("HumanGreen");
                 print("Agent " + a + " is cured", now);
             }
         }
@@ -402,7 +236,7 @@ private
 private
     bool agentCanInfectOthers(Agent *a)
     {
-        return agentSituation(a, infecting); // && !bool.valueOf(a.get(INFECTION_DETECTED).tostd::string());
+        return agentSituation(a, infecting); // && !bool.valueOf(a->get(INFECTION_DETECTED).tostd::string());
     }
 
     /**
@@ -425,7 +259,7 @@ private
 private
     bool agentSituation(Agent *a, std::string situation)
     {
-        return a.get(SITUATION).tostd::string().equals(situation);
+        return a->get(SITUATION).tostd::string().equals(situation);
     }
 
     /**
@@ -529,16 +363,16 @@ private
         while (peopleIt.hasNext())
         {
             Agent *a = peopleIt.next();
-            if (now.tostd::string().equals(a.get(INFECTION_TIME).tostd::string()) && (agentSituation(a, infected) || agentSituation(a, infecting)))
+            if (now.tostd::string().equals(a->get(INFECTION_TIME).tostd::string()) && (agentSituation(a, infected) || agentSituation(a, infecting)))
             {
-                int daysAfterInfection = Integer.parseInt(a.get(DAYS_AFTER_INFECTION).tostd::string());
-                a.set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(daysAfterInfection + 1)));
+                int daysAfterInfection = Integer.parseInt(a->get(DAYS_AFTER_INFECTION).tostd::string());
+                a->set(DAYS_AFTER_INFECTION, new Text(std::string.valueOf(daysAfterInfection + 1)));
             }
         }
     }
 
     /**
-	 * Write in EventData.csv and in the console about new infected agents and the beginning of a new day
+	 * Write in EventData->csv and in the console about new infected agents and the beginning of a new day
 	 * 
 	 * @param event the information
 	 */
@@ -592,9 +426,9 @@ private
                 csvWriter.print(easyTime.tostd::string() + ",");
                 csvWriter.print(agentName(a) + ","); //id
 
-                csvWriter.print(std::string.valueOf(a.get(BLOODOXYGEN)).replace(',', '.') + ","); //blood oxygen
-                //csvWriter.print(a.get(BLOODPRESSURE)+","); //blood pressure
-                csvWriter.print(std::string.valueOf(a.get(BODYTEMPERATURE)).replace(',', '.') + "\r\n"); //body temperature
+                csvWriter.print(std::string.valueOf(a->get(BLOODOXYGEN)).replace(',', '.') + ","); //blood oxygen
+                //csvWriter.print(a->get(BLOODPRESSURE)+","); //blood pressure
+                csvWriter.print(std::string.valueOf(a->get(BODYTEMPERATURE)).replace(',', '.') + "\r\n"); //body temperature
             }
             csvWriter.close();
         }
@@ -636,7 +470,7 @@ private
                 healthy += agentSituation(a, this.healthy) ? 1 : 0;
                 infected += agentSituation(a, this.infected) ? 1 : 0;
                 infecting += agentSituation(a, this.infecting) ? 1 : 0;
-                infectingAndAsymptomatic += agentSituation(a, this.infecting) && !bool.valueOf(a.get(SYMPTOMS).tostd::string()) ? 1 : 0;
+                infectingAndAsymptomatic += agentSituation(a, this.infecting) && !bool.valueOf(a->get(SYMPTOMS).tostd::string()) ? 1 : 0;
                 cured += agentSituation(a, this.cured) ? 1 : 0;
             }
 

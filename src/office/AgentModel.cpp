@@ -362,10 +362,10 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
     a->set(Fields::NEXT_EVENT_TIME, nextEventTime);
 }
 
-void AgentModel::lineInToilet(Agent *a, EasyTime* now)
+void AgentModel::lineInToilet(Agent *a, EasyTime *now)
 {
-    Publishable* info = a->get(Fields::DESIRED_TOILET);
-    Place* toilet;
+    Publishable *info = a->get(Fields::DESIRED_TOILET);
+    Place *toilet;
 
     if (!(info->getType().compare("Place")))
     {
@@ -383,18 +383,18 @@ void AgentModel::lineInToilet(Agent *a, EasyTime* now)
         //toilet = (Place) info;
         toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
         a->set(Fields::DESIRED_TOILET, toilet);
-        a.set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
+        a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
     }
 
-    if (now->isAfter((EasyTime*)a->get(Fields::NEXT_EVENT_TIME)))
+    if (now->isAfter((EasyTime *)a->get(Fields::NEXT_EVENT_TIME)))
     {
         a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(now))->shift(0, 2 * Constants::TOILET_RETRY_BLUR)->blur(Constants::TOILET_RETRY_BLUR));
         goToDesk(a);
     }
-    bool busy = ((BooleanType*)toilet->get("Busy"))->getValue();
+    bool busy = ((BooleanType *)toilet->get("Busy"))->getValue();
     if (busy)
     {
-        a->wanderAround((Place*)(a->get(Fields::WAITING_PLACE)), Constants::INLINE_WANDER);
+        a->wanderAround((Place *)(a->get(Fields::WAITING_PLACE)), Constants::INLINE_WANDER);
     }
     else
     {
@@ -402,4 +402,155 @@ void AgentModel::lineInToilet(Agent *a, EasyTime* now)
         a->setDestination(toilet);
         a->set(Fields::ACTIVITY, ActivityManager::ENTERING_TOILET);
     }
+}
+
+Place *AgentModel::getNearestBathroomNotBusy(Agent *a, std::string bathroomName)
+{
+    int bathRoomIndex = 0;
+    std::vector<Place *> places;
+    try
+    {
+        places = world->getPlacesOfType(bathroomName);
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "RuntimeException : No bathroom defined\n";
+    }
+    while (bathRoomIndex != places.size())
+    {
+        Place *bathroom = places[bathRoomIndex];
+        if (!((BooleanType *)bathroom->get("Busy"))->getValue())
+        {
+            return bathroom;
+        }
+        bathRoomIndex++;
+    }
+
+    try
+    {
+        return world->getNearestPlaceOfType(bathroomName, a->getPos());
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "RuntimeException\n";
+    }
+}
+
+void AgentModel::goToToilet(Agent *a)
+{
+    try
+    {
+        a->setDestination(world->getNearestPlaceOfType("RestHomeBathroomEntrance", a->getPos()));
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "RuntimeException\n";
+    }
+    a->set(Fields::ACTIVITY, ActivityManager::GOING_2_TOILET);
+    a->set(Fields::WAITING_PLACE, a->getDestination());
+}
+
+bool AgentModel::isTimeForToilet(Agent *a, EasyTime *now)
+{
+    EasyTime *nextVisit = (EasyTime *)a->get(Fields::NEXT_TOILET_VISIT);
+    if (nextVisit->isBefore((EasyTime *)a->get(Fields::WAKE_UP_TIME)))
+    {
+        nextVisit->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL));
+        a->set(Fields::NEXT_TOILET_VISIT, nextVisit);
+    }
+    if (now->isAfter((EasyTime *)a->get(Fields::NEXT_TOILET_VISIT)))
+    {
+        a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(now))->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL)));
+        //a->setImage("HumanGreen");
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+
+void AgentModel::goHome(Agent *a)
+{
+    a->setDestination((Place *)a->get(Fields::DESK));
+    a->set(Fields::ACTIVITY, ActivityManager::LEAVING_WORK);
+}
+
+void AgentModel::goToSleep(Agent *a)
+{
+    a->set(Fields::ACTIVITY, ActivityManager::RESTING);
+    //a->setVisible(true);
+}
+
+void AgentModel::goToDesk(Agent *a)
+{
+    a->set(Fields::ACTIVITY, ActivityManager::GOING_2_DESK);
+    //a->setImage("HumanBlue");
+    //a->setVisible(true);
+    a->setDestination((Place *)a->get(Fields::SEAT));
+}
+
+void AgentModel::beAtDesk(Agent *a)
+{
+    a->set(Fields::ACTIVITY, ActivityManager::AT_DESK);
+}
+
+Text* AgentModel::boolSort(std::string op)
+{
+
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    bool result = false;
+    double random = dis(gen);
+
+    if (op.compare(Fields::FEVER))
+    {
+        result = random < Constants::FEVER_PROBABILITY;
+        return;
+    }
+    else if (op.compare(Fields::SYMPTOMS))
+    {
+        result = random < Constants::SYMPTOMS_PROBABILITY;
+        return;
+    }
+    else if (op.compare(Fields::ABFC_USE_OF_N95_MASK))
+    {
+        result = random < Constants::BFC_USE_OF_N95_MASK;
+        return;
+    }
+    else if (op.compare(Fields::AAFC_USE_OF_N95_MASK))
+    {
+        result = random < Constants::AFC_USE_OF_N95_MASK;
+        return;
+    }
+    else if (op.compare(Fields::ABFC_USE_OF_OTHER_MASK))
+    {
+        result = random < Constants::BFC_USE_OF_OTHER_MASK;
+        return;
+    }
+    else if (op.compare(Fields::AAFC_USE_OF_OTHER_MASK))
+    {
+        result = random < Constants::AFC_USE_OF_OTHER_MASK;
+        return;
+    }
+    else if (op.compare(Fields::ABFC_USE_OF_EYE_PROTECTION))
+    {
+        result = random < Constants::BFC_USE_OF_EYE_PROTECTION;
+        return;
+    }
+    else if (op.compare(Fields::AAFC_USE_OF_EYE_PROTECTION)){
+        result = random < Constants::AFC_USE_OF_EYE_PROTECTION;
+        return;
+    }
+    else if (op.compare(Fields::ABFC_WASH_HANDS)) {
+        result = random < Constants::BFC_WASH_HANDS;
+        return;
+    }
+    else if (op.compare(Fields::AAFC_WASH_HANDS)){
+        result = random < Constants::AFC_WASH_HANDS;
+        return;
+    }
+    return new Text(std::to_string(result));
 }
