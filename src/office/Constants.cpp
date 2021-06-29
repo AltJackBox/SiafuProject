@@ -1,5 +1,6 @@
 #include <office/Constants.h>
 
+
 /** Time for the daily breakfast. */
 EasyTime *Constants::BREAKFAST_START = new EasyTime(8, 0);
 

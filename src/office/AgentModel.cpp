@@ -2,6 +2,7 @@
 #include <office/Constants.h>
 #include <model/World.h>
 #include <model/Agent.h>
+#include <model/Position.h>
 #include <types/EasyTime.h>
 #include <types/Text.h>
 #include <types/TimePeriod.h>
@@ -13,6 +14,7 @@
 #include <exception>
 #include <algorithm>
 #include <random>
+#include <cmath>
 
 void AgentModel::createWorker(std::vector<Agent *> people, const std::string type, const std::string bedLocation, const std::string seatLocation)
 {
@@ -122,7 +124,7 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
         if (now->toString().compare((new EasyTime(0, 0))->toString()) == 0)
         {
             day++;
-            writeDailyData(agents);
+            // writeDailyData(agents);
             printDayInfo();
         }
 
@@ -495,7 +497,7 @@ void AgentModel::beAtDesk(Agent *a)
     a->set(Fields::ACTIVITY, ActivityManager::AT_DESK);
 }
 
-Text* AgentModel::boolSort(std::string op)
+Text *AgentModel::boolSort(std::string op)
 {
 
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -505,52 +507,391 @@ Text* AgentModel::boolSort(std::string op)
     bool result = false;
     double random = dis(gen);
 
-    if (op.compare(Fields::FEVER))
+    if (op.compare(Fields::FEVER) == 0)
     {
         result = random < Constants::FEVER_PROBABILITY;
-        return;
     }
-    else if (op.compare(Fields::SYMPTOMS))
+    else if (op.compare(Fields::SYMPTOMS) == 0)
     {
         result = random < Constants::SYMPTOMS_PROBABILITY;
-        return;
     }
-    else if (op.compare(Fields::ABFC_USE_OF_N95_MASK))
+    else if (op.compare(Fields::ABFC_USE_OF_N95_MASK) == 0)
     {
         result = random < Constants::BFC_USE_OF_N95_MASK;
-        return;
     }
-    else if (op.compare(Fields::AAFC_USE_OF_N95_MASK))
+    else if (op.compare(Fields::AAFC_USE_OF_N95_MASK) == 0)
     {
         result = random < Constants::AFC_USE_OF_N95_MASK;
-        return;
     }
-    else if (op.compare(Fields::ABFC_USE_OF_OTHER_MASK))
+    else if (op.compare(Fields::ABFC_USE_OF_OTHER_MASK) == 0)
     {
         result = random < Constants::BFC_USE_OF_OTHER_MASK;
-        return;
     }
-    else if (op.compare(Fields::AAFC_USE_OF_OTHER_MASK))
+    else if (op.compare(Fields::AAFC_USE_OF_OTHER_MASK) == 0)
     {
         result = random < Constants::AFC_USE_OF_OTHER_MASK;
-        return;
     }
-    else if (op.compare(Fields::ABFC_USE_OF_EYE_PROTECTION))
+    else if (op.compare(Fields::ABFC_USE_OF_EYE_PROTECTION) == 0)
     {
         result = random < Constants::BFC_USE_OF_EYE_PROTECTION;
-        return;
     }
-    else if (op.compare(Fields::AAFC_USE_OF_EYE_PROTECTION)){
+    else if (op.compare(Fields::AAFC_USE_OF_EYE_PROTECTION) == 0)
+    {
         result = random < Constants::AFC_USE_OF_EYE_PROTECTION;
-        return;
     }
-    else if (op.compare(Fields::ABFC_WASH_HANDS)) {
+    else if (op.compare(Fields::ABFC_WASH_HANDS) == 0)
+    {
         result = random < Constants::BFC_WASH_HANDS;
-        return;
     }
-    else if (op.compare(Fields::AAFC_WASH_HANDS)){
+    else if (op.compare(Fields::AAFC_WASH_HANDS) == 0)
+    {
         result = random < Constants::AFC_WASH_HANDS;
-        return;
     }
     return new Text(std::to_string(result));
 }
+
+Text *AgentModel::intSort(std::string op)
+{
+    int result = 0;
+
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+
+    bool result = false;
+
+    if (op.compare(Fields::FEVER_DURATION) == 0)
+    {
+        std::uniform_int_distribution<> dis(0, Constants::FEVER_MAX_DURATION - Constants::FEVER_MIN_DURATION + 1);
+        result = dis(gen) + Constants::FEVER_MIN_DURATION;
+    }
+    else if (op.compare(Fields::SYMPTOMS_DURATION) == 0)
+    {
+        std::uniform_int_distribution<> dis(0, Constants::SYMPTOMS_MAX_DURATION - Constants::SYMPTOMS_MIN_DURATION + 1);
+        result = dis(gen) + Constants::SYMPTOMS_MIN_DURATION;
+    }
+    else if (op.compare(Fields::SYMPTOMS_DAYS_TO_START) == 0)
+    {
+        std::uniform_int_distribution<> dis(0, Constants::SYMPTOMS_MAX_DAYS_TO_START - Constants::SYMPTOMS_MIN_DAYS_TO_START + 1);
+        result = dis(gen) + Constants::SYMPTOMS_MIN_DAYS_TO_START;
+    }
+    else if (op.compare(Fields::ABFC_PHYSICAL_DISTANCE) == 0)
+    {
+        std::uniform_real_distribution<> dis(0.0, 1.0);
+        double aux = dis(gen);
+        result = aux <= Constants::BFC_PHYSICAL_DISTANCE_1M ? 1 : aux <= Constants::BFC_PHYSICAL_DISTANCE_1M + Constants::BFC_PHYSICAL_DISTANCE_2M                                     ? 2
+                                                              : aux <= Constants::BFC_PHYSICAL_DISTANCE_1M + Constants::BFC_PHYSICAL_DISTANCE_2M + Constants::BFC_PHYSICAL_DISTANCE_3M ? 3
+                                                                                                                                                                                       : 0;
+    }
+    else if (op.compare(Fields::AAFC_PHYSICAL_DISTANCE) == 0)
+    {
+        std::uniform_real_distribution<> dis(0.0, 1.0);
+        double aux2 = dis(gen);
+        result = aux2 <= Constants::AFC_PHYSICAL_DISTANCE_1M ? 1 : aux2 <= Constants::AFC_PHYSICAL_DISTANCE_1M + Constants::AFC_PHYSICAL_DISTANCE_2M                                     ? 2
+                                                               : aux2 <= Constants::AFC_PHYSICAL_DISTANCE_1M + Constants::AFC_PHYSICAL_DISTANCE_2M + Constants::AFC_PHYSICAL_DISTANCE_3M ? 3
+                                                                                                                                                                                         : 0;
+    }
+    return new Text(std::to_string(result));
+}
+
+double AgentModel::distanceBetweenAgents(Agent *a, Agent *b)
+{
+    return std::sqrt(std::pow(a->getPos()->getRow() - b->getPos()->getRow(), 2) + std::pow(a->getPos()->getCol() - b->getPos()->getCol(), 2));
+}
+
+std::string AgentModel::agentName(Agent *a)
+{
+    return a->getName().substr(a->getName().find_last_of(' ') + 1);
+}
+
+void AgentModel::isInfectionDetected(std::vector<Agent *> agents, EasyTime *easyTime)
+{
+    int peopleIndex = 0;
+    while (peopleIndex != agents.size())
+    {
+        Agent *a = agents[peopleIndex];
+        if (agentCanInfectOthers(a) &&
+            std::stoi((a->get(Fields::DAYS_AFTER_INFECTION))->toString()) >= std::stoi((a->get(Fields::SYMPTOMS_DAYS_TO_START))->toString()) &&
+            !((a->get(Fields::INFECTION_DETECTED))->toString()).compare("true") == 0)
+        {
+            infectionDetected = true;
+            a->set(Fields::INFECTION_DETECTED, new Text("true"));
+            print("Infection detected in agent " + agentName(a), easyTime);
+            isolateAgent(a);
+        }
+    }
+}
+
+void AgentModel::isolateAgent(Agent *a)
+{
+    // The proposal is to isolate the agent in the simulated world. For now, if the agent is isolated, he/she does not transmit to others
+}
+
+void AgentModel::infect(Agent *a, EasyTime *now)
+{
+    a->set(Fields::SITUATION, new Text(infected));
+    a->set(Fields::DAYS_AFTER_INFECTION, new Text("0"));
+    a->set(Fields::INFECTION_TIME, new Text((now->shift(23, 55))->toString()));
+}
+
+void AgentModel::infect(Agent *a, EasyTime *now, int daysAfterInfection)
+{
+    a->set(Fields::SITUATION, new Text(infected));
+    a->set(Fields::DAYS_AFTER_INFECTION, new Text(std::to_string(daysAfterInfection)));
+    a->set(Fields::INFECTION_TIME, new Text((now->shift(23, 55))->toString()));
+}
+
+void AgentModel::infectingOthers(std::vector<Agent *> agents, EasyTime *now)
+{
+    int peopleIndex = 0;
+    while (peopleIndex != agents.size())
+    {
+        Agent *a = agents[peopleIndex];
+        if (agentSituation(a, infected) && (std::stoi((a->get(Fields::DAYS_AFTER_INFECTION))->toString()) == Constants::TRANSMISSION_DAYS_TO_START))
+        {
+            a->set(Fields::SITUATION, new Text(infecting));
+            print("Agent " + agentName(a) + " is infecting others", now);
+        }
+    }
+}
+
+void AgentModel::cure(std::vector<Agent *> agents, EasyTime *now)
+{
+    int peopleIndex = 0;
+    while (peopleIndex != agents.size())
+    {
+        Agent *a = agents[peopleIndex];
+        if (agentSituation(a, infecting) && (std::stoi((a->get(Fields::DAYS_AFTER_INFECTION))->toString()) == Constants::TRANSMISSION_DURATION + Constants::TRANSMISSION_DAYS_TO_START))
+        {
+            a->set(Fields::SITUATION, new Text(cured));
+            print("Agent " + a->toString() + " is cured", now);
+        }
+    }
+}
+
+bool AgentModel::agentCanInfectOthers(Agent *a)
+{
+    return agentSituation(a, infecting); // && !bool.valueOf(a->get(INFECTION_DETECTED).tostd::string());
+}
+
+bool AgentModel::agentCanBeInfected(Agent *a)
+{
+    return agentSituation(a, healthy);
+}
+
+bool agentSituation(Agent *a, std::string situation)
+{
+    return (a->get(Fields::SITUATION)->toString()).compare(situation) == 0;
+}
+
+void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, EasyTime *now)
+{
+    std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+
+    double noseMouthChance = Constants::INFECTION_CHANCE_THROUGH_CONTACT;
+    double eyeChance = Constants::INFECTION_CHANCE_THROUGH_AIR;
+
+    //distance
+    double distance = distanceBetweenAgents(infected, notInfected) * Constants::AREA_SCALE;
+
+    if (!infectionDetected)
+    {
+        distance += std::stoi((notInfected->get(Fields::ABFC_PHYSICAL_DISTANCE))->toString()) * 100;
+    }
+    else
+    {
+        distance += std::stoi((notInfected->get(Fields::AAFC_PHYSICAL_DISTANCE))->toString()) * 100;
+    }
+
+    noseMouthChance -= (distance < 100 ? noseMouthChance * 0 : distance < 200 ? noseMouthChance * Constants::PHYSICAL_DISTANCE_REDUCTION_RISK_1M
+                                                           : distance < 300   ? noseMouthChance * Constants::PHYSICAL_DISTANCE_REDUCTION_RISK_2M
+                                                           : distance < 400   ? noseMouthChance * Constants::PHYSICAL_DISTANCE_REDUCTION_RISK_3M
+                                                                              : 1.0);
+    eyeChance -= (distance < 100 ? eyeChance * 0 : distance < 200 ? eyeChance * Constants::PHYSICAL_DISTANCE_REDUCTION_RISK_1M
+                                               : distance < 300   ? eyeChance * Constants::PHYSICAL_DISTANCE_REDUCTION_RISK_2M
+                                               : distance < 400   ? eyeChance * Constants::PHYSICAL_DISTANCE_REDUCTION_RISK_3M
+                                                                  : 1.0);
+
+    if (!infectionDetected)
+    {
+        //Infected n95 mask
+        noseMouthChance -= ((infected->get(Fields::ABFC_USE_OF_N95_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::N95_MASK_REDUCTION_RISK : 0;
+        //notInfected n95 mask
+        noseMouthChance -= ((notInfected->get(Fields::ABFC_USE_OF_N95_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::N95_MASK_REDUCTION_RISK : 0;
+
+        //Infected other mask
+        noseMouthChance -= ((infected->get(Fields::ABFC_USE_OF_OTHER_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::OTHER_MASK_REDUCTION_RISK : 0;
+        //notInfected other mask
+        noseMouthChance -= ((notInfected->get(Fields::ABFC_USE_OF_OTHER_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::OTHER_MASK_REDUCTION_RISK : 0;
+
+        //notInfected eye protection
+        eyeChance -= ((notInfected->get(Fields::ABFC_USE_OF_EYE_PROTECTION))->toString()).compare("true") == 0 ? eyeChance * Constants::EYE_PROTECTION_REDUCTION_RISK : 0;
+
+        //notInfected wash hands
+        noseMouthChance -= ((notInfected->get(Fields::ABFC_WASH_HANDS))->toString()).compare("true") == 0 ? noseMouthChance * Constants::WASH_HANDS_REDUCTION_RISK : 0;
+        eyeChance -= ((notInfected->get(Fields::ABFC_WASH_HANDS))->toString()).compare("true") == 0 ? eyeChance * Constants::WASH_HANDS_REDUCTION_RISK : 0;
+    }
+    else
+    {
+        //Infected n95 mask
+        noseMouthChance -= ((infected->get(Fields::AAFC_USE_OF_N95_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::N95_MASK_REDUCTION_RISK : 0;
+        //notInfected n95 mask
+        noseMouthChance -= ((notInfected->get(Fields::AAFC_USE_OF_N95_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::N95_MASK_REDUCTION_RISK : 0;
+
+        //Infected other mask
+        noseMouthChance -= ((infected->get(Fields::AAFC_USE_OF_OTHER_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::OTHER_MASK_REDUCTION_RISK : 0;
+        //notInfected other mask
+        noseMouthChance -= ((notInfected->get(Fields::AAFC_USE_OF_OTHER_MASK))->toString()).compare("true") == 0 ? noseMouthChance * Constants::OTHER_MASK_REDUCTION_RISK : 0;
+
+        //notInfected eye protection
+        eyeChance -= ((notInfected->get(Fields::AAFC_USE_OF_EYE_PROTECTION))->toString()).compare("true") == 0 ? eyeChance * Constants::EYE_PROTECTION_REDUCTION_RISK : 0;
+
+        //notInfected wash hands
+        noseMouthChance -= ((notInfected->get(Fields::AAFC_WASH_HANDS))->toString()).compare("true") == 0 ? noseMouthChance * Constants::WASH_HANDS_REDUCTION_RISK : 0;
+        eyeChance -= ((notInfected->get(Fields::AAFC_WASH_HANDS))->toString()).compare("true") == 0 ? eyeChance * Constants::WASH_HANDS_REDUCTION_RISK : 0;
+    }
+
+    std::uniform_real_distribution<> dis(0.0, 1.0);
+
+    double aux = dis(gen);
+    if (aux <= noseMouthChance)
+    {
+        infect(notInfected, now);
+        print("Agent " + agentName(infected) + " infected agent " + agentName(notInfected) + " through nose/mouth", now);
+    }
+    else if (aux <= eyeChance)
+    {
+        infect(notInfected, now);
+        print("Agent " + agentName(infected) + " infected agent " + agentName(notInfected) + " through eye", now);
+    }
+}
+
+void AgentModel::increaseDaysAfterInfection(std::vector<Agent *> agents, EasyTime *now)
+{
+    int agentIndex = 0;
+    while (agentIndex != agents.size())
+    {
+        Agent *a = agents[agentIndex];
+        if (((now->toString()).compare((a->get(Fields::INFECTION_TIME))->toString()) == 0) && (agentSituation(a, infected) || agentSituation(a, infecting)))
+        {
+            int daysAfterInfection = std::stoi(a->get(Fields::DAYS_AFTER_INFECTION)->toString());
+            a->set(Fields::DAYS_AFTER_INFECTION, new Text(std::to_string(daysAfterInfection + 1)));
+        }
+        agentIndex++;
+    }
+}
+
+void AgentModel::print(std::string message, EasyTime *easyTime)
+{
+    int hour = easyTime->getHour();
+    int minute = easyTime->getMinute();
+    std::string result = ((hour < 10 ? " " : "") + std::to_string(hour)) + ":" + ((minute < 10 ? "0" : "") + std::to_string(minute)) + " - " + message + "\n";
+    std::cout << result;
+    // writeEventData(result);
+}
+
+void AgentModel::printDayInfo()
+{
+    std::string result = "DAY " + std::to_string(day) + " ----------------------------------------\n";
+    std::cout << result;
+    // writeEventData(result);
+}
+
+// void writeData(std::vector<Agent *> agents, EasyTime *easyTime)
+// {
+//     PrintWriter csvWriter;
+//     std::string filePath = path + "/Desktop/WearableData.csv";
+//     try
+//     {
+//         File file = new File(filePath);
+//         if (!file.exists())
+//         {
+//             file = new File(filePath);
+//         }
+//         csvWriter = new PrintWriter(new FileWriter(file, true));
+
+//         Iterator<Agent> peopleIt = agents.iterator();
+//         while (peopleIt.hasNext())
+//         {
+//             Agent *a = peopleIt.next();
+//             csvWriter.print(day + ",");
+//             csvWriter.print(easyTime.tostd::string() + ",");
+//             csvWriter.print(agentName(a) + ","); //id
+
+//             csvWriter.print(std::string.valueOf(a->get(BLOODOXYGEN)).replace(',', '.') + ","); //blood oxygen
+//             //csvWriter.print(a->get(BLOODPRESSURE)+","); //blood pressure
+//             csvWriter.print(std::string.valueOf(a->get(BODYTEMPERATURE)).replace(',', '.') + "\r\n"); //body temperature
+//         }
+//         csvWriter.close();
+//     }
+//     catch (Exception e)
+//     {
+//         e.printStackTrace();
+//     }
+// }
+
+// void writeDailyData(Collection<Agent> agents)
+// {
+//     PrintWriter csvWriter;
+//     std::string filePath = "DailyData.csv";
+//     try
+//     {
+//         File file = new File(filePath);
+//         if (!file.exists())
+//         {
+//             file = new File(filePath);
+//         }
+//         csvWriter = new PrintWriter(new FileWriter(file, true));
+
+//         int healthy = 0;
+//         int infected = 0;
+//         int infecting = 0;
+//         int infectingAndAsymptomatic = 0;
+//         int cured = 0;
+
+//         Iterator<Agent> peopleIt = agents.iterator();
+//         while (peopleIt.hasNext())
+//         {
+//             Agent *a = peopleIt.next();
+//             healthy += agentSituation(a, this.healthy) ? 1 : 0;
+//             infected += agentSituation(a, this.infected) ? 1 : 0;
+//             infecting += agentSituation(a, this.infecting) ? 1 : 0;
+//             infectingAndAsymptomatic += agentSituation(a, this.infecting) && !bool.valueOf(a->get(SYMPTOMS).tostd::string()) ? 1 : 0;
+//             cured += agentSituation(a, this.cured) ? 1 : 0;
+//         }
+
+//         csvWriter.print(day + ",");
+//         csvWriter.print((infectionDetected ? "1" : "0") + ",");
+//         csvWriter.print(healthy + ",");
+//         csvWriter.print(infected + ",");
+//         csvWriter.print(infecting + ",");
+//         csvWriter.print(infectingAndAsymptomatic + ",");
+//         csvWriter.print(cured + "\r\n");
+//         csvWriter.close();
+//     }
+//     catch (Exception e)
+//     {
+//         e.printStackTrace();
+//     }
+// }
+
+// void writeEventData(std::string event)
+// {
+//     PrintWriter csvWriter;
+//     std::string filePath = path + "/Desktop/EventData.csv";
+//     try
+//     {
+//         File file = new File(filePath);
+//         if (!file.exists())
+//         {
+//             file = new File(filePath);
+//         }
+//         csvWriter = new PrintWriter(new FileWriter(file, true));
+//         csvWriter.print(event + "\r\n");
+//         csvWriter.close();
+//     }
+//     catch (Exception e)
+//     {
+//         e.printStackTrace();
+//     }
+// }
