@@ -40,8 +40,6 @@ private:
 
     static std::set<std::string> INFO_FIELDS;
 
-    //static const Random RAND = new Random();
-
     bool onAuto = true;
 
     std::string name;

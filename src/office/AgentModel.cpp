@@ -115,6 +115,7 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
                 print("Agent 2 is infected", now);
                 infect(a, now, -1);
             }
+            agentIndex++;
         }
     }
 
@@ -193,6 +194,7 @@ void AgentModel::doIteration(std::vector<Agent *> agents)
         Agent *a = agents[peopleIndex];
         handlePerson(a, now);
         handlePersonBodySensors(a);
+        peopleIndex++;
     }
 }
 
@@ -618,6 +620,7 @@ void AgentModel::isInfectionDetected(std::vector<Agent *> agents, EasyTime *easy
             print("Infection detected in agent " + agentName(a), easyTime);
             isolateAgent(a);
         }
+        peopleIndex++;
     }
 }
 
@@ -651,6 +654,7 @@ void AgentModel::infectingOthers(std::vector<Agent *> agents, EasyTime *now)
             a->set(Fields::SITUATION, new Text(infecting));
             print("Agent " + agentName(a) + " is infecting others", now);
         }
+        peopleIndex++;
     }
 }
 
@@ -665,6 +669,7 @@ void AgentModel::cure(std::vector<Agent *> agents, EasyTime *now)
             a->set(Fields::SITUATION, new Text(cured));
             print("Agent " + a->toString() + " is cured", now);
         }
+        peopleIndex++;
     }
 }
 

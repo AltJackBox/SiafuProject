@@ -6,6 +6,8 @@
 #include <model/SimulationData.h>
 #include <model/Place.h>
 #include <progress/Progress.h>
+#include <office/AgentModel.h>
+#include <office/WorldModel.h>
 #include <Calendar.h>
 #include <behaviormodels/BaseAgentModel.h>
 #include <behaviormodels/BaseContextModel.h>
@@ -120,11 +122,7 @@ void World::createPeople()
 {
     try
     {
-        // agentModel = (BaseAgentModel)simData.getAgentModelClass()
-        //                  .getConstructor(new Class[]{this.getClass()})
-        //                  .newInstance(new Object[]{this});
-
-        // agentModel = Simulation-Office.agentModel
+        agentModel = new AgentModel(this);
     }
     catch (std::exception &e)
     {
@@ -146,14 +144,6 @@ void World::createPeople()
 
 void World::createTime()
 {
-    // time = Calendar.getInstance();
-
-    // time.set(Calendar.getInstance().get(Calendar.YEAR),
-    //          Calendar.getInstance().get(Calendar.MONTH),
-    //          Calendar.getInstance().get(Calendar.DAY_OF_MONTH),
-    //          6,
-    //          0);
-
     time = new Calendar();
 }
 
@@ -174,17 +164,17 @@ void World::freezeInfoFields()
 
 void World::createPlaces()
 {
-    // try
-    // {
+    try
+    {
 
-        //worldModel = Simulation.Office.worldModel
-    // }
-    // catch (std::exception &e)
-    // {
-    //     std::cerr << "RuntimeException Can't instantiate the world model\n";
-    // }
+        worldModel = new WorldModel(this);
+    }
+    catch (std::exception &e)
+    {
+        std::cerr << "RuntimeException : Can't instantiate the world model\n";
+    }
     places = createPlacesFromImages();
-    //worldModel->createPlaces(places);
+    worldModel->createPlaces(places);
 }
 
 std::vector<Place *> World::createPlacesFromImages()
@@ -252,9 +242,9 @@ World::World(Simulation *simulation, SimulationData *simData)
 
     createPlaces();
 
-    // createPeople();
+    createPeople();
 
-    // freezeInfoFields();
+    freezeInfoFields();
 }
 
 std::string World::getWorldName()

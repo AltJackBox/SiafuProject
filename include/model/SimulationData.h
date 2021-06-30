@@ -41,12 +41,6 @@ public:
 		}
 	}
 
-	//Class < ? extends BaseAgentModel > getAgentModelClass();
-
-	//Class < ? extends BaseContextModel > getContextModelClass();
-
-	//Class < ? extends BaseWorldModel > getWorldModelClass();
-
 	std::vector<std::string> getPlaceFiles();
 
 	std::string getWallsFile();
