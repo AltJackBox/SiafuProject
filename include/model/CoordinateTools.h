@@ -8,6 +8,7 @@ class Position;
 class CoordinateTools {
 	
 	private:
+
 	static const int PRETTY_COORDINATE_PRECISION = 3;
 
 	static const int MINUTES_PER_DEGREE = 60;
@@ -55,6 +56,9 @@ class CoordinateTools {
 
 
 	public:
+
+	CoordinateTools();
+
 	CoordinateTools(const int height, const int width, const double topRight[] , const double bottomRight[] , const double bottomLeft[] );
 
 	double* localToCoordinates(int i, int j);

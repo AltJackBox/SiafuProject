@@ -7,6 +7,7 @@
 class Place;
 class World;
 class EasyTime;
+class Text;
 
 class AgentModel : public BaseAgentModel
 {

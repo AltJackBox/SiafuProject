@@ -39,6 +39,7 @@ Gradient *PersistentCachedMap::recoverObject(std::string key)
         toc.erase(key); // Try and heal the list
         std::cerr << "RuntimeException : Can't read" + path + "-" + key + ".data, did u erase it manually ?\n";
     }
+    return nullptr;
 }
 
 void PersistentCachedMap::putInCache(std::string key, Gradient *value)
@@ -62,7 +63,6 @@ void PersistentCachedMap::putInCache(std::string key, Gradient *value)
         std::string to_erase = recent.at(0);
         recent.erase(recent.begin());
         cache.erase(to_erase);
-        // System.out.println("Dropped element form cache");
     }
 }
 

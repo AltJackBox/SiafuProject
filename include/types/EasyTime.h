@@ -47,7 +47,7 @@ public:
 
     std::string getType() override;
 
-    bool EasyTime::equals(Publishable *o);
+    bool equals(Publishable *o);
 };
 
 #endif

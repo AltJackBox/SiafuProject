@@ -2,14 +2,27 @@
 #define GRADIENT_H
 
 #include <string>
-
+#include <boost/archive/text_iarchive.hpp>
 
 class Position;
 class World;
 
-class Gradient {
+class Gradient
+{
 
-	private:
+private:
+    // Used to serialize (save & load the instances of Gradient inside files)
+    friend class boost::serialization::access;
+
+    template <class GradientArchive>
+    void serialize(GradientArchive &ar, const unsigned int version)
+    {
+        ar &distance;
+        ar &h;
+        ar &w;
+        ar &center;
+    }
+    // -----------------------------------------------------------------------
 
     static const int POSSIBLE_DIRS = 8;
 
@@ -17,33 +30,34 @@ class Gradient {
 
     static const int DIAGONAL_DISTANCE = 14;
 
-    int* distance;
+    int *distance;
 
     int h;
 
     int w;
 
-    Position* center;
+    Position *center;
 
-    void calculateGradient(World* world, Position* relevantPos);
+    void calculateGradient(World *world, Position *relevantPos);
 
-	public:
-
+public:
     static const int UNREACHABLE = 2147483647; // maximum value for an int
 
-	Gradient(Position* center, World* world);
+    Gradient();
 
-	Gradient(Position* center, World* world, Position* relevantPos);
+    Gradient(Position *center, World *world);
 
-	std::string toString();
+    Gradient(Position *center, World *world, Position *relevantPos);
 
-	int getHeight();
+    std::string toString();
 
-	int getWidth();
+    int getHeight();
 
-	int pointFrom(Position* pos, int preferredDir);
+    int getWidth();
 
-	int distanceFrom(Position* pos);
+    int pointFrom(Position *pos, int preferredDir);
+
+    int distanceFrom(Position *pos);
 };
 
 #endif

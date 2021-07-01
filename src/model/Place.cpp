@@ -65,7 +65,7 @@ void Place::setName(std::string name)
     this->name = name;
 }
 
-std::string Place::getType()
+std::string Place::getPlaceType()
 {
     return type;
 }

@@ -5,7 +5,7 @@
 #include <assert.h>
 
 void test1(){
-    Controller* controller = new Controller("","1");
+    Controller* controller = new Controller("1");
     Progress* progress = controller->getProgress();
     assert(progress != NULL);
     World* world = controller->getWorld();

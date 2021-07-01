@@ -211,10 +211,10 @@ void AgentModel::handlePersonBodySensors(Agent *a)
     bloodOxygen = bloodOxygen < 95 ? bloodOxygen + dis(gen) : bloodOxygen - dis(gen);
     a->set(Fields::BLOODOXYGEN, new Text(std::to_string(bloodOxygen)));
 
-    std::string string = (a->get(Fields::BODYTEMPERATURE))->toString();
-    std::replace(string.begin(), string.end(), ',', '.');
+    std::string str = (a->get(Fields::BODYTEMPERATURE))->toString();
+    std::replace(str.begin(), str.end(), ',', '.');
 
-    double bodytemperature = std::stod(string);
+    double bodytemperature = std::stod(str);
     bodytemperature = bodytemperature < 36.5 ? bodytemperature + dis(gen) : bodytemperature - dis(gen);
     a->set(Fields::BODYTEMPERATURE, new Text(std::to_string(bodytemperature)));
 
@@ -438,6 +438,7 @@ Place *AgentModel::getNearestBathroomNotBusy(Agent *a, std::string bathroomName)
     {
         std::cerr << "RuntimeException\n";
     }
+    return nullptr;
 }
 
 void AgentModel::goToToilet(Agent *a)
@@ -558,8 +559,6 @@ Text *AgentModel::intSort(std::string op)
 
     std::random_device rd;  //Will be used to obtain a seed for the random number engine
     std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-
-    bool result = false;
 
     if (op.compare(Fields::FEVER_DURATION) == 0)
     {

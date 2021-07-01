@@ -57,7 +57,7 @@ public:
 
 	void setName(std::string name);
 
-	std::string getType();
+	std::string getPlaceType();
 
 	Position *getPos();
 
@@ -74,6 +74,7 @@ public:
 	bool equals(Place *p);
 
 	std::string getType() override;
+
 };
 
 #endif

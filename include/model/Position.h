@@ -1,9 +1,9 @@
 #ifndef POSITION_H
 #define POSITION_H
 
-#include <iostream>
 #include <model/World.h>
 #include <model/CoordinateTools.h>
+#include <iostream>
 
 class World;
 class CoordinateTools;
@@ -12,9 +12,8 @@ class Position
 {
 
 private:
-    static const int NEAR_DISTANCE = 15;
 
-    static const long serialVersionUID = 1L;
+    static const int NEAR_DISTANCE = 15;
 
     static bool initialized;
 
@@ -35,7 +34,6 @@ private:
     int j;
 
 public:
-
     static void initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
     {
         if (worldObj == NULL)

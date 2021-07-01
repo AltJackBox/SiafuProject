@@ -88,7 +88,6 @@ protected:
     std::vector<Place *> createPlacesFromImages();
 
 public:
-
     static int getCacheSize()
     {
         return cacheSize;

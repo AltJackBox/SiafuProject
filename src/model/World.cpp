@@ -325,7 +325,7 @@ std::vector<Place *> World::getPlacesOfType(std::string type)
     {
         Place *p = places[index];
 
-        if (p->getType().compare(type) == 0)
+        if (p->getPlaceType().compare(type) == 0)
         {
             selection.push_back(p);
         }

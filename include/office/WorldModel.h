@@ -44,7 +44,7 @@ public:
 
     void createPlaces(const std::vector<Place *> places) override;
 
-    void WorldModel::doIteration(const std::vector<Place *> places);
+    void doIteration(const std::vector<Place *> places);
 };
 
 #endif
