@@ -28,11 +28,18 @@ TEST4=t_World
 TEST4_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
 	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
 	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/model/test/t_World.o
+
+TEST5=t_PersistentCachedMap
+TEST5_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
+	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
+	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/office/AgentModel.o $(OBJ_DIR)/office/WorldModel.o $(OBJ_DIR)/office/Constants.o \
+	$(OBJ_DIR)/utils/PersistentCachedMap.o $(OBJ_DIR)/types/BooleanType.o $(OBJ_DIR)/types/EasyTime.o $(OBJ_DIR)/types/Text.o \
+	$(OBJ_DIR)/types/TimePeriod.o $(OBJ_DIR)/utils/test/t_PersistentCachedMap.o 
 	
 
 all: build test
 
-test: $(OBJS) $(BIN_DIR)/$(TEST2) $(BIN_DIR)/$(TEST3) $(BIN_DIR)/$(TEST4)
+test: $(OBJS) $(BIN_DIR)/$(TEST5)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
@@ -51,6 +58,10 @@ $(BIN_DIR)/$(TEST3) : $(TEST3_DEP)
 	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST3) $^ -lstdc++fs
 
 $(BIN_DIR)/$(TEST4) : $(TEST4_DEP)
+	@mkdir -p $(@D)
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST4) $^ -lstdc++fs -lpthread
+
+$(BIN_DIR)/$(TEST5) : $(TEST5_DEP)
 	@mkdir -p $(@D)
 	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST4) $^ -lstdc++fs -lpthread
 

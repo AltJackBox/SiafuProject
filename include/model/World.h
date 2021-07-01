@@ -39,7 +39,6 @@ class World
 {
 
 private:
-    // static bool prefillCache;
 
     int height;
 
@@ -89,11 +88,6 @@ protected:
     std::vector<Place *> createPlacesFromImages();
 
 public:
-    // USEFUL ?
-    //void setShouldPrefillCache(bool prefill);
-
-    // USEFUL ?
-    //bool shouldPrefillCache();
 
     static int getCacheSize()
     {

@@ -675,7 +675,7 @@ void AgentModel::cure(std::vector<Agent *> agents, EasyTime *now)
 
 bool AgentModel::agentCanInfectOthers(Agent *a)
 {
-    return agentSituation(a, infecting); // && !bool.valueOf(a->get(INFECTION_DETECTED).tostd::string());
+    return agentSituation(a, infecting);
 }
 
 bool AgentModel::agentCanBeInfected(Agent *a)

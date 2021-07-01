@@ -26,7 +26,7 @@ int main(int argc, char *argv[])
         }
     }
 
-    new Controller(configPath, simulationPath);
+    new Controller(simulationPath);
     std::cout << "Main method executed\n";
     return 0;
 }

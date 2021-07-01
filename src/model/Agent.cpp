@@ -273,16 +273,6 @@ void Agent::wander(int soberness)
     }
 }
 
-// bool Agent::isVisible()
-// {
-//     return visible;
-// }
-
-// void setVisible(bool visible)
-// {
-//     this->visible = visible;
-// }
-
 bool Agent::equals(Agent *agent)
 {
     if (this == agent)
@@ -330,8 +320,6 @@ bool Agent::equals(Agent *agent)
         return false;
     if (speed != agent->speed)
         return false;
-    // if (visible != agent->visible)
-    //     return false;
     if (zPriority != agent->zPriority)
         return false;
     return true;

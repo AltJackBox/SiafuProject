@@ -15,7 +15,6 @@ static const std::string DEFAULT_GRADIENT_PATH = "./ressources/CalculatedGradien
 
 static const std::string DEFAULT_CONFIG_FILE = CONFIG_PATH + separator + "config.xml";
 
-
 static const int DEFAULT_CACHE_SIZE = 100;
 
 static const int DEFAULT_UI_SPEED = 50;
@@ -29,16 +28,17 @@ class Controller
 {
 
 private:
-    Simulation* simulation;
-    static Progress* progress;
+    Simulation *simulation;
+    static Progress *progress;
     std::mutex mutex;
 
 public:
     Controller();
 
-    Controller(std::string configPath, std::string simulationPath);
+    Controller(std::string simulationPath);
 
-    static Progress *getProgress() {
+    static Progress *getProgress()
+    {
         return progress;
     }
 
@@ -48,12 +48,12 @@ public:
 
     bool isPaused();
 
-    World* getWorld();
+    World *getWorld();
 
-    SimulationData* getSimulationData();
+    SimulationData *getSimulationData();
 
     void endSimulator();
-    
+
     bool isSimulationRunning();
 };
 #endif

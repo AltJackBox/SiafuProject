@@ -56,8 +56,6 @@ private:
 
     std::map<std::string, Publishable *> info;
 
-    //bool visible = true;
-
     int zPriority;
 
     void basicChecks(World *thisAgentsWorld);
@@ -127,10 +125,6 @@ public:
     void wander();
 
     void wander(int soberness);
-
-    // bool isVisible();
-
-    // void setVisible( bool visible);
 
     static void initialize(World *agentsWorld)
     {

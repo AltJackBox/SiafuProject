@@ -28,7 +28,6 @@ private:
     int iterationStep;
     //SimulatorOutputPrinter outputPrinter;
     bool simulationRunning;
-    //XMLConfiguration siafuConfig;
     std::mutex lock; 
 
     /*synchronized*/ bool isEnded();

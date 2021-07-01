@@ -6,19 +6,14 @@
 #include <iostream>
 #include <string>
 
-Progress* Controller::progress;
+Progress *Controller::progress;
 
-Controller::Controller(){
+Controller::Controller()
+{
 }
 
-Controller::Controller(std::string configPath, std::string simulationPath)
+Controller::Controller(std::string simulationPath)
 {
-	// std::string verifiedConfigPath = configPath;
-
-	// if (configPath.empty())
-	// {
-	// 	verifiedConfigPath = DEFAULT_CONFIG_FILE;
-	// }
 
 	//Start the simulation without a GUI
 	if (!simulationPath.empty())
@@ -33,7 +28,6 @@ Controller::Controller(std::string configPath, std::string simulationPath)
 		exit(1);
 	}
 }
-
 
 void Controller::stopSimulation()
 {
@@ -53,21 +47,24 @@ bool Controller::isPaused()
 	return simulation->isPaused();
 }
 
-World* Controller::getWorld() {
+World *Controller::getWorld()
+{
 	return simulation->getWorld();
 }
 
-SimulationData* Controller::getSimulationData() {
+SimulationData *Controller::getSimulationData()
+{
 	return simulation->getSimulationData();
 }
 
 void Controller::endSimulator()
 {
 	mutex.lock();
-	if (this->simulation != NULL) {
+	if (this->simulation != NULL)
+	{
 		this->simulation->die();
 	}
-	std::cout<< "been through endsimulator\n";
+	std::cout << "been through endsimulator\n";
 	mutex.unlock();
 }
 

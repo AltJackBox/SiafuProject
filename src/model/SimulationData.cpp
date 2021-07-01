@@ -32,7 +32,6 @@ std::vector<std::string> SimulationData::getFilesByPath(const std::string dirPat
         {
             name = p.path().string(); // UPDATE : p.path().stem().string(); ---> without extension
             file = std::ifstream{p.path().string()};
-            //std::cout << name << '\n';
             if (!file)
             {
                 std::cout << "File is missing : " + p.path().string() + ", no entry inside map\n";

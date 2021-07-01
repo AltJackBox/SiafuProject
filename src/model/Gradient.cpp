@@ -96,11 +96,11 @@ Gradient::Gradient(Position *center, World *world)
 
 Gradient::Gradient(Position *center, World *world, Position *relevantPos)
 {
-    h = world->getHeight();
-    w = world->getWidth();
+    // h = world->getHeight();
+    // w = world->getWidth();
     this->center = center;
 
-    calculateGradient(world, relevantPos);
+    // calculateGradient(world, relevantPos);
 }
 
 std::string Gradient::toString()

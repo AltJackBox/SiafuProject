@@ -8,13 +8,6 @@
 #include <unordered_set>
 #include <vector>
 
-class FilenameFilter
-{
-public:
-    FilenameFilter();
-    bool accept(const std::string fileName);
-};
-
 class PersistentCachedMap
 {
 
@@ -29,10 +22,6 @@ protected:
 
     std::unordered_set<std::string> toc;
 
-    void persistObject(Position *key, Gradient *value);
-
-    Gradient *recoverObject(std::string key);
-
 private:
     void putInCache(std::string key, Gradient *value);
 
@@ -46,6 +35,10 @@ public:
     Gradient *get(std::string key);
 
     bool containsKey(std::string key);
+
+    void persistObject(Position *key, Gradient *value); // protected
+
+    Gradient *recoverObject(std::string key); // protected
 };
 
 #endif
