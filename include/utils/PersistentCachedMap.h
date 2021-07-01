@@ -39,42 +39,7 @@ private:
 public:
     static const int MAX_KEY_LENGTH = 250;
 
-    PersistentCachedMap(std::string basePath, std::string name, int cacheSize, bool fillCache);
-    // {
-    //     this->cacheSize = cacheSize;
-    //     this->recent.reserve(cacheSize);
-    //     this->path = basePath + name + "/";
-
-    //     File dir = new File(path);
-
-    //     if (!dir.exists())
-    //     {
-    //         std::cout << "\nCreating directory for the persisted map in " + path + "\n";
-
-    //         if (!dir.mkdirs())
-    //         {
-    //             std::cerr << "RuntimeException : Can't create " + path + "\n";
-    //         }
-    //     }
-    //     else if (!dir.isDirectory())
-    //     {
-    //         std::cerr << "The file " + path + " is in the way, please remove it\n";
-    //     }
-
-    //     FilenameFilter *filt = new FilenameFilter();
-
-    //     std::string files[] = dir.list(filter);
-
-    //     if (files != null)
-    //     {
-    //         for (int i = 0; i < files.length; i++)
-    //         {
-    //             // file name format is: key.data
-    //             int end = files[i].lastIndexOf(".");
-    //             toc.add(files[i].substring(0, end));
-    //         }
-    //     }
-    // }
+    PersistentCachedMap(std::string basePath, std::string name, int cacheSize);
 
     void put(Position *key, Gradient *value);
 

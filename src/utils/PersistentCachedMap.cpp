@@ -3,51 +3,43 @@
 #include <model/Position.h>
 #include <exception>
 #include <iostream>
+#include <fstream>
 #include <algorithm>
+#include <dirent.h>
+#include <experimental/filesystem>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
-bool FilenameFilter::accept(const std::string fileName)
+void PersistentCachedMap::persistObject(Position *key, Gradient *value)
 {
-    return fileName.find(".data") != std::string::npos;
+    try
+    {
+        std::ofstream f(path + key->toString() + ".data" /*, std::ofstream::binary*/);
+        boost::archive::text_oarchive oa{f};
+        oa << value;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << "RuntimeException : Can't write " + path + key->toString() + ".data";
+    }
 }
 
-// void PersistentCachedMap::persistObject( Position* key,  Gradient* value)
-// {
-//     try
-//     {
-//         FileOutputStream fOut = new FileOutputStream(path + key + ".data");
-//         GZIPOutputStream gzFOut = new GZIPOutputStream(fOut);
-//         ObjectOutputStream objOut = new ObjectOutputStream(gzFOut);
-//         objOut.writeObject(value);
-
-//         gzFOut.finish();
-//         gzFOut.close();
-//         objOut.close();
-//     }
-//     catch (std::exception& e)
-//     {
-//         std::cout << "RuntimeException : Can't write " + path + value + ".data");
-//     }
-// }
-
-// Object recoverObject(final Object key)
-// {
-//     try
-//     {
-//         FileInputStream fIn = new FileInputStream(path + key + ".data");
-//         GZIPInputStream gzFIn = new GZIPInputStream(fIn);
-//         ObjectInputStream objIn = new ObjectInputStream(gzFIn);
-//         Object obj = objIn.readObject();
-//         gzFIn.close();
-//         objIn.close();
-//         return obj;
-//     }
-//     catch (Exception e)
-//     {
-//         toc.remove(key.toString()); // Try and heal the list
-//         e.printStackTrace();
-//         throw new RuntimeException("Can't read" + path + "-" + key + ".data, did u erase it manually?");
-//     }
-// }
+Gradient *PersistentCachedMap::recoverObject(std::string key)
+{
+    try
+    {
+        std::ifstream f(path + key + ".data" /*, std::ifstream::binary*/);
+        boost::archive::text_iarchive ia{f};
+        Gradient *a;
+        ia >> a;
+        return a;
+    }
+    catch (std::exception &e)
+    {
+        toc.erase(key); // Try and heal the list
+        std::cerr << "RuntimeException : Can't read" + path + "-" + key + ".data, did u erase it manually ?\n";
+    }
+}
 
 void PersistentCachedMap::putInCache(std::string key, Gradient *value)
 {
@@ -71,6 +63,46 @@ void PersistentCachedMap::putInCache(std::string key, Gradient *value)
         recent.erase(recent.begin());
         cache.erase(to_erase);
         // System.out.println("Dropped element form cache");
+    }
+}
+
+PersistentCachedMap::PersistentCachedMap(std::string basePath, std::string name, int cacheSize)
+{
+    this->cacheSize = cacheSize;
+    this->recent.reserve(cacheSize);
+    this->path = basePath + name + "/";
+
+    const char *pathUsed = path.c_str();
+
+    DIR *dir = opendir(pathUsed);
+
+    if (ENOENT == errno)
+    {
+        std::cerr << "RuntimeException : Can't open " + path + "\n";
+    }
+
+    std::string ext(".data");
+    std::vector<std::string> files;
+    std::ifstream file;
+    std::string filename;
+
+    for (auto &p : std::experimental::filesystem::directory_iterator(path))
+    {
+        if (p.path().extension() == ext)
+        {
+
+            filename = p.path().string(); // UPDATE : p.path().stem().string(); ---> without extension
+            file = std::ifstream{name};
+            //std::cout << name << '\n';
+            if (!file)
+            {
+                std::cout << "File is missing : " + filename + ", no entry inside map\n";
+            }
+            else
+            {
+                toc.insert(p.path().stem().string());
+            }
+        }
     }
 }
 

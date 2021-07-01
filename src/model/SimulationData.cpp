@@ -2,22 +2,6 @@
 #include <experimental/filesystem>
 #include <utility>
 
-
-// AgentModel getAgentModelClass()
-// {
-//    return new AgentModel();                          SIMULATION_OFFICE
-// }
-
-// ContextModel getContextModelClass()
-// {
-//    return new ContextModel();                        SIMULATION_OFFICE
-// }
-
-// Class < ? extends BaseWorldModel > getWorldModelClass()
-// {
-//    return new WorldModel();                          SIMULATION_OFFICE
-// }
-
 std::vector<std::string> SimulationData::getPlaceFiles()
 {
     return getFilesByPath(PLACES_PATH);
@@ -27,24 +11,6 @@ std::string SimulationData::getWallsFile()
 {
     return getFile(WALLS_FILE);
 }
-
-// XMLConfiguration getConfigFile()
-// {
-//     if (simulationConfig == null)
-//     {
-//         simulationConfig = new XMLConfiguration();
-//         try
-//         {
-//             simulationConfig.load(getFile(CONFIG_FILE));
-//         }
-//         catch (ConfigurationException e)
-//         {
-//             throw new RuntimeException(
-//                 "Error reading the simulation config file", e);
-//         }
-//     }
-//     return simulationConfig;
-// }
 
 SimulationData::SimulationData(std::string givenPath)
 {

@@ -11,7 +11,7 @@ static const std::string ABSOLUTE_PATH = "/home" + separator + getlogin(); // Un
 
 static const std::string CONFIG_PATH = ABSOLUTE_PATH + "/.Siafu"; // Unix version
 
-static const std::string DEFAULT_GRADIENT_PATH = CONFIG_PATH + separator + "CalculatedGradients" + separator;
+static const std::string DEFAULT_GRADIENT_PATH = "./ressources/CalculatedGradients/";
 
 static const std::string DEFAULT_CONFIG_FILE = CONFIG_PATH + separator + "config.xml";
 

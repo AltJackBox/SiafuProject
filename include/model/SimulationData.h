@@ -25,19 +25,15 @@ public:
 
 	static SimulationData *getInstance(const std::string pathString)
 	{
-		//std::string defaultFilePath = DEFAULT_PATH + "config.xml";
 		std::ifstream file{pathString + "config.xml"};
-		//std::ifstream file{defaultFilePath};
 		if (!file)
 		{
 			std::cerr << "The simulation data at " + pathString + " does not exist\n";
-			//std::cerr << "The simulation data at " + defaultFilePath + " does not exist\n";
 			return nullptr;
 		}
 		else
 		{
 			return new SimulationData(pathString);
-			//return new SimulationData(DEFAULT_PATH);
 		}
 	}
 

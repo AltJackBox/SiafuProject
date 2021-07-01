@@ -1,19 +1,23 @@
 #ifndef PLACE_H
 #define PLACE_H
 
+#include <siafu/Controller.h>
+#include <model/World.h>
 #include <types/Publishable.h>
+#include <utils/PersistentCachedMap.h>
 #include <string>
 #include <map>
 
 class Position;
 class World;
 class Gradient;
+class PersistentCachedMap;
 
 class Place : public Publishable
 {
 
 private:
-	//static PersistentCachedMap gradients;
+	static PersistentCachedMap* gradients;
 
 	static World *world;
 
@@ -37,12 +41,8 @@ public:
 		world = newWorld;
 		// Allow the old value to be garbage
 		// collected before the next is created
-		// gradients = null;
-
-		// gradients =
-		//     new SiafuGradientCache(Controller.DEFAULT_GRADIENT_PATH,
-		//                            world.getWorldName(), World.getCacheSize(),
-		//                            World.shouldPrefillCache());
+		gradients = nullptr;
+		gradients = new PersistentCachedMap(DEFAULT_GRADIENT_PATH, world->getWorldName(), World::getCacheSize());
 	}
 
 	Place();

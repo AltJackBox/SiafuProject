@@ -67,6 +67,8 @@ private:
 
     SimulationData *simData;
 
+    static int cacheSize;
+
     std::vector<Position *> readPlacePoints(std::string filename);
 
     void buildWalls();
@@ -92,6 +94,16 @@ public:
 
     // USEFUL ?
     //bool shouldPrefillCache();
+
+    static int getCacheSize()
+    {
+        return cacheSize;
+    }
+
+    static void setCacheSize(int size)
+    {
+        cacheSize = size;
+    }
 
     World();
 

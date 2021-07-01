@@ -213,21 +213,10 @@ std::vector<Place *> World::createPlacesFromImages()
     return placesFromImg;
 }
 
-// void World::setShouldPrefillCache(bool prefill)
-// {
-//     this->prefillCache = prefill;
-// }
-
-// bool World::shouldPrefillCache()
-// {
-//     return this->prefillCache;
-// }
-
 World::World(Simulation *simulation, SimulationData *simData)
 {
     this->simulation = simulation;
     this->simData = simData;
-    // this->simulationConfig = simData->getConfigFile();
     this->worldName = "Siafu Offices, Heidelberg, Germany";
 
     Agent::resetAgents();

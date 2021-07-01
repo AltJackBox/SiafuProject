@@ -2,6 +2,7 @@
 #include <model/World.h>
 #include <model/Position.h>
 #include <model/Gradient.h>
+#include <utils/PersistentCachedMap.h>
 
 #include <string>
 #include <iostream>
@@ -11,10 +12,10 @@ World *Place::world;
 
 void Place::basicChecks(World *thisPlacesWorld)
 {
-    // if (gradients == null) {
-    // 	throw new InitializationRequiredException(
-    // 			"You need to initialize the Place class");
-    // }
+    if (gradients == nullptr)
+    {
+        std::cerr << "InitializationRequiredException : You need to initialize the Place class\n";
+    }
     if (world != thisPlacesWorld)
     {
         std::cerr << "All your places must belong to the same World.";
@@ -39,11 +40,14 @@ Place::Place(std::string type, Position *pos, World *world, std::string name, Po
 
     world->addPlaceType(type);
 
-    if (relevantPosition != NULL) {
-    	temporaryGradient = new Gradient(pos, world, relevantPosition);
-    } /* else if (!gradients.containsKey(pos.tostd::string())) { */
-    // 	gradients.put(pos, new Gradient(pos, world));
-    // }
+    if (relevantPosition != NULL)
+    {
+        temporaryGradient = new Gradient(pos, world, relevantPosition);
+    }
+    else if (!gradients->containsKey(pos->toString()))
+    {
+        gradients->put(pos, new Gradient(pos, world));
+    }
 }
 
 std::string Place::toString()
@@ -71,14 +75,14 @@ Position *Place::getPos()
     return pos;
 }
 
-void Place::set(std::string key, Publishable* value)
+void Place::set(std::string key, Publishable *value)
 {
-    std::pair<std::string, Publishable*> pair;
+    std::pair<std::string, Publishable *> pair;
     pair = std::make_pair(key, value);
     info.insert(pair);
 }
 
-Publishable* Place::get(std::string key)
+Publishable *Place::get(std::string key)
 {
     if (info.find(key) == info.end())
     {
@@ -88,33 +92,35 @@ Publishable* Place::get(std::string key)
     return info.at(key);
 }
 
-Gradient* Place::getGradient()
+Gradient *Place::getGradient()
 {
     if (temporaryGradient != NULL)
     {
         return temporaryGradient;
     }
+    else
+    {
+        return (Gradient *)gradients->get(pos->toString());
+    }
     return nullptr;
-    // else
-    // {
-        // return (Gradient)gradients.get(pos.tostd::string());
-    // }
 }
 
-int Place::pointFrom(Position* targetPos, int preferedDir)
+int Place::pointFrom(Position *targetPos, int preferedDir)
 {
     return getGradient()->pointFrom(targetPos, preferedDir);
 }
 
-int Place::distanceFrom(Position* targetPos)
+int Place::distanceFrom(Position *targetPos)
 {
     return getGradient()->distanceFrom(targetPos);
 }
 
-bool Place::equals(Place* p){
+bool Place::equals(Place *p)
+{
     return (this->getPos()->equals(p->getPos())) && (this->getName().compare(p->getName()));
 }
 
-std::string Place::getType(){
+std::string Place::getType()
+{
     return "Place";
 }
