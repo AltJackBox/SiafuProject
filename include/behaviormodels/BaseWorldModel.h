@@ -18,9 +18,9 @@ class BaseWorldModel {
 		this->world = world;
 	}
 
-	virtual void createPlaces(std::vector<Place*> places);
+	virtual void createPlaces(std::vector<Place*> places) {}
 
-	virtual void doIteration(std::vector<Place*> places);
+	virtual void doIteration(std::vector<Place*> places) {}
 
 };
 

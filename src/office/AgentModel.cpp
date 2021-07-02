@@ -682,7 +682,7 @@ bool AgentModel::agentCanBeInfected(Agent *a)
     return agentSituation(a, healthy);
 }
 
-bool agentSituation(Agent *a, std::string situation)
+bool AgentModel::agentSituation(Agent *a, std::string situation)
 {
     return (a->get(Fields::SITUATION)->toString()).compare(situation) == 0;
 }

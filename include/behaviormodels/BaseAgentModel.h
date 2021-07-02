@@ -19,9 +19,11 @@ public:
 		this->world = world;
 	}
 
-	virtual std::vector<Agent *> createAgents();
+	virtual std::vector<Agent *> createAgents() {
+		return std::vector<Agent*>();
+	}
 
-	virtual void doIteration(std::vector<Agent *> agents);
+	virtual void doIteration(std::vector<Agent *> agents) {}
 };
 
 #endif

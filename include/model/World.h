@@ -98,7 +98,7 @@ public:
         cacheSize = size;
     }
 
-    World();
+    World(){}
 
     World(Simulation *simulation, SimulationData *simData);
 

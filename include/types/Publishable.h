@@ -6,8 +6,12 @@
 class Publishable
 {
     public:
-    virtual std::string getType();
-    virtual std::string toString();
+    virtual std::string getType() {
+        return "Publishable";
+    }
+    virtual std::string toString() {
+        return "Empty";
+    }
 };
 
 #endif

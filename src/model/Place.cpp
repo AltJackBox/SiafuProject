@@ -9,6 +9,7 @@
 #include <utility>
 
 World *Place::world;
+PersistentCachedMap *Place::gradients;
 
 void Place::basicChecks(World *thisPlacesWorld)
 {

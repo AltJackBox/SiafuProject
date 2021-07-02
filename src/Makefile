@@ -63,7 +63,7 @@ $(BIN_DIR)/$(TEST4) : $(TEST4_DEP)
 
 $(BIN_DIR)/$(TEST5) : $(TEST5_DEP)
 	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST4) $^ -lstdc++fs -lpthread
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST5) $^ -lstdc++fs -lpthread
 
 -include $(DEPENDENCIES)
 

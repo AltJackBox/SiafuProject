@@ -14,6 +14,8 @@
 #include <behaviormodels/BaseWorldModel.h>
 #include <iostream>
 
+int World::cacheSize;
+
 extern "C"
 {
 #define STB_IMAGE_IMPLEMENTATION
