@@ -2,7 +2,7 @@
 #define GRADIENT_H
 
 #include <string>
-// #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 class Position;
 class World;
@@ -11,18 +11,15 @@ class Gradient
 {
 
 private:
-    // // Used to serialize (save & load the instances of Gradient inside files)
-    // friend class boost::serialization::access;
+    // Used to serialize (save & load the instances of Gradient inside files)
+    friend class boost::serialization::access;
 
-    // template <class GradientArchive>
-    // void serialize(GradientArchive &ar, const unsigned int version)
-    // {
-    //     ar &distance;
-    //     ar &h;
-    //     ar &w;
-    //     ar &center;
-    // }
-    // // -----------------------------------------------------------------------
+    template <class GradientArchive>
+    void serialize(GradientArchive &ar, const unsigned int version)
+    {
+        ar & distance & h & w & center;
+    }
+    // -----------------------------------------------------------------------
 
     static const int POSSIBLE_DIRS = 8;
 

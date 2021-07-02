@@ -8,50 +8,39 @@
 #include <dirent.h>
 #include <experimental/filesystem>
 
-// #include <boost/archive/text_oarchive.hpp>
-// #include <boost/archive/text_iarchive.hpp>
+#include <boost/archive/text_oarchive.hpp>
+#include <boost/archive/text_iarchive.hpp>
 
 void PersistentCachedMap::persistObject(Position *key, Gradient *value)
 {
-    // try
-    // {
-    //     std::ofstream f(path + key->toString() + ".data" /*, std::ofstream::binary*/);
-    //     boost::archive::text_oarchive oa{f};
-    //     oa << value;
-    // }
-    // catch (std::exception &e)
-    // {
-    //     std::cout << "RuntimeException : Can't write " + path + key->toString() + ".data";
-    // }
-    std::string initialPath = path + key->toString() + ".data";
-    const char* pathUsed = initialPath.c_str();
-    FILE *File = fopen(pathUsed,"wb");
-    fwrite((char *)value,sizeof(value),1,File); //Treats the object as if it is a char array
-    fclose(File);
+    try
+    {
+        std::ofstream f(path + key->toString() + ".data" /*, std::ofstream::binary*/);
+        boost::archive::text_oarchive oa{f};
+        oa << value;
+    }
+    catch (std::exception &e)
+    {
+        std::cout << "RuntimeException : Can't write " + path + key->toString() + ".data";
+    }
 }
 
 Gradient *PersistentCachedMap::recoverObject(std::string key)
 {
-    // try
-    // {
-    //     std::ifstream f(path + key + ".data" /*, std::ifstream::binary*/);
-    //     boost::archive::text_iarchive ia{f};
-    //     Gradient *a;
-    //     ia >> a;
-    //     return a;
-    // }
-    // catch (std::exception &e)
-    // {
-    //     toc.erase(key); // Try and heal the list
-    //     std::cerr << "RuntimeException : Can't read" + path + "-" + key + ".data, did u erase it manually ?\n";
-    // }
-    Gradient* grad;
-    std::string initialPath = path + key + ".data";
-    const char* pathUsed = initialPath.c_str();
-    FILE* File = fopen(pathUsed,"rb");
-    fread((char *)&grad,sizeof(grad),1,File); //Treats the object as if it is a char array
-    fclose(File);
-    return grad;
+    try
+    {
+        std::ifstream f(path + key + ".data" /*, std::ifstream::binary*/);
+        boost::archive::text_iarchive ia{f};
+        Gradient *a;
+        ia >> a;
+        return a;
+    }
+    catch (std::exception &e)
+    {
+        toc.erase(key); // Try and heal the list
+        std::cerr << "RuntimeException : Can't read" + path + "-" + key + ".data, did u erase it manually ?\n";
+    }
+    return nullptr;
 }
 
 void PersistentCachedMap::putInCache(std::string key, Gradient *value)
@@ -104,16 +93,9 @@ PersistentCachedMap::PersistentCachedMap(std::string basePath, std::string name,
         {
 
             filename = p.path().string(); // UPDATE : p.path().stem().string(); ---> without extension
-            file = std::ifstream{name};
+            file = std::ifstream{filename};
             //std::cout << name << '\n';
-            if (!file)
-            {
-                std::cout << "File is missing : " + filename + ", no entry inside map\n";
-            }
-            else
-            {
-                toc.insert(p.path().stem().string());
-            }
+            toc.insert(p.path().stem().string());
         }
     }
 }
