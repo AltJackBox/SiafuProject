@@ -23,9 +23,8 @@ void Place::basicChecks(World *thisPlacesWorld)
     }
 }
 
-Place::Place(std::string type, Position *pos, World *world)
+Place::Place(std::string type, Position *pos, World *world) : Place(type, pos, world, type + "-" + pos->toString(), NULL)
 {
-    Place(type, pos, world, type + "-" + pos->toString(), NULL);
 }
 
 Place::Place(std::string type, Position *pos, World *world, std::string name, Position *relevantPosition)

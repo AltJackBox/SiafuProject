@@ -24,9 +24,8 @@ void Agent::basicChecks(World *thisAgentsWorld)
     }
 }
 
-Agent::Agent(std::string name, Position *start, World *world)
+Agent::Agent(std::string name, Position *start, World *world) : Agent(name, start, world, 0)
 {
-    Agent(name, start, world, 0);
 }
 
 Agent::Agent(std::string name, Position *start, World *world, int zPriority)

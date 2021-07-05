@@ -18,15 +18,15 @@ const int Position::COMPASS[8][2] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {
 
 Position::Position(const int i, const int j)
 {
-    // if (!initialized)
-    // {
-    //     std::cerr << "Position not initialized";
-    // }
+    if (!initialized)
+    {
+        std::cerr << "Position not initialized";
+    }
 
-    // if ((i >= height) || (i < 0) || (j >= width) || (j < 0))
-    // {
-    //     std::cerr << "PositionOutOfTheMapException";
-    // }
+    if ((i >= height) || (i < 0) || (j >= width) || (j < 0))
+    {
+        std::cerr << "PositionOutOfTheMapException";
+    }
 
     this->i = i;
     this->j = j;
