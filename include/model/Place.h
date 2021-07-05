@@ -42,7 +42,7 @@ public:
 		// Allow the old value to be garbage
 		// collected before the next is created
 		gradients = nullptr;
-		gradients = new PersistentCachedMap(DEFAULT_GRADIENT_PATH, world->getWorldName(), World::getCacheSize());
+		gradients = new PersistentCachedMap(DEFAULT_GRADIENT_PATH, "Simulation-Office", World::getCacheSize());
 	}
 
 	Place();

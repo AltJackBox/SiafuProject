@@ -1,4 +1,3 @@
-#include <siafu/Simulation.h>
 #include <siafu/Controller.h>
 #include <assert.h>
 #include <iostream>

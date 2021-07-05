@@ -12,7 +12,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
 {
     bool doneCalculating = false;
     bool foundRelevantPos = false;
-
+    distance.reserve(h*w);
     for (int i = 0; i < h; i++)
     {
         for (int j = 0; j < w; j++)

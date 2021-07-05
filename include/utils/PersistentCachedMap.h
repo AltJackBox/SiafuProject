@@ -6,6 +6,9 @@
 #include <unordered_set>
 #include <vector>
 
+class Gradient;
+class Position;
+
 class PersistentCachedMap
 {
 
@@ -19,6 +22,10 @@ protected:
     std::vector<std::string> recent;
 
     std::unordered_set<std::string> toc;
+
+    void persistObject(Position * key, Gradient * value); // protected
+
+    Gradient *recoverObject(std::string key); // protected
 
 private:
     void putInCache(std::string key, Gradient *value);
@@ -34,9 +41,6 @@ public:
 
     bool containsKey(std::string key);
 
-    void persistObject(Position * key, Gradient * value); // protected
-
-    Gradient *recoverObject(std::string key); // protected
 };
 
 #endif

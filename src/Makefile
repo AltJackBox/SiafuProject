@@ -12,14 +12,12 @@ SRCS=$(wildcard siafu/*.cpp) \
 OBJS  := $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 DEPENDENCIES := $(OBJS:.o=.d)
 
-TEST1=t_Controller 
-TEST1_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o $(OBJ_DIR)/siafu/Simulation.o \
-	$(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o $(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/siafu/test/t_Controller.o
-
 TEST2=t_Simulation
 TEST2_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
 	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
-	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/siafu/test/t_Simulation.o
+	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/office/AgentModel.o $(OBJ_DIR)/office/WorldModel.o $(OBJ_DIR)/office/Constants.o \
+	$(OBJ_DIR)/utils/PersistentCachedMap.o $(OBJ_DIR)/types/BooleanType.o $(OBJ_DIR)/types/EasyTime.o $(OBJ_DIR)/types/Text.o \
+	$(OBJ_DIR)/types/TimePeriod.o $(OBJ_DIR)/siafu/test/t_Simulation.o
 
 TEST3=t_SimulationData
 TEST3_DEP=$(OBJ_DIR)/model/SimulationData.o $(OBJ_DIR)/model/test/t_SimulationData.o
@@ -39,15 +37,11 @@ TEST5_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DI
 
 all: build test
 
-test: $(OBJS) $(BIN_DIR)/$(TEST5)
+test: $(OBJS) $(BIN_DIR)/$(TEST2)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CPPFLAGS) -c $< -o $@ 
-
-$(BIN_DIR)/$(TEST1) : $(TEST1_DEP)
-	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST1) $^ -lstdc++fs -lpthread
 
 $(BIN_DIR)/$(TEST2) : $(TEST2_DEP)
 	@mkdir -p $(@D)

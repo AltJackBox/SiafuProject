@@ -25,13 +25,24 @@ inline bool ends_with(std::string const &value, std::string const &ending)
 inline int getIndex(std::vector<std::string> v, std::string K)
 {
     int index = 0;
-    while (index != v.size()){
-        if (v[index].compare(K) == 0) {
+    while (index != v.size())
+    {
+        if (v[index].compare(K) == 0)
+        {
             return index;
         }
         index++;
     }
     return -1;
+}
+
+inline int signum(double x)
+{
+    if (x > 0)
+        return 1;
+    if (x < 0)
+        return -1;
+    return 0;
 }
 
 #endif

@@ -1,5 +1,6 @@
 #include <model/CoordinateTools.h>
 #include <model/Position.h>
+#include <utils.h>
 #include <cmath>
 
 CoordinateTools::CoordinateTools(const int height, const int width, const double topRight[], const double bottomRight[], const double bottomLeft[])
@@ -18,7 +19,7 @@ CoordinateTools::CoordinateTools(const int height, const int width, const double
 
 	// Optimization: check if we need to figure out N/S and E/W everytime,
 	// or we are always on the same hemispheres.
-	if (std::signbit(blLon) != std::signbit(trLon) || std::signbit(blLat) != std::signbit(trLat) || std::signbit(blLat) != std::signbit(trLat - brLat) || std::signbit(blLon) != std::signbit(trLon - brLon))
+	if ( (signum(blLon) != signum(trLon)) || (signum(blLat) != signum(trLat)) || (signum(blLat) != signum(trLat - brLat)) || (signum(blLon) != signum(trLon - brLon)) )
 	{
 		crossesZeroes = true;
 		latHemisphere = "";

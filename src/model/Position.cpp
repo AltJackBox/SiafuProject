@@ -20,12 +20,12 @@ Position::Position(const int i, const int j)
 {
     if (!initialized)
     {
-        std::cerr << "Position not initialized";
+        std::cerr << "Position not initialized\n";
     }
 
     if ((i >= height) || (i < 0) || (j >= width) || (j < 0))
     {
-        std::cerr << "PositionOutOfTheMapException";
+        std::cerr << "Position Out Of The Map\n";
     }
 
     this->i = i;
@@ -53,7 +53,7 @@ Position *Position::calculateMove(const int rawDir)
 
     if (world->isAWall(p))
     {
-        std::cerr << "PositionOnAWallException";
+        std::cerr << "Position On A Wall Exception\n";
     }
 
     return p;

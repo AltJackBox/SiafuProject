@@ -10,9 +10,9 @@ int main() {
 
     PersistentCachedMap* pcm = new PersistentCachedMap("./ressources/CalculatedGradients/", "Simulation-Office", 100);
 
-    pcm->persistObject(pos, grad);
+    //pcm->persistObject(pos, grad);
 
-    grad = pcm->recoverObject(pos->toString());
+    //grad = pcm->recoverObject(pos->toString());
 
     std::cout << "Width = " << grad->getWidth() << " Heigth = " << grad->getHeight() << "\n";
     std::cout << "Recovered gradient contains : " + grad->toString() + " as center position\n";
