@@ -4,7 +4,6 @@
 #include <model/World.h>
 #include <model/CoordinateTools.h>
 #include <iostream>
-#include <boost/archive/text_iarchive.hpp>
 
 class World;
 class CoordinateTools;
@@ -13,15 +12,6 @@ class Position
 {
 
 private:
-    // Used to serialize (save & load the instances of Gradient inside files)
-    friend class boost::serialization::access;
-
-    template <class PositionArchive>
-    void serialize(PositionArchive &ar, const unsigned int version)
-    {
-        ar &i &j &world;
-    }
-    // -----------------------------------------------------------------------
 
     static const int NEAR_DISTANCE = 15;
 

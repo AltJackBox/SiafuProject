@@ -8,16 +8,25 @@
 #include <dirent.h>
 #include <experimental/filesystem>
 
-#include <boost/archive/text_oarchive.hpp>
-#include <boost/archive/text_iarchive.hpp>
+// #include <boost/archive/text_oarchive.hpp>
+// #include <boost/archive/text_iarchive.hpp>
+#include <cereal/archives/binary.hpp>
 
 void PersistentCachedMap::persistObject(Position *key, Gradient *value)
 {
     try
     {
+        // std::ofstream f(path + key->toString() + ".data" /*, std::ofstream::binary*/);
+        // boost::archive::text_oarchive oa{f};
+        // oa << value;
         std::ofstream f(path + key->toString() + ".data" /*, std::ofstream::binary*/);
-        boost::archive::text_oarchive oa{f};
-        oa << value;
+        cereal::BinaryOutputArchive oarchive(f);
+
+        int w = value->getWidth();
+        int h = value->getHeight();
+        int* distance = value->getDistance();
+        Position* pos = value->getCenter();
+        oarchive(w, h, pos->getRow(), pos->getCol(), cereal::binary_data( distance, sizeof(int) * h * w ));                         
     }
     catch (std::exception &e)
     {
@@ -29,11 +38,15 @@ Gradient *PersistentCachedMap::recoverObject(std::string key)
 {
     try
     {
+        // boost::archive::text_iarchive ia{f};
+        // Gradient *a;
+        // ia >> a;
         std::ifstream f(path + key + ".data" /*, std::ifstream::binary*/);
-        boost::archive::text_iarchive ia{f};
-        Gradient *a;
-        ia >> a;
-        return a;
+        cereal::BinaryInputArchive iarchive(f); // Create an input archive
+        int w, h, centerI, centerJ;
+        int* distance;
+        iarchive(w, h, centerI, centerJ, cereal::binary_data( distance, sizeof(int) * h * w ) ); // Read the data from the archive
+        return new Gradient(new Position(centerI, centerJ), h, w, distance);
     }
     catch (std::exception &e)
     {

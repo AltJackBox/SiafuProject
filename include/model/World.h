@@ -6,7 +6,6 @@
 #include <unordered_map>
 #include <set>
 #include <string>
-#include <boost/archive/text_iarchive.hpp>
 
 class Simulation;
 class SimulationData;
@@ -40,15 +39,6 @@ class World
 {
 
 private:
-    // Used to serialize (save & load the instances of Gradient inside files)
-    friend class boost::serialization::access;
-
-    template <class WorldArchive>
-    void serialize(WorldArchive &ar, const unsigned int version)
-    {
-        ar &walls;
-    }
-    // -----------------------------------------------------------------------
 
     int height;
 

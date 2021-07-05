@@ -1,8 +1,11 @@
 #ifndef GRADIENT_H
 #define GRADIENT_H
 
+// #include <model/Position.h>
+// #include <boost/serialization/serialization.hpp>
+// #include <boost/serialization/split_member.hpp>
+// #include <boost/serialization/array.hpp>
 #include <string>
-#include <boost/archive/text_iarchive.hpp>
 
 class Position;
 class World;
@@ -12,13 +15,38 @@ class Gradient
 
 private:
     // Used to serialize (save & load the instances of Gradient inside files)
-    friend class boost::serialization::access;
+    // friend class boost::serialization::access;
 
-    template <class GradientArchive>
-    void serialize(GradientArchive &ar, const unsigned int version)
-    {
-        ar & distance & h & w & center;
-    }
+    // template <class Archive>
+    // void save(Archive &ar, const unsigned int version) const
+    // {
+    //     // invoke serialization of the base class
+    //     ar << h;
+    //     ar << w;
+    //     ar << boost::serialization::make_array<int>(distance, h * w);
+    //     ar << centeri;
+    //     ar << centerj;
+    //     delete center;
+    // }
+
+    // template <class Archive>
+    // void load(Archive &ar, const unsigned int version)
+    // {
+    //     // invoke serialization of the base class
+    //     ar >> h;
+    //     ar >> w;
+    //     ar >> boost::serialization::make_array<int>(distance, h * w);
+    //     ar >> centeri;
+    //     ar >> centerj;
+    //     center = new Position(centeri, centerj);
+    // }
+
+    // template <class Archive>
+    // void serialize(Archive &ar, const unsigned int version)
+    // {
+    //     //ar & distance & h & w & centeri & centerj;
+    //     boost::serialization::split_member(ar, *this, version);
+    // }
     // -----------------------------------------------------------------------
 
     static const int POSSIBLE_DIRS = 8;
@@ -46,6 +74,8 @@ public:
 
     Gradient(Position *center, World *world, Position *relevantPos);
 
+    Gradient(Position *center, int h, int w, int* distance);
+
     std::string toString();
 
     int getHeight();
@@ -55,6 +85,10 @@ public:
     int pointFrom(Position *pos, int preferredDir);
 
     int distanceFrom(Position *pos);
+
+    int* getDistance();
+
+    Position* getCenter();
 };
 
 #endif

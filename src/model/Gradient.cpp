@@ -103,6 +103,13 @@ Gradient::Gradient(Position *center, World *world, Position *relevantPos)
     // calculateGradient(world, relevantPos);
 }
 
+Gradient::Gradient(Position *center, int h, int w, int* distance){
+    this->center = center;
+    this->h = h;
+    this->w = w;
+    this->distance = distance;
+}
+
 std::string Gradient::toString()
 {
     return center->toString();
@@ -168,4 +175,12 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
 int Gradient::distanceFrom(Position *pos)
 {
     return distance[pos->getRow() * w + pos->getCol()];
+}
+
+int * Gradient::getDistance(){
+    return distance;
+}
+
+Position* Gradient::getCenter(){
+    return center;
 }
