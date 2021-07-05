@@ -1,8 +1,6 @@
 #ifndef PERSISTENTCACHEDMAP_H
 #define PERSISTENTCACHEDMAP_H
 
-#include <model/Gradient.h>
-#include <utils.h>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -36,7 +34,7 @@ public:
 
     bool containsKey(std::string key);
 
-    void persistObject(Position *key, Gradient *value); // protected
+    void persistObject(Position * key, Gradient * value); // protected
 
     Gradient *recoverObject(std::string key); // protected
 };

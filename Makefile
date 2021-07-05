@@ -3,6 +3,7 @@ export SRC_DIR=$(CURDIR)/src
 export HDR_DIR=$(CURDIR)/include
 export OBJ_DIR=$(CURDIR)/obj
 export BIN_DIR=$(CURDIR)/bin
+export RSC_DIR=$(CURDIR)/ressources
 
 #g++ -I../runtime/src main.cpp -o main
 
@@ -36,7 +37,8 @@ test:
 	cd $(SRC_DIR) && $(MAKE) test
 
 clean:
-	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/*
+	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/* $(RSC_DIR)/CalculatedGradients/Simulation-Office/*
+
 
 
 

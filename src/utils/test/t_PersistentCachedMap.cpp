@@ -5,8 +5,8 @@
 
 int main() {
     World* world = new World();
-    Position* pos = new Position(0,3);
-    Gradient* grad = new Gradient(pos, world); // center
+    Position * pos = new Position(0,3);
+    Gradient * grad = new Gradient(pos, world); // center
 
     PersistentCachedMap* pcm = new PersistentCachedMap("./ressources/CalculatedGradients/", "Simulation-Office", 100);
 
@@ -14,6 +14,11 @@ int main() {
 
     grad = pcm->recoverObject(pos->toString());
 
+    std::cout << "Width = " << grad->getWidth() << " Heigth = " << grad->getHeight() << "\n";
     std::cout << "Recovered gradient contains : " + grad->toString() + " as center position\n";
-
+    std::cout << "Distances : ";
+    for (int element : grad->getDistance()) {
+        std::cout << element << " ";
+    }
+    std::cout << "\n";
 }

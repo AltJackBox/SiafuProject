@@ -32,14 +32,12 @@ Position::Position(const int i, const int j)
     this->j = j;
 }
 
-Position::Position(const double lat, const double lon)
+Position::Position(const double lat, const double lon) : Position(coordinateTool->coordinatesToLocal(lat, lon))
 {
-    Position(coordinateTool->coordinatesToLocal(lat, lon));
 }
 
-Position::Position(Position *p)
+Position::Position(Position *p) : Position(p->i, p->j)
 {
-    Position(p->i, p->j);
 }
 
 std::string Position::toString()

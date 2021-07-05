@@ -10,7 +10,6 @@
 
 void Gradient::calculateGradient(World *world, Position *relevantPos)
 {
-    distance = new int[h * w];
     bool doneCalculating = false;
     bool foundRelevantPos = false;
 
@@ -89,21 +88,22 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     }
 }
 
-Gradient::Gradient(Position *center, World *world)
+Gradient::Gradient(Position *center, World *world) : Gradient(center, world, NULL)
 {
-    Gradient(center, world, NULL);
 }
 
 Gradient::Gradient(Position *center, World *world, Position *relevantPos)
 {
-    // h = world->getHeight();
-    // w = world->getWidth();
+    h = world->getHeight();
+    w = world->getWidth();
+
     this->center = center;
 
-    // calculateGradient(world, relevantPos);
+    calculateGradient(world, relevantPos);
 }
 
-Gradient::Gradient(Position *center, int h, int w, int* distance){
+Gradient::Gradient(Position *center, int h, int w, std::vector <int> distance)
+{
     this->center = center;
     this->h = h;
     this->w = w;
@@ -177,10 +177,12 @@ int Gradient::distanceFrom(Position *pos)
     return distance[pos->getRow() * w + pos->getCol()];
 }
 
-int * Gradient::getDistance(){
+std::vector<int> Gradient::getDistance()
+{
     return distance;
 }
 
-Position* Gradient::getCenter(){
+Position *Gradient::getCenter()
+{
     return center;
 }

@@ -1,11 +1,8 @@
 #ifndef GRADIENT_H
 #define GRADIENT_H
 
-// #include <model/Position.h>
-// #include <boost/serialization/serialization.hpp>
-// #include <boost/serialization/split_member.hpp>
-// #include <boost/serialization/array.hpp>
 #include <string>
+#include <vector>
 
 class Position;
 class World;
@@ -14,40 +11,6 @@ class Gradient
 {
 
 private:
-    // Used to serialize (save & load the instances of Gradient inside files)
-    // friend class boost::serialization::access;
-
-    // template <class Archive>
-    // void save(Archive &ar, const unsigned int version) const
-    // {
-    //     // invoke serialization of the base class
-    //     ar << h;
-    //     ar << w;
-    //     ar << boost::serialization::make_array<int>(distance, h * w);
-    //     ar << centeri;
-    //     ar << centerj;
-    //     delete center;
-    // }
-
-    // template <class Archive>
-    // void load(Archive &ar, const unsigned int version)
-    // {
-    //     // invoke serialization of the base class
-    //     ar >> h;
-    //     ar >> w;
-    //     ar >> boost::serialization::make_array<int>(distance, h * w);
-    //     ar >> centeri;
-    //     ar >> centerj;
-    //     center = new Position(centeri, centerj);
-    // }
-
-    // template <class Archive>
-    // void serialize(Archive &ar, const unsigned int version)
-    // {
-    //     //ar & distance & h & w & centeri & centerj;
-    //     boost::serialization::split_member(ar, *this, version);
-    // }
-    // -----------------------------------------------------------------------
 
     static const int POSSIBLE_DIRS = 8;
 
@@ -55,7 +18,7 @@ private:
 
     static const int DIAGONAL_DISTANCE = 14;
 
-    int *distance;
+    std::vector<int> distance;
 
     int h;
 
@@ -74,7 +37,7 @@ public:
 
     Gradient(Position *center, World *world, Position *relevantPos);
 
-    Gradient(Position *center, int h, int w, int* distance);
+    Gradient(Position *center, int h, int w, std::vector<int> distance);
 
     std::string toString();
 
@@ -86,7 +49,7 @@ public:
 
     int distanceFrom(Position *pos);
 
-    int* getDistance();
+    std::vector<int> getDistance();
 
     Position* getCenter();
 };
