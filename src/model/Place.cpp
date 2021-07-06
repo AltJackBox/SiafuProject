@@ -32,7 +32,7 @@ Place::Place(std::string type, Position *pos, World *world, std::string name, Po
     basicChecks(world);
     if (world->isAWall(pos))
     {
-        std::cerr << "PositionOnAWallException";
+        std::cerr << "Place.cpp : Position On A Wall Exception\n";
     }
     this->type = type;
     this->pos = pos;
@@ -40,11 +40,11 @@ Place::Place(std::string type, Position *pos, World *world, std::string name, Po
 
     world->addPlaceType(type);
 
-    if (relevantPosition != NULL)
+    if (relevantPosition != nullptr)
     {
         temporaryGradient = new Gradient(pos, world, relevantPosition);
     }
-    else if (!gradients->containsKey(pos->toString()))
+    else if (!(gradients->containsKey(pos->toString())))
     {
         gradients->put(pos, new Gradient(pos, world));
     }

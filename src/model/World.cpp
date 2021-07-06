@@ -62,7 +62,7 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
                 }
                 catch (std::exception const &e)
                 {
-                    std::cerr << "Place (" << x << "  " << y << ") is unreachable. Is it out of the map or on a wall?\n";
+                    std::cerr << "World.cpp : Place (" << x << "  " << y << ") is unreachable. Is it out of the map or on a wall?\n";
                 }
             }
         }
@@ -89,7 +89,7 @@ void World::buildWalls()
     bool success = load_image(image, filename, width, height);
     if (!success)
     {
-        std::cout << "Error loading image\n";
+        std::cout << "World.cpp : Error loading image\n";
         return;
     }
 
@@ -128,7 +128,7 @@ void World::createPeople()
     }
     catch (std::exception &e)
     {
-        std::cerr << "RuntimeException : Can't instantiate the agent model\n";
+        std::cerr << "World.cpp : RuntimeException : Can't instantiate the agent model\n";
     }
 
     Agent::initialize(this);
@@ -157,7 +157,7 @@ void World::freezeInfoFields()
 
         if (!p->checkAllInfoFieldsPresent())
         {
-            std::cerr << "RuntimeException : Agent " + p->getName() + " is missing at least one field that other agents have.\n";
+            std::cerr << "World.cpp : RuntimeException : Agent " + p->getName() + " is missing at least one field that other agents have.\n";
         }
     }
 
@@ -173,7 +173,7 @@ void World::createPlaces()
     }
     catch (std::exception &e)
     {
-        std::cerr << "RuntimeException : Can't instantiate the world model\n";
+        std::cerr << "World.cpp : RuntimeException : Can't instantiate the world model\n";
     }
     places = createPlacesFromImages();
     worldModel->createPlaces(places);
@@ -189,7 +189,7 @@ std::vector<Place *> World::createPlacesFromImages()
     {
         std::string filename = fileList[index];
         std::vector<Position *> placePoints = readPlacePoints(filename);
-        showPlacePoints(placePoints, filename);
+        // showPlacePoints(placePoints, filename);
         int indexVec = 0;
         Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
@@ -203,7 +203,7 @@ std::vector<Place *> World::createPlacesFromImages()
             }
             catch (std::exception &e)
             {
-                std::cerr << "RuntimeException : One of your " + filename + " places, at " + pos->toString() + " is on a wall";
+                std::cerr << "World.cpp : RuntimeException : One of your " + filename + " places, at " + pos->toString() + " is on a wall\n";
             }
             Controller::getProgress()->reportPlaceCreated(filename);
             placesFromImg.push_back(place);
@@ -292,7 +292,7 @@ Place *World::getPlaceByName(std::string name)
         index++;
     }
 
-    std::cerr << "PlaceNotFoundException : " + name;
+    std::cerr << "World.cpp : PlaceNotFoundException : " + name + "\n";
     exit(EXIT_FAILURE);
 }
 
@@ -309,7 +309,7 @@ Place *World::getPlaceByPosition(Position *pos)
         }
         index++;
     }
-    std::cerr << "PlaceNotFoundException : at " + pos->toString();
+    std::cerr << "World.cpp : PlaceNotFoundException : at " + pos->toString() + "\n";
     exit(EXIT_FAILURE);
 }
 
@@ -317,7 +317,7 @@ std::vector<Place *> World::getPlacesOfType(std::string type)
 {
     if (placeTypes.find(type) == placeTypes.end())
     {
-        std::cerr << "PlaceTypeUndefinedException : " + type;
+        std::cerr << "World.cpp : PlaceTypeUndefinedException : " + type + "\n";
     }
 
     std::vector<Place *> selection;

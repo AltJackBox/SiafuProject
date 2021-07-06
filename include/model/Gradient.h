@@ -12,11 +12,11 @@ class Gradient
 
 private:
 
-    static const int POSSIBLE_DIRS = 8;
+    static const int POSSIBLE_DIRS;
 
-    static const int STRAIGHT_DISTANCE = 10;
+    static const int STRAIGHT_DISTANCE;
 
-    static const int DIAGONAL_DISTANCE = 14;
+    static const int DIAGONAL_DISTANCE;
 
     std::vector<int> distance;
 
@@ -29,7 +29,7 @@ private:
     void calculateGradient(World *world, Position *relevantPos);
 
 public:
-    static const int UNREACHABLE = 2147483647; // maximum value for an int
+    static const int UNREACHABLE; // maximum value for an int
 
     Gradient();
 

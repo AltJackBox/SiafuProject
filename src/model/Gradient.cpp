@@ -7,17 +7,25 @@
 #include <exception>
 #include <iostream>
 #include <algorithm>
+#include <limits.h>
+
+const int Gradient::UNREACHABLE = INT_MAX;
+
+const int Gradient::POSSIBLE_DIRS = 8;
+
+const int Gradient::STRAIGHT_DISTANCE = 10;
+
+const int Gradient::DIAGONAL_DISTANCE = 14;
 
 void Gradient::calculateGradient(World *world, Position *relevantPos)
 {
     bool doneCalculating = false;
     bool foundRelevantPos = false;
-    distance.reserve(h*w);
     for (int i = 0; i < h; i++)
     {
         for (int j = 0; j < w; j++)
         {
-            distance[i * w + j] = UNREACHABLE;
+            distance.push_back(UNREACHABLE);
         }
     }
     std::set<Position *> pending;
@@ -29,7 +37,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
 
     while (!doneCalculating)
     {
-        for (Position *pos : pending)
+        for (auto pos : pending)
         {
             int distanceStraight = distance[pos->getRow() * w + pos->getCol()] + STRAIGHT_DISTANCE;
             int distanceDiagonal = distance[pos->getRow() * w + pos->getCol()] + DIAGONAL_DISTANCE;
@@ -56,7 +64,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                 try
                 {
                     Position *newPos = pos->calculateMove(dir);
-                    if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()])
+                    if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()] )
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceDiagonal;
                         next.insert(newPos);
@@ -67,12 +75,13 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                     continue;
                 }
             }
-            if (relevantPos != NULL && pending.find(relevantPos) != pending.end())
+            if ((relevantPos != nullptr) && (pending.find(relevantPos) != pending.end()))
             {
                 foundRelevantPos = true;
                 doneCalculating = true;
             }
         }
+        pending.clear();
         pending = next;
         next.clear();
 
@@ -82,9 +91,9 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
         }
     }
 
-    if (relevantPos != NULL && !foundRelevantPos)
+    if (relevantPos != nullptr && !foundRelevantPos)
     {
-        std::cerr << "PositionUnreachableException\n";
+        std::cerr << "Gradient.cpp : Position Unreachable Exception\n";
     }
 }
 
@@ -102,7 +111,7 @@ Gradient::Gradient(Position *center, World *world, Position *relevantPos)
     calculateGradient(world, relevantPos);
 }
 
-Gradient::Gradient(Position *center, int h, int w, std::vector <int> distance)
+Gradient::Gradient(Position *center, int h, int w, std::vector<int> distance)
 {
     this->center = center;
     this->h = h;

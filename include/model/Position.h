@@ -13,7 +13,7 @@ class Position
 
 private:
 
-    static const int NEAR_DISTANCE = 15;
+    static const int NEAR_DISTANCE;
 
     static bool initialized;
 
@@ -25,7 +25,7 @@ private:
 
     static World *world;
 
-    static const int DIRECTIONS = 8;
+    static const int DIRECTIONS;
 
     static const int COMPASS[8][2];
 

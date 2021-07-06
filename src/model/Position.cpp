@@ -14,18 +14,23 @@ int Position::height;
 
 World *Position::world;
 
+const int Position::NEAR_DISTANCE = 15;
+
+const int Position::DIRECTIONS = 8;
+
 const int Position::COMPASS[8][2] = {{-1, 0}, {-1, 1}, {0, 1}, {1, 1}, {1, 0}, {1, -1}, {0, -1}, {-1, -1}};
 
 Position::Position(const int i, const int j)
 {
     if (!initialized)
     {
-        std::cerr << "Position not initialized\n";
+        std::cerr << "Position.cpp : Position not initialized\n";
     }
 
     if ((i >= height) || (i < 0) || (j >= width) || (j < 0))
     {
-        std::cerr << "Position Out Of The Map\n";
+        std::cerr << "Position.cpp : Position Out Of The Map : i = " << i << " j = " << j << " \n";
+        exit(EXIT_FAILURE);
     }
 
     this->i = i;
@@ -53,7 +58,7 @@ Position *Position::calculateMove(const int rawDir)
 
     if (world->isAWall(p))
     {
-        std::cerr << "Position On A Wall Exception\n";
+        std::cerr << "Position.cpp : Position On A Wall Exception\n";
     }
 
     return p;
