@@ -29,8 +29,8 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
         }
     }
     std::set<Position *> pending;
-
     std::set<Position *> next;
+    std::vector<std::string> insertedPositions;
 
     distance[center->getRow() * w + center->getCol()] = 0;
     pending.insert(center);
@@ -50,7 +50,11 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                     if (distanceStraight < distance[newPos->getRow() * w + newPos->getCol()])
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceStraight;
-                        next.insert(newPos);
+                        if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
+                        {
+                            next.insert(newPos);
+                            insertedPositions.push_back( newPos->toString() );
+                        }
                     }
                 }
                 catch (const std::exception &e)
@@ -64,10 +68,14 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                 try
                 {
                     Position *newPos = pos->calculateMove(dir);
-                    if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()] )
+                    if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()])
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceDiagonal;
-                        next.insert(newPos);
+                        if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
+                        {
+                            next.insert(newPos);
+                            insertedPositions.push_back(newPos->toString());
+                        }
                     }
                 }
                 catch (const std::exception &e)
@@ -84,6 +92,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
         pending.clear();
         pending = next;
         next.clear();
+        insertedPositions.clear();
 
         if (pending.empty())
         {
