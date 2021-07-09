@@ -23,7 +23,7 @@ protected:
 
     std::unordered_set<std::string> toc;
 
-    void persistObject(Position * key, Gradient * value); // protected
+    void persistObject(Position *key, Gradient *value); // protected
 
     Gradient *recoverObject(std::string key); // protected
 
@@ -40,7 +40,6 @@ public:
     Gradient *get(std::string key);
 
     bool containsKey(std::string key);
-
 };
 
 #endif

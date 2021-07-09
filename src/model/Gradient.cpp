@@ -1,6 +1,7 @@
 #include <model/Gradient.h>
 #include <model/World.h>
 #include <model/Position.h>
+#include <utils.h>
 
 #include <vector>
 #include <set>
@@ -8,6 +9,8 @@
 #include <iostream>
 #include <algorithm>
 #include <limits.h>
+
+#include <fstream>
 
 const int Gradient::UNREACHABLE = INT_MAX;
 
@@ -30,7 +33,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     }
     std::set<Position *> pending;
     std::set<Position *> next;
-    std::vector<std::string> insertedPositions;
+    std::vector<Position *> insertedPositions;
 
     distance[center->getRow() * w + center->getCol()] = 0;
     pending.insert(center);
@@ -50,10 +53,12 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                     if (distanceStraight < distance[newPos->getRow() * w + newPos->getCol()])
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceStraight;
-                        if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
+                        if (!(std::any_of(insertedPositions.begin(), insertedPositions.end(), [newPos](Position *y)
+                                          { return (hashCode(newPos->toString()) == hashCode(y->toString()) && (newPos->equals(y))); })))
+                        //if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
                         {
                             next.insert(newPos);
-                            insertedPositions.push_back( newPos->toString() );
+                            insertedPositions.push_back(newPos);
                         }
                     }
                 }
@@ -71,10 +76,13 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                     if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()])
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceDiagonal;
-                        if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
+                        if (!(std::any_of(insertedPositions.begin(), insertedPositions.end(), [newPos](Position *y)
+                                          { return (hashCode(newPos->toString()) == hashCode(y->toString()) && (newPos->equals(y))); })))
+
+                        // if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
                         {
                             next.insert(newPos);
-                            insertedPositions.push_back(newPos->toString());
+                            insertedPositions.push_back(newPos);
                         }
                     }
                 }
@@ -91,6 +99,15 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
         }
         pending.clear();
         pending = next;
+        std::cout << pending.size() << "\n";
+        if (pending.size() == 96) {
+            std::ofstream f("pendingC.txt");
+            for (auto pos : pending)
+            {
+                f << pos->toString() + "\n";
+            }
+            f.close();
+        }
         next.clear();
         insertedPositions.clear();
 
@@ -106,7 +123,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     }
 }
 
-Gradient::Gradient(Position *center, World *world) : Gradient(center, world, NULL)
+Gradient::Gradient(Position *center, World *world) : Gradient(center, world, nullptr)
 {
 }
 

@@ -19,7 +19,7 @@ bool load_image(std::vector<unsigned char>& image, const std::string& filename, 
 }
 
 int main() {
-    std::string filename = "RestHomeBathroomEntrance.png";
+    std::string filename = "./ressources/Simulation-Office/places/RestHomeBathroomEntrance.png";
 
     int width, height;
     std::vector<unsigned char> image;
@@ -32,12 +32,10 @@ int main() {
     
     std::cout << "Image width = " << width << '\n';
     std::cout << "Image height = " << height << '\n';
-    
-    const size_t RGB = 1;
-    
+        
     int x = 212;
     int y = 256;
-    size_t index = RGB * (x * width + y);
+    size_t index = x * width + y;
     std::cout << "RGBA pixel @ (x=212, y=256): " 
               << static_cast<int>(image[index + 0]) << " "
               << static_cast<int>(image[index + 1]) << " "

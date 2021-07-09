@@ -45,4 +45,27 @@ inline int signum(double x)
     return 0;
 }
 
+// Java's algorithms to calculate the hashcode of a string
+
+inline int hashCode(std::string value) 
+{
+    int h = 0;
+    if (value.length() > 0)
+    {
+        const char *val = value.c_str();
+
+        for (int i = 0; i < value.length(); i++)
+        {
+            h = 31 * h + val[i];
+        }
+    }
+    return h;
+}
+
+// inline int hash(std::string key)
+// {
+//     int h;
+//     return h = hashCode(key) ^ (h >>> 16);
+// }
+
 #endif

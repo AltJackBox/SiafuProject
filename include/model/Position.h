@@ -36,7 +36,7 @@ private:
 public:
     static void initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
     {
-        if (worldObj == NULL)
+        if (worldObj == nullptr)
         {
             std::cerr << "Null world received!";
         }
