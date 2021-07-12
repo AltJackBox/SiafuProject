@@ -49,6 +49,8 @@ public:
 
     Position();
 
+    ~Position();
+
     Position(const int i, const int j);
 
     Position(const double lat, const double lon);

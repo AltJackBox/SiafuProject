@@ -1,6 +1,9 @@
 #include <model/Position.h>
 #include <model/World.h>
 #include <model/CoordinateTools.h>
+#include <exceptions/PositionOnAWallException.h>
+#include <exceptions/InitializationRequiredException.h>
+#include <exceptions/PositionOutOfTheMapException.h>
 #include <iostream>
 #include <cmath>
 
@@ -24,18 +27,19 @@ Position::Position(const int i, const int j)
 {
     if (!initialized)
     {
-        std::cerr << "Position.cpp : Position not initialized\n";
+        throw InitializationRequiredException("Position not initialized");
     }
 
     if ((i >= height) || (i < 0) || (j >= width) || (j < 0))
     {
-        std::cerr << "Position.cpp : Position Out Of The Map : i = " << i << " j = " << j << " \n";
-        exit(EXIT_FAILURE);
+        throw PositionOutOfTheMapException();
     }
 
     this->i = i;
     this->j = j;
 }
+
+Position::~Position() {}
 
 Position::Position(const double lat, const double lon) : Position(coordinateTool->coordinatesToLocal(lat, lon))
 {
@@ -58,7 +62,7 @@ Position *Position::calculateMove(const int rawDir)
 
     if (world->isAWall(p))
     {
-        std::cerr << "Position.cpp : Position On A Wall Exception\n";
+        return nullptr;
     }
 
     return p;

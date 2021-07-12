@@ -1,7 +1,7 @@
 #include <model/Gradient.h>
 #include <model/World.h>
 #include <model/Position.h>
-#include <utils.h>
+#include <exceptions/PositionOnAWallException.h>
 
 #include <vector>
 #include <set>
@@ -33,7 +33,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     }
     std::set<Position *> pending;
     std::set<Position *> next;
-    std::vector<Position *> insertedPositions;
+    std::vector<std::string> insertedPositions;
 
     distance[center->getRow() * w + center->getCol()] = 0;
     pending.insert(center);
@@ -49,44 +49,44 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
             {
                 try
                 {
-                    Position *newPos = pos->calculateMove(dir);
+                    Position* newPos = pos->calculateMove(dir);
+                    if (newPos == nullptr) {
+                        throw PositionOnAWallException();
+                    }
                     if (distanceStraight < distance[newPos->getRow() * w + newPos->getCol()])
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceStraight;
-                        if (!(std::any_of(insertedPositions.begin(), insertedPositions.end(), [newPos](Position *y)
-                                          { return (hashCode(newPos->toString()) == hashCode(y->toString()) && (newPos->equals(y))); })))
-                        //if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
+                        if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString()) == insertedPositions.end())
                         {
                             next.insert(newPos);
-                            insertedPositions.push_back(newPos);
+                            insertedPositions.push_back(newPos->toString());
                         }
                     }
                 }
-                catch (const std::exception &e)
+                catch (const PositionUnreachableException & err)
                 {
                     continue;
                 }
             }
-
             for (int dir = 1; dir < POSSIBLE_DIRS; dir += 2)
             {
                 try
                 {
-                    Position *newPos = pos->calculateMove(dir);
+                    Position* newPos = pos->calculateMove(dir);
+                    if (newPos == nullptr) {
+                        throw PositionOnAWallException();
+                    }
                     if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()])
                     {
                         distance[newPos->getRow() * w + newPos->getCol()] = distanceDiagonal;
-                        if (!(std::any_of(insertedPositions.begin(), insertedPositions.end(), [newPos](Position *y)
-                                          { return (hashCode(newPos->toString()) == hashCode(y->toString()) && (newPos->equals(y))); })))
-
-                        // if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString() ) == insertedPositions.end())
+                        if (std::find(insertedPositions.begin(), insertedPositions.end(), newPos->toString()) == insertedPositions.end())
                         {
                             next.insert(newPos);
-                            insertedPositions.push_back(newPos);
+                            insertedPositions.push_back(newPos->toString());
                         }
                     }
                 }
-                catch (const std::exception &e)
+                catch (const PositionUnreachableException & e)
                 {
                     continue;
                 }
@@ -97,20 +97,10 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                 doneCalculating = true;
             }
         }
-        pending.clear();
+        std::for_each(pending.begin(), pending.end(), [](Position* obj){ delete obj; });
         pending = next;
-        std::cout << pending.size() << "\n";
-        if (pending.size() == 96) {
-            std::ofstream f("pendingC.txt");
-            for (auto pos : pending)
-            {
-                f << pos->toString() + "\n";
-            }
-            f.close();
-        }
         next.clear();
         insertedPositions.clear();
-
         if (pending.empty())
         {
             doneCalculating = true;
@@ -119,7 +109,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
 
     if (relevantPos != nullptr && !foundRelevantPos)
     {
-        std::cerr << "Gradient.cpp : Position Unreachable Exception\n";
+        throw PositionUnreachableException();
     }
 }
 

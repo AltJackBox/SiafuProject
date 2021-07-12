@@ -1,6 +1,9 @@
 #include <model/Agent.h>
 #include <model/World.h>
 #include <model/Position.h>
+#include <exceptions/InfoFieldsLockedException.h>
+#include <exceptions/InfoUndefinedException.h>
+#include <exceptions/InitializationRequiredException.h>
 #include <exception>
 #include <stdlib.h>
 
@@ -16,11 +19,13 @@ void Agent::basicChecks(World *thisAgentsWorld)
 {
     if (world == nullptr)
     {
-        std::cerr << "You need to initialize the agents.\n";
+        throw InitializationRequiredException("You need to initialize the agents.");
+        exit(EXIT_FAILURE);
     }
     if (world != thisAgentsWorld)
     {
         std::cerr << "All your users must belong to the same world\n";
+        exit(EXIT_FAILURE);
     }
 }
 
@@ -125,7 +130,8 @@ void Agent::set(std::string key, Publishable *value)
 {
     if (infoFieldsLocked && (info.find(key) != info.end()))
     {
-        std::cerr << "InfoFieldsLockedException" + key + "\n";
+        throw InfoFieldsLockedException(key);
+        exit(EXIT_FAILURE);
     }
     INFO_FIELDS.insert(key);
     std::pair<std::string, Publishable *> pair;
@@ -147,7 +153,8 @@ Publishable *Agent::get(std::string key)
 {
     if (info.find(key) == info.end())
     {
-        std::cerr << "InfoUndefinedException " + key + "\n";
+        throw InfoUndefinedException(key);
+        exit(EXIT_FAILURE);
     }
 
     return info.at(key);

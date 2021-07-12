@@ -2,6 +2,8 @@
 #include <model/World.h>
 #include <model/Position.h>
 #include <model/Gradient.h>
+#include <exceptions/PositionOnAWallException.h>
+#include <exceptions/InitializationRequiredException.h>
 #include <utils/PersistentCachedMap.h>
 
 #include <string>
@@ -15,15 +17,17 @@ void Place::basicChecks(World *thisPlacesWorld)
 {
     if (gradients == nullptr)
     {
-        std::cerr << "InitializationRequiredException : You need to initialize the Place class\n";
+        throw InitializationRequiredException("You need to initialize the Place class.");
+        exit(EXIT_FAILURE);
     }
     if (world != thisPlacesWorld)
     {
-        std::cerr << "All your places must belong to the same World.";
+        std::cerr << "All your places must belong to the same World.\n";
+        exit(EXIT_FAILURE);
     }
 }
 
-Place::Place(std::string type, Position *pos, World *world) : Place(type, pos, world, type + "-" + pos->toString(), NULL)
+Place::Place(std::string type, Position *pos, World *world) : Place(type, pos, world, type + "-" + pos->toString(), nullptr)
 {
 }
 
@@ -32,7 +36,7 @@ Place::Place(std::string type, Position *pos, World *world, std::string name, Po
     basicChecks(world);
     if (world->isAWall(pos))
     {
-        std::cerr << "Place.cpp : Position On A Wall Exception\n";
+        throw PositionOnAWallException();
     }
     this->type = type;
     this->pos = pos;

@@ -12,6 +12,7 @@
 #include <behaviormodels/BaseAgentModel.h>
 #include <behaviormodels/BaseContextModel.h>
 #include <behaviormodels/BaseWorldModel.h>
+#include <exceptions/PlaceTypeUndefinedException.h>
 #include <iostream>
 
 int World::cacheSize;
@@ -28,7 +29,7 @@ bool load_image(std::vector<unsigned char> &image, const std::string &filename, 
     unsigned char *data = stbi_load(filename.c_str(), &x, &y, &n, 1);
     if (data != nullptr)
     {
-        image = std::vector<unsigned char>(data, data + x * y /** 0*/);
+        image = std::vector<unsigned char>(data, data + x * y);
     }
     stbi_image_free(data);
     return (data != nullptr);
@@ -71,14 +72,16 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
     return placePoints;
 }
 
-void showPlacePoints(std::vector<Position*> pos, std::string name) {
-        std::cout<< name + "\n";
-        int index = 0;
-		while (index != pos.size()) {
-            std::cout<< pos[index]->toString() << " ";
-            index++;
-		}
-        std::cout<< "\n";	
+void showPlacePoints(std::vector<Position *> pos, std::string name)
+{
+    std::cout << name + "\n";
+    int index = 0;
+    while (index != pos.size())
+    {
+        std::cout << pos[index]->toString() << " ";
+        index++;
+    }
+    std::cout << "\n";
 }
 
 void World::buildWalls()
@@ -98,7 +101,7 @@ void World::buildWalls()
 
     walls = new bool[height * width];
 
-    size_t index;
+    int index;
     for (int y = 0; y < height; y++)
     {
         for (int x = 0; x < width; x++)
@@ -111,11 +114,11 @@ void World::buildWalls()
 
 void World::initializeCoordinates()
 {
-    double topRight[2] = { TOPRIGHT_LATITUDE , TOPRIGHT_LONGITUDE };
+    double topRight[2] = {TOPRIGHT_LATITUDE, TOPRIGHT_LONGITUDE};
 
-    double bottomLeft[2] = { BOTTOMLEFT_LATITUDE , BOTTOMLEFT_LONGITUDE };
+    double bottomLeft[2] = {BOTTOMLEFT_LATITUDE, BOTTOMLEFT_LONGITUDE};
 
-    double bottomRight[2] = { BOTTOMRIGHT_LATITUDE , BOTTOMRIGHT_LONGITUDE };
+    double bottomRight[2] = {BOTTOMRIGHT_LATITUDE, BOTTOMRIGHT_LONGITUDE};
 
     Position::initialize(this, topRight, bottomRight, bottomLeft);
 }
@@ -204,6 +207,7 @@ std::vector<Place *> World::createPlacesFromImages()
             catch (std::exception &e)
             {
                 std::cerr << "World.cpp : RuntimeException : One of your " + filename + " places, at " + pos->toString() + " is on a wall\n";
+                exit(EXIT_FAILURE);
             }
             Controller::getProgress()->reportPlaceCreated(filename);
             placesFromImg.push_back(place);
@@ -273,7 +277,7 @@ std::vector<Place *> World::getPlaces()
     return places;
 }
 
-Calendar* World::getTime()
+Calendar *World::getTime()
 {
     return time;
 }
@@ -317,7 +321,7 @@ std::vector<Place *> World::getPlacesOfType(std::string type)
 {
     if (placeTypes.find(type) == placeTypes.end())
     {
-        std::cerr << "World.cpp : PlaceTypeUndefinedException : " + type + "\n";
+        throw PlaceTypeUndefinedException(type);
     }
 
     std::vector<Place *> selection;

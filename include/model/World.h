@@ -17,7 +17,7 @@ class Place;
 class Agent;
 class Calendar;
 
-static const int COLOR_WHITE = 0xFFFFFF;
+static const int COLOR_WHITE = 255;
 
 static const int NEAR_DISTANCE = 15;
 

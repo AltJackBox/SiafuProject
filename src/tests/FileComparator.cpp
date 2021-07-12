@@ -5,6 +5,17 @@
 std::vector<std::string> found;
 std::vector<std::string> notFound;
 
+// Lines to add to write a file to compare
+
+// if (pending.size() == 96) {
+//     std::ofstream f("pendingC.txt");
+//     for (auto pos : pending)
+//     {
+//         f << pos->toString() + "\n";
+//     }
+//     f.close();
+// }
+
 void lookLine(std::string lineA, std::ifstream &File1, std::ifstream &File2)
 {
     bool lineFound = false;
@@ -30,18 +41,46 @@ void lookLine(std::string lineA, std::ifstream &File1, std::ifstream &File2)
 
 int main()
 {
+
+    // Compare the content of 2 files
+
+    // std::ifstream FileC;
+    // FileC.open("pendingC.txt");
+    // std::ifstream FileJ;
+    // FileJ.open("pendingJ.txt");
+    // std::string line;
+
+    // while (std::getline(FileC, line))
+    // {
+    //     lookLine(line, FileC, FileJ);
+    // }
+    // std::cout << "Not found : \n\n";
+    // for (auto s : notFound)
+    // {
+    //     std::cout << s + "\n";
+    // }
+
+    // Compare content and order of the line (no difference)
+
     std::ifstream FileC;
     FileC.open("pendingC.txt");
     std::ifstream FileJ;
     FileJ.open("pendingJ.txt");
-    std::string line;
+    std::string lineC;
+    std::string lineJ;
 
-    while (std::getline(FileC, line))
+    //seek back to beginning and use std::equal to compare contents
+    FileC.seekg(0, std::ifstream::beg);
+    FileJ.seekg(0, std::ifstream::beg);
+    bool value = std::equal(std::istreambuf_iterator<char>(FileC.rdbuf()),
+                            std::istreambuf_iterator<char>(),
+                            std::istreambuf_iterator<char>(FileJ.rdbuf()));
+    if (value)
     {
-        lookLine(line, FileC, FileJ);
+        std::cout << "Equals\n";
     }
-    std::cout << "Not found : \n\n";
-    for (auto s : notFound) {
-        std::cout << s + "\n";
+    else
+    {
+        std::cout << "Not equals\n";
     }
 }
