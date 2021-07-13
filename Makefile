@@ -37,7 +37,7 @@ test:
 	cd $(SRC_DIR) && $(MAKE) test
 
 clean:
-	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/* $(RSC_DIR)/CalculatedGradients/Simulation-Office/*
+	$(RM) $(BIN_DIR)/* $(OBJ_DIR)/*
 
 
 

@@ -24,6 +24,8 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
 {
     bool doneCalculating = false;
     bool foundRelevantPos = false;
+    bool firstIteration = false; // check if the first iteration has been done, in order to avoid destruction of center
+
     for (int i = 0; i < h; i++)
     {
         for (int j = 0; j < w; j++)
@@ -97,7 +99,12 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                 doneCalculating = true;
             }
         }
-        std::for_each(pending.begin(), pending.end(), [](Position* obj){ delete obj; });
+
+        if (firstIteration) {
+            std::for_each(pending.begin(), pending.end(), [](Position* obj){ delete obj; });
+        } else {
+            firstIteration = true;
+        }
         pending = next;
         next.clear();
         insertedPositions.clear();

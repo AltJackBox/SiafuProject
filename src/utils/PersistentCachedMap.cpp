@@ -1,6 +1,7 @@
 #include <utils/PersistentCachedMap.h>
 #include <model/Gradient.h>
 #include <model/Position.h>
+#include <exceptions/NullPointerException.h>
 #include <utils.h>
 #include <exception>
 #include <iostream>
@@ -12,22 +13,27 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
 
-void PersistentCachedMap::persistObject(Position * key, Gradient * value)
+void PersistentCachedMap::persistObject(Position *key, Gradient *value)
 {
+
+    Position *pos = value->getCenter();
+    int w = value->getWidth();
+    int h = value->getHeight();
+    std::vector<int> vec = value->getDistance();
     try
     {
         std::ofstream f(path + key->toString() + ".data");
         cereal::BinaryOutputArchive oarchive(f);
 
-        Position* pos = value->getCenter();
-        int w = value->getWidth();
-        int h = value->getHeight();
-        std::vector<int> vec = value->getDistance();
-        oarchive(w, h, pos->getRow(), pos->getCol() , vec );                         
+        oarchive(w, h, pos->getRow(), pos->getCol(), vec);
+        delete pos;
+        delete value;
     }
     catch (std::exception &e)
     {
-        std::cout << "RuntimeException : Can't write " + path + key->toString() + ".data";
+        throw std::runtime_error("Can't write " + path + key->toString() + ".data");
+        delete pos;
+        
     }
 }
 
@@ -40,13 +46,14 @@ Gradient *PersistentCachedMap::recoverObject(std::string key)
 
         int w, h, centerI, centerJ;
         std::vector<int> vec;
-        iarchive(w, h, centerI, centerJ , vec ); // Read the data from the archive
+        iarchive(w, h, centerI, centerJ, vec); // Read the data from the archive
         return new Gradient(new Position(centerI, centerJ), h, w, vec);
     }
     catch (std::exception &e)
     {
         toc.erase(key); // Try and heal the list
-        std::cerr << "RuntimeException : Can't read" + path + "-" + key + ".data, did u erase it manually ?\n";
+        throw std::runtime_error("Can't read" + path + "-" + key + ".data, did u erase it manually ?");
+        
     }
     return nullptr;
 }
@@ -87,7 +94,8 @@ PersistentCachedMap::PersistentCachedMap(std::string basePath, std::string name,
 
     if (ENOENT == errno)
     {
-        std::cerr << "RuntimeException : Can't open " + path + "\n";
+        throw std::runtime_error("Can't open " + path);
+        
     }
 
     std::string ext(".data");
@@ -112,12 +120,13 @@ void PersistentCachedMap::put(Position *key, Gradient *value)
 {
     if ((key == nullptr) || (value == nullptr))
     {
-        std::cerr << "NullPointerException\n";
+        throw NullPointerException("Putting null value/key inside PersistentCachedMap");       
     }
 
     if (key->toString().length() > MAX_KEY_LENGTH)
     {
-        std::cerr << "IllegalArgumentException : You tried to add a key whose toString method yielded a string over 250 chars\n";
+        throw std::invalid_argument("You tried to add a key whose toString method yielded a string over 250 chars");
+        
     }
 
     if (!toc.count(key->toString()))
@@ -133,7 +142,7 @@ Gradient *PersistentCachedMap::get(std::string key)
 {
     if (key.empty())
     {
-        std::cerr << "NullPointerException\n";
+        throw NullPointerException("Getting null key inside PersistentCachedMap");
     }
 
     if (!toc.count(key))
