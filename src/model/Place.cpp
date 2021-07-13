@@ -2,6 +2,7 @@
 #include <model/World.h>
 #include <model/Position.h>
 #include <model/Gradient.h>
+#include <model/SimulationData.h>
 #include <exceptions/PositionOnAWallException.h>
 #include <exceptions/InitializationRequiredException.h>
 #include <utils/PersistentCachedMap.h>
@@ -12,6 +13,9 @@
 
 World *Place::world;
 PersistentCachedMap *Place::gradients;
+
+std::string PLACES = DEFAULT_PATH + PLACES_PATH;
+std::string PNG = ".png";
 
 void Place::basicChecks(World *thisPlacesWorld)
 {
@@ -31,18 +35,35 @@ Place::Place(std::string type, Position *pos, World *world) : Place(type, pos, w
 {
 }
 
-Place::Place(std::string type, Position *pos, World *world, std::string name, Position *relevantPosition)
+Place::Place(std::string typeP, Position *pos, World *world, std::string name, Position *relevantPosition)
 {
     basicChecks(world);
     if (world->isAWall(pos))
     {
         throw PositionOnAWallException();
     }
-    this->type = type;
     this->pos = pos;
     this->name = name;
 
-    world->addPlaceType(type);
+    
+    
+    // Search for the substring in string
+    size_t pos1 = typeP.find(PLACES);
+    if (pos1 != std::string::npos)
+    {
+        // If found then erase it from string
+        typeP.erase(pos1, PLACES.length());
+    }
+    size_t pos2 = typeP.find(PNG);
+    if (pos2 != std::string::npos)
+    {
+        // If found then erase it from string
+        typeP.erase(pos2, PNG.length());
+    }
+
+    this->type = typeP;
+
+    world->addPlaceType(typeP);
 
     if (relevantPosition != nullptr)
     {

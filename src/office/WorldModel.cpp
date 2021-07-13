@@ -3,6 +3,7 @@
 #include <types/EasyTime.h>
 #include <types/Text.h>
 #include <types/BooleanType.h>
+#include <exceptions/InfoUndefinedException.h>
 #include <model/World.h>
 #include <model/Agent.h>
 #include <model/Place.h>
@@ -39,7 +40,7 @@ void WorldModel::organizeGlobalMeeting()
     }
     catch (std::exception &e)
     {
-        std::cerr << "RuntimeException\n";
+        throw std::runtime_error("Error getting seats in World Model");
     }
     int seatsIndex = 0;
     int peopleIndex = 0;
@@ -149,8 +150,8 @@ void WorldModel::doIteration(const std::vector<Place *> places)
             terminateGlobalMeeting();
         }
     }
-    catch (std::exception &e)
+    catch (const InfoUndefinedException &e)
     {
-        std::cerr << "RuntimeException : Person's missing information\n";
+        throw std::runtime_error("Person's missing information");
     }
 }

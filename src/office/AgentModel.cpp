@@ -8,6 +8,8 @@
 #include <types/TimePeriod.h>
 #include <types/BooleanType.h>
 #include <behaviormodels/BaseAgentModel.h>
+#include <exceptions/PlaceTypeUndefinedException.h>
+#include <exceptions/InfoUndefinedException.h>
 #include <Calendar.h>
 #include <iostream>
 #include <vector>
@@ -16,20 +18,21 @@
 #include <random>
 #include <cmath>
 
-void AgentModel::createWorker(std::vector<Agent *> people, const std::string type, const std::string bedLocation, const std::string seatLocation)
+std::vector<Agent *> AgentModel::createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation)
 {
+    std::vector<Agent *> people;
     int bedIndex = 0;
     int seatIndex = 0;
     std::vector<Place *> beds;
     std::vector<Place *> seats;
     try
     {
-        std::vector<Place *> beds = world->getPlacesOfType(bedLocation);
-        std::vector<Place *> seats = world->getPlacesOfType(seatLocation);
+        beds = world->getPlacesOfType(bedLocation);
+        seats = world->getPlacesOfType(seatLocation);
     }
-    catch (std::exception &e)
+    catch (const PlaceTypeUndefinedException &e)
     {
-        std::cerr << "RuntimeException : No beds or seats defined\n";
+        throw std::runtime_error("No beds or seats defined");
     }
 
     int i = 0;
@@ -98,6 +101,7 @@ void AgentModel::createWorker(std::vector<Agent *> people, const std::string typ
         bedIndex++;
         seatIndex++;
     }
+    return people;
 }
 
 void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
@@ -167,16 +171,17 @@ AgentModel::AgentModel(World *world) : BaseAgentModel(world)
         //apartmentThreeDoor = world.getPlacesOfType("ApartmentThreeEntrance").iterator().next();
         //houseDoor = world.getPlacesOfType("HouseEntrance").iterator().next();
     }
-    catch (std::exception &e)
+    catch (const PlaceTypeUndefinedException &e)
     {
-        std::cerr << "One or more doors are undefined\n";
+        throw std::runtime_error("One or more doors are undefined"); 
     }
 }
 
 std::vector<Agent *> AgentModel::createAgents()
 {
-    std::vector<Agent *> people(Constants::POPULATION);
-    createWorker(people, "RestHomeResident", "RestHomeBeds", "RestHomeSeats");
+    //std::vector<Agent *> people(Constants::POPULATION);
+    std::vector<Agent *> people;
+    people = createWorker("RestHomeResident", "RestHomeBeds", "RestHomeSeats");
     //createWorker(people, "Student", "StudentDesk");
     return people;
 }
@@ -301,12 +306,12 @@ void AgentModel::handlePerson(Agent *a, EasyTime *now)
         }
         else
         {
-            std::cerr << "RuntimeException : Unknown Activity\n";
+            throw std::runtime_error("Unknown Activity");
         }
     }
-    catch (std::exception &e)
+    catch (const InfoUndefinedException &e)
     {
-        std::cerr << "RuntimeException :Unknown info requested for " + a->toString() + "\n";
+        throw std::runtime_error("Unknown info requested for " + a->toString());
     }
 }
 
@@ -416,9 +421,9 @@ Place *AgentModel::getNearestBathroomNotBusy(Agent *a, std::string bathroomName)
     {
         places = world->getPlacesOfType(bathroomName);
     }
-    catch (std::exception &e)
+    catch (const PlaceTypeUndefinedException &e)
     {
-        std::cerr << "RuntimeException : No bathroom defined\n";
+        throw std::runtime_error("No bathroom defined");
     }
     while (bathRoomIndex != places.size())
     {
@@ -434,9 +439,9 @@ Place *AgentModel::getNearestBathroomNotBusy(Agent *a, std::string bathroomName)
     {
         return world->getNearestPlaceOfType(bathroomName, a->getPos());
     }
-    catch (std::exception &e)
+    catch (const std::exception &e)
     {
-        std::cerr << "RuntimeException\n";
+        throw std::runtime_error("Nearest place of type " + bathroomName + " not found inside AgentModel");
     }
     return nullptr;
 }
@@ -449,7 +454,7 @@ void AgentModel::goToToilet(Agent *a)
     }
     catch (std::exception &e)
     {
-        std::cerr << "RuntimeException\n";
+        throw std::runtime_error("Nearest place of type RestHomeBathroomEntrance not found inside AgentModel");
     }
     a->set(Fields::ACTIVITY, ActivityManager::GOING_2_TOILET);
     a->set(Fields::WAITING_PLACE, a->getDestination());

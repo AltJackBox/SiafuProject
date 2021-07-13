@@ -42,11 +42,6 @@ void Controller::startSimulation(std::string simulationPath)
 	simulation = new Simulation(simulationPath, this);
 }
 
-bool Controller::isPaused()
-{
-	return simulation->isPaused();
-}
-
 World *Controller::getWorld()
 {
 	return simulation->getWorld();
@@ -60,15 +55,14 @@ SimulationData *Controller::getSimulationData()
 void Controller::endSimulator()
 {
 	mutex.lock();
-	if (this->simulation != NULL)
+	if (this->simulation != nullptr)
 	{
 		this->simulation->die();
 	}
-	std::cout << "been through endsimulator\n";
 	mutex.unlock();
 }
 
 bool Controller::isSimulationRunning()
 {
-	return simulation != NULL && simulation->isSimulationRunning();
+	return simulation != nullptr && simulation->isSimulationRunning();
 }

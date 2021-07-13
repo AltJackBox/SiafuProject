@@ -131,7 +131,7 @@ void World::createPeople()
     }
     catch (std::exception &e)
     {
-        std::cerr << "World.cpp : RuntimeException : Can't instantiate the agent model\n";
+        throw std::runtime_error("Can't instantiate the agent model");
     }
 
     Agent::initialize(this);

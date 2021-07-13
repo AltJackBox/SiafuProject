@@ -51,7 +51,6 @@ void Simulation::operator()()
 {
 	this->world = new World(this, simData);
 	this->time = world->getTime();
-	this->time = new Calendar();
 	this->iterationStep = 10;
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
@@ -60,16 +59,12 @@ void Simulation::operator()()
 
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;
-	int day = 0;
 	while (!isEnded())
 	{
-		if (!isPaused())
-		{
-			tickTime();
-			worldModel->doIteration(world->getPlaces());
-			agentModel->doIteration(world->getPeople());
-			// contextModel->doIteration(world->getOverlays());
-		}
+		tickTime();
+		worldModel->doIteration(world->getPlaces());
+		agentModel->doIteration(world->getPeople());
+		// contextModel->doIteration(world->getOverlays());
 	}
 	simulationRunning = false;
 	control->getProgress()->reportSimulationEnded();
@@ -83,12 +78,6 @@ World *Simulation::getWorld()
 bool Simulation::isSimulationRunning()
 {
 	return simulationRunning;
-}
-
-bool Simulation::isPaused()
-{
-	std::lock_guard<std::mutex> lg(lock);
-	return paused;
 }
 
 void Simulation::die()

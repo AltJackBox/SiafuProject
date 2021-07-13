@@ -8,6 +8,7 @@ class Place;
 class World;
 class EasyTime;
 class Text;
+class Agent;
 
 class AgentModel : public BaseAgentModel
 {
@@ -31,7 +32,7 @@ private:
     Place *apartmentThreeDoor;
     Place *houseDoor;
 
-    void createWorker(const std::vector<Agent *> people, const std::string type, const std::string bedLocation, const std::string seatLocation);
+    std::vector<Agent*> createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation);
 
     void handleInfection(std::vector<Agent *> agents, EasyTime *now);
 

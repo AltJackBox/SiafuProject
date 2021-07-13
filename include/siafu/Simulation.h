@@ -19,7 +19,6 @@ private:
     Controller* control;
     bool ended;
     SimulationData* simData;
-    bool paused;
     World* world;
     Calendar* time;
     BaseAgentModel* agentModel;
@@ -39,7 +38,6 @@ public:
     void launchSimulation();
     bool isSimulationRunning();
     World* getWorld(); 
-    /*synchronized*/ bool isPaused();
     void operator()();
     void die();
     SimulationData* getSimulationData();

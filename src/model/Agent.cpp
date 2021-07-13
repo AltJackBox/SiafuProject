@@ -7,7 +7,7 @@
 #include <exception>
 #include <stdlib.h>
 
-Place *Agent::DEFAULT_DESTINATION;
+Place *Agent::DEFAULT_DESTINATION = nullptr;
 
 World *Agent::world;
 
@@ -20,12 +20,10 @@ void Agent::basicChecks(World *thisAgentsWorld)
     if (world == nullptr)
     {
         throw InitializationRequiredException("You need to initialize the agents.");
-        exit(EXIT_FAILURE);
     }
     if (world != thisAgentsWorld)
     {
-        std::cerr << "All your users must belong to the same world\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error("All your users must belong to the same world");
     }
 }
 
@@ -128,10 +126,9 @@ void Agent::setPos(Position *pos)
 
 void Agent::set(std::string key, Publishable *value)
 {
-    if (infoFieldsLocked && (info.find(key) != info.end()))
+    if (infoFieldsLocked && (info.find(key) == info.end()))
     {
         throw InfoFieldsLockedException(key);
-        exit(EXIT_FAILURE);
     }
     INFO_FIELDS.insert(key);
     std::pair<std::string, Publishable *> pair;
@@ -154,7 +151,6 @@ Publishable *Agent::get(std::string key)
     if (info.find(key) == info.end())
     {
         throw InfoUndefinedException(key);
-        exit(EXIT_FAILURE);
     }
 
     return info.at(key);

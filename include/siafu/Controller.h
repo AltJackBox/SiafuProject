@@ -46,8 +46,6 @@ public:
 
     void startSimulation(std::string simulationPath);
 
-    bool isPaused();
-
     World *getWorld();
 
     SimulationData *getSimulationData();
