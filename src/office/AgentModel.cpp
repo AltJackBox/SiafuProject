@@ -68,24 +68,24 @@ std::vector<Agent *> AgentModel::createWorker(const std::string type, const std:
         //a->set(GLUCOSE, new Text("90.1")); // mg/dL
         //a->set(PACEMAKERACTIVE, new Text("0"));
 
-        a->set(Fields::FEVER, boolSort(Fields::FEVER));
+        a->set(Fields::FEVER, booleanSort(Fields::FEVER));
         a->set(Fields::FEVER_DURATION, intSort(Fields::FEVER_DURATION));
 
-        a->set(Fields::SYMPTOMS, boolSort(Fields::SYMPTOMS));
+        a->set(Fields::SYMPTOMS, booleanSort(Fields::SYMPTOMS));
         a->set(Fields::SYMPTOMS_DURATION, intSort(Fields::SYMPTOMS_DURATION));
         a->set(Fields::SYMPTOMS_DAYS_TO_START, intSort(Fields::SYMPTOMS_DAYS_TO_START));
 
-        a->set(Fields::ABFC_USE_OF_N95_MASK, boolSort(Fields::ABFC_USE_OF_N95_MASK));
-        a->set(Fields::AAFC_USE_OF_N95_MASK, boolSort(Fields::AAFC_USE_OF_N95_MASK));
+        a->set(Fields::ABFC_USE_OF_N95_MASK, booleanSort(Fields::ABFC_USE_OF_N95_MASK));
+        a->set(Fields::AAFC_USE_OF_N95_MASK, booleanSort(Fields::AAFC_USE_OF_N95_MASK));
 
-        a->set(Fields::ABFC_USE_OF_OTHER_MASK, boolSort(Fields::ABFC_USE_OF_OTHER_MASK));
-        a->set(Fields::AAFC_USE_OF_OTHER_MASK, boolSort(Fields::AAFC_USE_OF_OTHER_MASK));
+        a->set(Fields::ABFC_USE_OF_OTHER_MASK, booleanSort(Fields::ABFC_USE_OF_OTHER_MASK));
+        a->set(Fields::AAFC_USE_OF_OTHER_MASK, booleanSort(Fields::AAFC_USE_OF_OTHER_MASK));
 
-        a->set(Fields::ABFC_USE_OF_EYE_PROTECTION, boolSort(Fields::ABFC_USE_OF_EYE_PROTECTION));
-        a->set(Fields::AAFC_USE_OF_EYE_PROTECTION, boolSort(Fields::AAFC_USE_OF_EYE_PROTECTION));
+        a->set(Fields::ABFC_USE_OF_EYE_PROTECTION, booleanSort(Fields::ABFC_USE_OF_EYE_PROTECTION));
+        a->set(Fields::AAFC_USE_OF_EYE_PROTECTION, booleanSort(Fields::AAFC_USE_OF_EYE_PROTECTION));
 
-        a->set(Fields::ABFC_WASH_HANDS, boolSort(Fields::ABFC_WASH_HANDS));
-        a->set(Fields::AAFC_WASH_HANDS, boolSort(Fields::AAFC_WASH_HANDS));
+        a->set(Fields::ABFC_WASH_HANDS, booleanSort(Fields::ABFC_WASH_HANDS));
+        a->set(Fields::AAFC_WASH_HANDS, booleanSort(Fields::AAFC_WASH_HANDS));
 
         a->set(Fields::ABFC_PHYSICAL_DISTANCE, intSort(Fields::ABFC_PHYSICAL_DISTANCE));
         a->set(Fields::AAFC_PHYSICAL_DISTANCE, intSort(Fields::AAFC_PHYSICAL_DISTANCE));
@@ -125,8 +125,11 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
 
     if (lastHandleInfectionExecution.empty() || !(lastHandleInfectionExecution.compare(now->toString()) == 0))
     {
+        if ((now->getHour() == 0) && (now->getMinute() == 0)){
+            std::cout << "New Day\n";
+        }
 
-        if (now->toString().compare((new EasyTime(0, 0))->toString()) == 0)
+        if ( (now->toString()).compare( (new EasyTime(0,0))->toString()) == 0)
         {
             day++;
             // writeDailyData(agents);
@@ -209,18 +212,20 @@ void AgentModel::handlePersonBodySensors(Agent *a)
     std::replace(string.begin(), string.end(), ',', '.');
     double bloodOxygen = std::stod(string);
 
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    // std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    bloodOxygen = bloodOxygen < 95 ? bloodOxygen + dis(gen) : bloodOxygen - dis(gen);
+    double aux = 0.5;
+
+    bloodOxygen = bloodOxygen < 95 ? bloodOxygen + aux : bloodOxygen - aux;
     a->set(Fields::BLOODOXYGEN, new Text(std::to_string(bloodOxygen)));
 
     std::string str = (a->get(Fields::BODYTEMPERATURE))->toString();
     std::replace(str.begin(), str.end(), ',', '.');
 
     double bodytemperature = std::stod(str);
-    bodytemperature = bodytemperature < 36.5 ? bodytemperature + dis(gen) : bodytemperature - dis(gen);
+    bodytemperature = bodytemperature < 36.5 ? bodytemperature + aux : bodytemperature - aux;
     a->set(Fields::BODYTEMPERATURE, new Text(std::to_string(bodytemperature)));
 
     //double glucose = Double.parseDouble(a.get(GLUCOSE).tostd::string().replace(',', '.'));
@@ -279,7 +284,6 @@ void AgentModel::handlePerson(Agent *a, EasyTime *now)
         }
         else if (activity == ActivityManager::AT_DESK)
         {
-            //a.wanderAround((Place) (a.get(WAITING_PLACE)), INLINE_WANDER);
             if (now->isAfter((EasyTime *)a->get(Fields::SLEEP_TIME)) || now->isIn(new TimePeriod(new EasyTime(0, 0), (EasyTime *)a->get(Fields::WAKE_UP_TIME))))
             {
                 goHome(a);
@@ -326,7 +330,6 @@ void AgentModel::beAtGlobalMeeting(Agent *a)
 
 void AgentModel::goToGlobalMeeting(Agent *a)
 {
-    //a.setImage("HumanYellow");
     a->setDestination((Place *)a->get("TemporaryDestination"));
     a->set(Fields::ACTIVITY, ActivityManager::GOING_2_GLOBAL_LUNCH);
 }
@@ -359,12 +362,13 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 {
     a->set(Fields::ACTIVITY, ActivityManager::IN_TOILET);
 
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_int_distribution<> dis(0, Constants::TOILET_VISIT_DURATION + 1);
+    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    // std::uniform_int_distribution<> dis(0, Constants::TOILET_VISIT_DURATION + 1);
 
-    EasyTime *nextEventTime = (new EasyTime(now))->shift(0, dis(gen));
-    if (nextEventTime->toString().compare((new EasyTime(23, 59))->toString()) == 0)
+    // EasyTime *nextEventTime = (new EasyTime(now))->shift(0, dis(gen));
+    EasyTime *nextEventTime = (new EasyTime(now))->shift(0, Constants::TOILET_VISIT_DURATION + 1);
+    if ( (nextEventTime->toString()).compare((new EasyTime(23, 59))->toString()) == 0 )
     {
         nextEventTime->shift(0, -1);
     }
@@ -378,12 +382,7 @@ void AgentModel::lineInToilet(Agent *a, EasyTime *now)
 
     if (!(info->getType().compare("Place")))
     {
-        //try {
         toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
-        //toilet = world.getNearestPlaceOfType("RestHomeBathroom", a.getPos());
-        //} catch (PlaceNotFoundException e) {
-        //	throw new RuntimeException(e);
-        //}
         a->set(Fields::DESIRED_TOILET, toilet);
         a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
     }
@@ -471,7 +470,6 @@ bool AgentModel::isTimeForToilet(Agent *a, EasyTime *now)
     if (now->isAfter((EasyTime *)a->get(Fields::NEXT_TOILET_VISIT)))
     {
         a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(now))->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL)));
-        //a->setImage("HumanGreen");
         return true;
     }
     else
@@ -495,7 +493,6 @@ void AgentModel::goToSleep(Agent *a)
 void AgentModel::goToDesk(Agent *a)
 {
     a->set(Fields::ACTIVITY, ActivityManager::GOING_2_DESK);
-    //a->setImage("HumanBlue");
     //a->setVisible(true);
     a->setDestination((Place *)a->get(Fields::SEAT));
 }
@@ -505,15 +502,16 @@ void AgentModel::beAtDesk(Agent *a)
     a->set(Fields::ACTIVITY, ActivityManager::AT_DESK);
 }
 
-Text *AgentModel::boolSort(std::string op)
+Text *AgentModel::booleanSort(std::string op)
 {
 
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    // std::uniform_real_distribution<> dis(0.0, 1.0);
 
     bool result = false;
-    double random = dis(gen);
+    // double random = dis(gen);
+    double random = 0.5;
 
     if (op.compare(Fields::FEVER) == 0)
     {
@@ -562,36 +560,41 @@ Text *AgentModel::intSort(std::string op)
 {
     int result = 0;
 
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 
     if (op.compare(Fields::FEVER_DURATION) == 0)
     {
-        std::uniform_int_distribution<> dis(0, Constants::FEVER_MAX_DURATION - Constants::FEVER_MIN_DURATION + 1);
-        result = dis(gen) + Constants::FEVER_MIN_DURATION;
+        // std::uniform_int_distribution<> dis(0, Constants::FEVER_MAX_DURATION - Constants::FEVER_MIN_DURATION + 1);
+        // result = dis(gen) + Constants::FEVER_MIN_DURATION;
+        result = Constants::FEVER_MAX_DURATION;
     }
     else if (op.compare(Fields::SYMPTOMS_DURATION) == 0)
     {
-        std::uniform_int_distribution<> dis(0, Constants::SYMPTOMS_MAX_DURATION - Constants::SYMPTOMS_MIN_DURATION + 1);
-        result = dis(gen) + Constants::SYMPTOMS_MIN_DURATION;
+        // std::uniform_int_distribution<> dis(0, Constants::SYMPTOMS_MAX_DURATION - Constants::SYMPTOMS_MIN_DURATION + 1);
+        // result = dis(gen) + Constants::SYMPTOMS_MIN_DURATION;
+        result = Constants::SYMPTOMS_MAX_DURATION;
     }
     else if (op.compare(Fields::SYMPTOMS_DAYS_TO_START) == 0)
     {
-        std::uniform_int_distribution<> dis(0, Constants::SYMPTOMS_MAX_DAYS_TO_START - Constants::SYMPTOMS_MIN_DAYS_TO_START + 1);
-        result = dis(gen) + Constants::SYMPTOMS_MIN_DAYS_TO_START;
+        // std::uniform_int_distribution<> dis(0, Constants::SYMPTOMS_MAX_DAYS_TO_START - Constants::SYMPTOMS_MIN_DAYS_TO_START + 1);
+        // result = dis(gen) + Constants::SYMPTOMS_MIN_DAYS_TO_START;
+        result = Constants::SYMPTOMS_MAX_DAYS_TO_START;
     }
     else if (op.compare(Fields::ABFC_PHYSICAL_DISTANCE) == 0)
     {
-        std::uniform_real_distribution<> dis(0.0, 1.0);
-        double aux = dis(gen);
+        // std::uniform_real_distribution<> dis(0.0, 1.0);
+        // double aux = dis(gen);
+        double aux = 0.5;
         result = aux <= Constants::BFC_PHYSICAL_DISTANCE_1M ? 1 : aux <= Constants::BFC_PHYSICAL_DISTANCE_1M + Constants::BFC_PHYSICAL_DISTANCE_2M                                     ? 2
                                                               : aux <= Constants::BFC_PHYSICAL_DISTANCE_1M + Constants::BFC_PHYSICAL_DISTANCE_2M + Constants::BFC_PHYSICAL_DISTANCE_3M ? 3
                                                                                                                                                                                        : 0;
     }
     else if (op.compare(Fields::AAFC_PHYSICAL_DISTANCE) == 0)
     {
-        std::uniform_real_distribution<> dis(0.0, 1.0);
-        double aux2 = dis(gen);
+        // std::uniform_real_distribution<> dis(0.0, 1.0);
+        // double aux2 = dis(gen);
+        double aux2 = 0.5;
         result = aux2 <= Constants::AFC_PHYSICAL_DISTANCE_1M ? 1 : aux2 <= Constants::AFC_PHYSICAL_DISTANCE_1M + Constants::AFC_PHYSICAL_DISTANCE_2M                                     ? 2
                                                                : aux2 <= Constants::AFC_PHYSICAL_DISTANCE_1M + Constants::AFC_PHYSICAL_DISTANCE_2M + Constants::AFC_PHYSICAL_DISTANCE_3M ? 3
                                                                                                                                                                                          : 0;
@@ -694,8 +697,8 @@ bool AgentModel::agentSituation(Agent *a, std::string situation)
 
 void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, EasyTime *now)
 {
-    std::random_device rd;  //Will be used to obtain a seed for the random number engine
-    std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
 
     double noseMouthChance = Constants::INFECTION_CHANCE_THROUGH_CONTACT;
     double eyeChance = Constants::INFECTION_CHANCE_THROUGH_AIR;
@@ -760,9 +763,9 @@ void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, Eas
         eyeChance -= ((notInfected->get(Fields::AAFC_WASH_HANDS))->toString()).compare("true") == 0 ? eyeChance * Constants::WASH_HANDS_REDUCTION_RISK : 0;
     }
 
-    std::uniform_real_distribution<> dis(0.0, 1.0);
+    // std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    double aux = dis(gen);
+    double aux = 0.5;
     if (aux <= noseMouthChance)
     {
         infect(notInfected, now);

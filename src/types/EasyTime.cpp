@@ -89,8 +89,9 @@ EasyTime *EasyTime::shift(EasyTime *et)
 
 EasyTime *EasyTime::blur(const int blurMinutes)
 {
-    srand(time(0));
-    int minuteShift = (rand() % (blurMinutes - 1)) - (blurMinutes / 2); //Randint is generates numbers between 0 (inclusive) and the specified value (exclusive)
+    // srand(time(0));
+    //int minuteShift = (rand() % (blurMinutes - 1)) - (blurMinutes / 2); //Randint is generates numbers between 0 (inclusive) and the specified value (exclusive)
+    int minuteShift = blurMinutes - (blurMinutes / 2);
     this->shift(0, minuteShift);
     return this;
 }
@@ -114,7 +115,7 @@ int EasyTime::getTimeInSeconds()
 
 std::string EasyTime::toString()
 {
-    return hour + ":" + minute;
+    return std::to_string(hour) + ":" + std::to_string(minute);
 }
 
 std::string EasyTime::getType()
@@ -125,7 +126,7 @@ std::string EasyTime::getType()
 bool EasyTime::equals(Publishable *o)
 {
 
-    if (!(o->getType().compare("EasyTime") == 0))
+    if (!( (o->getType()).compare("EasyTime") == 0) )
     {
         return false;
     }

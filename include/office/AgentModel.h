@@ -66,7 +66,7 @@ private:
 
     void beAtDesk(Agent *a);
 
-    Text *boolSort(std::string op);
+    Text *booleanSort(std::string op);
 
     Text *intSort(std::string op);
 

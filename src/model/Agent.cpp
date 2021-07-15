@@ -6,6 +6,7 @@
 #include <exceptions/InitializationRequiredException.h>
 #include <exception>
 #include <stdlib.h>
+#include <random>
 
 Place *Agent::DEFAULT_DESTINATION = nullptr;
 
@@ -235,13 +236,22 @@ void Agent::wander(int soberness)
 {
     atDestination = true;
     bool stuck = true;
-    int random = rand() % 2;
-    int searchDir = (random == 1) ? (-WANDER_TURN) : WANDER_TURN;
+
+    // std::random_device rd;  //Will be used to obtain a seed for the random number engine
+    // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
+
+    // std::uniform_int_distribution<> dis(0, 1);
+
+    // int random = dis(gen);
+
+    // int searchDir = (random == 1) ? (-WANDER_TURN) : WANDER_TURN;
+    int searchDir = (-WANDER_TURN);
+
     int tries = 0;
 
     while (stuck && (tries < POSSIBLE_DIRECTIONS))
     {
-        Position *target = NULL;
+        Position *target;
 
         try
         {
@@ -260,19 +270,21 @@ void Agent::wander(int soberness)
     {
         std::cerr << "My name's " + name + " and you've got me stuck in a " + "one pixel wide room! I have rights!\n";
     }
-    random = rand() % soberness;
-    if (random == 0)
+    // std::uniform_int_distribution<> dissob(0, soberness - 1);
+    // random = dissob(gen);
+    // if (random == 0)
+    // {
+    if (soberness == 0)
     {
-        random = rand() % 2;
-        if (random == 1)
-        {
-            turn(1);
-        }
-        else
-        {
-            turn(-1);
-        }
+        // random = dis(gen);
+        // if (random == 1)
+        // {
+        turn(1);
     }
+    // else
+    // {
+    //     turn(-1);
+    // }
 }
 
 bool Agent::equals(Agent *agent)

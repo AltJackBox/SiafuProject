@@ -2,7 +2,7 @@
 
 Calendar::Calendar()
 {
-    hour = 0;
+    hour = 6;
     minute = 0;
     second = 0;
 }
