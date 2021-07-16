@@ -4,6 +4,7 @@
 #include <exceptions/InfoFieldsLockedException.h>
 #include <exceptions/InfoUndefinedException.h>
 #include <exceptions/InitializationRequiredException.h>
+#include <exceptions/PositionOnAWallException.h>
 #include <exception>
 #include <stdlib.h>
 #include <random>
@@ -90,7 +91,7 @@ void Agent::setSpeed(int speed)
 
 void Agent::setDestination(Place *destination)
 {
-    if (this->destination != NULL && this->destination->equals(destination))
+    if (this->destination != nullptr && this->destination->equals(destination))
     {
         return;
     }
@@ -134,7 +135,7 @@ void Agent::set(std::string key, Publishable *value)
     INFO_FIELDS.insert(key);
     std::pair<std::string, Publishable *> pair;
     pair = std::make_pair(key, value);
-    info.insert(pair);
+    info[pair.first] = pair.second;
 }
 
 bool Agent::checkAllInfoFieldsPresent()
@@ -153,7 +154,6 @@ Publishable *Agent::get(std::string key)
     {
         throw InfoUndefinedException(key);
     }
-
     return info.at(key);
 }
 
@@ -176,7 +176,7 @@ void Agent::moveTowardsDestination()
 
             if (pos->equals(destination->getPos()))
             {
-                destination = NULL;
+                destination = nullptr;
                 atDestination = true;
                 break;
             }
@@ -192,6 +192,10 @@ void Agent::moveInDirection(int moveDir)
     }
 
     pos = pos->calculateMove(moveDir);
+    if (pos == nullptr)
+    {
+        throw PositionOnAWallException();
+    }
     this->dir = moveDir;
 }
 
@@ -256,10 +260,13 @@ void Agent::wander(int soberness)
         try
         {
             target = pos->calculateMove(dir);
+            if (target == nullptr) {
+                throw PositionOnAWallException();
+            }
             pos = target;
             stuck = false;
         }
-        catch (std::exception &e)
+        catch (const PositionUnreachableException &e)
         {
             turn(searchDir);
             tries++;

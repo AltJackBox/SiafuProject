@@ -28,6 +28,7 @@ void WorldModel::terminateGlobalMeeting()
         {
             p->set(Fields::EVENT, new Text("GlobalMeetingEnded"));
         }
+        index++;
     }
 }
 

@@ -31,10 +31,14 @@ private:
 
     /*synchronized*/ bool isEnded();
     void tickTime();
+    void moveAgents();
 
 public:
     Simulation();
     Simulation(std::string simulationPath, Controller* control);
+
+    int day;
+    
     void launchSimulation();
     bool isSimulationRunning();
     World* getWorld(); 

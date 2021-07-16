@@ -25,7 +25,7 @@ private:
 
 	Position *pos;
 
-	Gradient *temporaryGradient;
+	Gradient *temporaryGradient = nullptr;
 
 	bool visible = true;
 

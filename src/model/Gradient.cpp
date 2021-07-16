@@ -176,6 +176,9 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
         try
         {
             aux = pos->calculateMove(dir);
+            if (aux == nullptr) {
+                throw PositionOnAWallException();
+            }
             grad = distance[aux->getRow() * w + aux->getCol()];
             if (grad == min)
             {
@@ -188,7 +191,7 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
                 optimalDirs.push_back(dir);
             }
         }
-        catch (const std::exception &e)
+        catch (const PositionUnreachableException &e)
         {
             continue;
         }

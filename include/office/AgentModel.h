@@ -112,6 +112,8 @@ public:
     std::vector<Agent *> createAgents() override;
 
     void doIteration(std::vector<Agent *> agents) override;
+
+    int getDay();
 };
 
 #endif

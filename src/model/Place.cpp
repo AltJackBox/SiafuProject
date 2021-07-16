@@ -119,7 +119,7 @@ Publishable *Place::get(std::string key)
 
 Gradient *Place::getGradient()
 {
-    if (temporaryGradient != NULL)
+    if (temporaryGradient != nullptr)
     {
         return temporaryGradient;
     }

@@ -24,6 +24,8 @@ public:
 
     Calendar();
 
+    ~Calendar(){};
+
     void reset();
 
     void add(int increaseSec);

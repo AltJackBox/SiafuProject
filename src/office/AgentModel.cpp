@@ -18,6 +18,10 @@
 #include <random>
 #include <cmath>
 
+int AgentModel::getDay(){
+    return day;
+}
+
 std::vector<Agent *> AgentModel::createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation)
 {
     std::vector<Agent *> people;
@@ -125,11 +129,13 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
 
     if (lastHandleInfectionExecution.empty() || !(lastHandleInfectionExecution.compare(now->toString()) == 0))
     {
-        if ((now->getHour() == 0) && (now->getMinute() == 0)){
-            std::cout << "New Day\n";
+
+        if ((now->getHour() == 23) && (now->getMinute() > 50))
+        {
+            std::cout;
         }
 
-        if ( (now->toString()).compare( (new EasyTime(0,0))->toString()) == 0)
+        if (((now->toString()).compare((new EasyTime(0, 0))->toString())) == 0)
         {
             day++;
             // writeDailyData(agents);
@@ -176,7 +182,7 @@ AgentModel::AgentModel(World *world) : BaseAgentModel(world)
     }
     catch (const PlaceTypeUndefinedException &e)
     {
-        throw std::runtime_error("One or more doors are undefined"); 
+        throw std::runtime_error("One or more doors are undefined");
     }
 }
 
@@ -204,6 +210,8 @@ void AgentModel::doIteration(std::vector<Agent *> agents)
         handlePersonBodySensors(a);
         peopleIndex++;
     }
+
+    delete now;
 }
 
 void AgentModel::handlePersonBodySensors(Agent *a)
@@ -368,7 +376,7 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 
     // EasyTime *nextEventTime = (new EasyTime(now))->shift(0, dis(gen));
     EasyTime *nextEventTime = (new EasyTime(now))->shift(0, Constants::TOILET_VISIT_DURATION + 1);
-    if ( (nextEventTime->toString()).compare((new EasyTime(23, 59))->toString()) == 0 )
+    if ((nextEventTime->toString()).compare((new EasyTime(23, 59))->toString()) == 0)
     {
         nextEventTime->shift(0, -1);
     }
@@ -692,7 +700,8 @@ bool AgentModel::agentCanBeInfected(Agent *a)
 
 bool AgentModel::agentSituation(Agent *a, std::string situation)
 {
-    return (a->get(Fields::SITUATION)->toString()).compare(situation) == 0;
+    std::string value = a->get(Fields::SITUATION)->toString();
+    return (value).compare(situation) == 0;
 }
 
 void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, EasyTime *now)
@@ -784,7 +793,7 @@ void AgentModel::increaseDaysAfterInfection(std::vector<Agent *> agents, EasyTim
     while (agentIndex != agents.size())
     {
         Agent *a = agents[agentIndex];
-        if (((now->toString()).compare((a->get(Fields::INFECTION_TIME))->toString()) == 0) && (agentSituation(a, infected) || agentSituation(a, infecting)))
+        if ((((now->toString()).compare((a->get(Fields::INFECTION_TIME))->toString())) == 0) && (agentSituation(a, infected) || agentSituation(a, infecting)))
         {
             int daysAfterInfection = std::stoi(a->get(Fields::DAYS_AFTER_INFECTION)->toString());
             a->set(Fields::DAYS_AFTER_INFECTION, new Text(std::to_string(daysAfterInfection + 1)));

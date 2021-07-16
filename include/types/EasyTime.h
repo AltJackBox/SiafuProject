@@ -23,6 +23,8 @@ private:
 public:
     EasyTime(EasyTime *time);
 
+    ~EasyTime() {};
+
     EasyTime(const int hour, const int minute);
 
     bool isAfter(EasyTime *t);

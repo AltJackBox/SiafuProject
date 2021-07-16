@@ -4,7 +4,11 @@
 #include <model/World.h>
 #include <model/SimulationData.h>
 #include <model/Agent.h>
+#include <model/Position.h>
 #include <Calendar.h>
+
+#include <office/AgentModel.h>
+
 #include <behaviormodels/BaseAgentModel.h>
 #include <behaviormodels/BaseWorldModel.h>
 #include <behaviormodels/BaseContextModel.h>
@@ -51,7 +55,7 @@ void Simulation::operator()()
 {
 	this->world = new World(this, simData);
 	this->time = world->getTime();
-	this->iterationStep = 10;
+	this->iterationStep = 100;
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
 	// this->contextModel = world->getContextModel();
@@ -65,9 +69,19 @@ void Simulation::operator()()
 		worldModel->doIteration(world->getPlaces());
 		agentModel->doIteration(world->getPeople());
 		// contextModel->doIteration(world->getOverlays());
+		moveAgents();
 	}
 	simulationRunning = false;
 	control->getProgress()->reportSimulationEnded();
+}
+
+
+void Simulation::moveAgents()
+{
+	for (Agent* a : world->getPeople())
+	{
+		a->moveTowardsDestination();
+	}
 }
 
 World *Simulation::getWorld()
