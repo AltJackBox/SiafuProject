@@ -11,7 +11,7 @@ export CC=gcc
 export CXX=g++
 export RM=rm -rvf
 
-export CPPFLAGS= -I$(HDR_DIR) -MMD -MP -g # -I is a preprocessor flag, not a compiler flag
+export CPPFLAGS= -I$(HDR_DIR) -MMD -MP -g -O2 # -I is a preprocessor flag, not a compiler flag
 export CFLAFLGS= -Wall              # some warnings about bad code
 export LDFLAGS= -L/usr/lib              # -L is a linker flag
 export LDLIBS= -lm                # Left empty if no libs are needed
