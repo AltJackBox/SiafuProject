@@ -25,6 +25,8 @@ private:
     bool infectionDetected = false;
     int day = 1;
 
+    int nbLines = 0;
+
     /** The door to the places. */
     Place *restHomeDoor;
     // Place apartmentOneDoor;
@@ -105,6 +107,8 @@ private:
     // void writeDailyData(std::vector<Agent*> agents);
 
     // void writeEventData(std::string event);
+
+    void printAgentInfo(Agent *a, int d);
 
 public:
     AgentModel(World *world);

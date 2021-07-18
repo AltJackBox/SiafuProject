@@ -205,7 +205,7 @@ void Agent::moveTowardsPlace(Place *place)
     {
         moveInDirection(place->pointFrom(pos, dir));
     }
-    catch (std::exception &e)
+    catch (const std::exception &e)
     {
         {
             std::cerr << "Agent '" + this->getName() + "' can't reach '" + place->getName() + "' at '" + pos->toString() + "'\n";
@@ -298,13 +298,13 @@ bool Agent::equals(Agent *agent)
 {
     if (this == agent)
         return true;
-    if (agent == NULL)
+    if (agent == nullptr)
         return false;
     if (atDestination != agent->atDestination)
         return false;
-    if (destination == NULL)
+    if (destination == nullptr)
     {
-        if (agent->destination != NULL)
+        if (agent->destination != nullptr)
             return false;
     }
     else if (!destination->equals(agent->destination))
@@ -332,9 +332,9 @@ bool Agent::equals(Agent *agent)
     }
     else if (!(onAuto == agent->onAuto))
         return false;
-    if (pos == NULL)
+    if (pos == nullptr)
     {
-        if (agent->pos != NULL)
+        if (agent->pos != nullptr)
             return false;
     }
     else if (!pos->equals(agent->pos))

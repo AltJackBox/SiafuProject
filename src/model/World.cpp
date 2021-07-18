@@ -265,10 +265,28 @@ bool World::isAWall(Position *pos)
 std::vector<Agent *> World::getPeople()
 {
     std::vector<Agent *> agents;
-    for (std::pair<std::string, Agent *> element : people)
-    {
-        agents.push_back(element.second);
-    }
+    // for (std::pair<std::string, Agent *> element : people)
+    // {
+    //     agents.push_back(element.second);
+    // }
+    agents.push_back(people["RestHomeResident - 10"]);
+    agents.push_back(people["RestHomeResident - 13"]);
+    agents.push_back(people["RestHomeResident - 14"]);
+    agents.push_back(people["RestHomeResident - 11"]);
+    agents.push_back(people["RestHomeResident - 12"]);
+    agents.push_back(people["RestHomeResident - 8"]);
+    agents.push_back(people["RestHomeResident - 17"]);
+    agents.push_back(people["RestHomeResident - 9"]);
+    agents.push_back(people["RestHomeResident - 18"]);
+    agents.push_back(people["RestHomeResident - 15"]);
+    agents.push_back(people["RestHomeResident - 16"]);
+    agents.push_back(people["RestHomeResident - 4"]);
+    agents.push_back(people["RestHomeResident - 5"]);
+    agents.push_back(people["RestHomeResident - 6"]);
+    agents.push_back(people["RestHomeResident - 7"]);
+    agents.push_back(people["RestHomeResident - 1"]);
+    agents.push_back(people["RestHomeResident - 2"]);
+    agents.push_back(people["RestHomeResident - 3"]);
     return agents;
 }
 

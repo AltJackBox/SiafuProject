@@ -75,10 +75,9 @@ void Simulation::operator()()
 	control->getProgress()->reportSimulationEnded();
 }
 
-
 void Simulation::moveAgents()
 {
-	for (Agent* a : world->getPeople())
+	for (Agent *a : world->getPeople())
 	{
 		a->moveTowardsDestination();
 	}

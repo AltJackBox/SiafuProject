@@ -18,7 +18,10 @@
 #include <random>
 #include <cmath>
 
-int AgentModel::getDay(){
+#include <fstream>
+
+int AgentModel::getDay()
+{
     return day;
 }
 
@@ -130,11 +133,6 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
     if (lastHandleInfectionExecution.empty() || !(lastHandleInfectionExecution.compare(now->toString()) == 0))
     {
 
-        if ((now->getHour() == 23) && (now->getMinute() > 50))
-        {
-            std::cout;
-        }
-
         if (((now->toString()).compare((new EasyTime(0, 0))->toString())) == 0)
         {
             day++;
@@ -195,6 +193,27 @@ std::vector<Agent *> AgentModel::createAgents()
     return people;
 }
 
+void AgentModel::printAgentInfo(Agent *a, int d)
+{
+    std::ofstream f("Agent10C.txt", std::ios_base::app);
+    std::string line;
+    if (a->getDestination() == nullptr)
+    {
+        line = a->getPos()->toString() + " " + std::to_string(d) + "\n";
+    }
+    else
+    {
+        line = a->getPos()->toString() + " " + a->getDestination()->toString() + " " + std::to_string(a->getDir()) + " " + std::to_string(d) + "\n";
+    }
+    f << line;
+    nbLines++;
+    if ((nbLines == 583) || (nbLines == 584))
+    {
+        std::cout << line;
+    }
+    f.close();
+}
+
 void AgentModel::doIteration(std::vector<Agent *> agents)
 {
     Calendar *time = world->getTime();
@@ -208,6 +227,10 @@ void AgentModel::doIteration(std::vector<Agent *> agents)
         Agent *a = agents[peopleIndex];
         handlePerson(a, now);
         handlePersonBodySensors(a);
+        if ((day < 4) && (agentName(a).compare("10") == 0))
+        {
+            printAgentInfo(a, day);
+        }
         peopleIndex++;
     }
 
@@ -388,7 +411,7 @@ void AgentModel::lineInToilet(Agent *a, EasyTime *now)
     Publishable *info = a->get(Fields::DESIRED_TOILET);
     Place *toilet;
 
-    if (!(info->getType().compare("Place")))
+    if (!(info->getType().compare("Place") == 0))
     {
         toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
         a->set(Fields::DESIRED_TOILET, toilet);

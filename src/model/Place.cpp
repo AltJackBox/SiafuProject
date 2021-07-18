@@ -35,7 +35,7 @@ Place::Place(std::string type, Position *pos, World *world) : Place(type, pos, w
 {
 }
 
-Place::Place(std::string typeP, Position *pos, World *world, std::string name, Position *relevantPosition)
+Place::Place(std::string typeP, Position *pos, World *world, std::string nameP, Position *relevantPosition)
 {
     basicChecks(world);
     if (world->isAWall(pos))
@@ -43,10 +43,7 @@ Place::Place(std::string typeP, Position *pos, World *world, std::string name, P
         throw PositionOnAWallException();
     }
     this->pos = pos;
-    this->name = name;
 
-    
-    
     // Search for the substring in string
     size_t pos1 = typeP.find(PLACES);
     if (pos1 != std::string::npos)
@@ -61,7 +58,22 @@ Place::Place(std::string typeP, Position *pos, World *world, std::string name, P
         typeP.erase(pos2, PNG.length());
     }
 
+    pos1 = nameP.find(PLACES);
+    if (pos1 != std::string::npos)
+    {
+        // If found then erase it from string
+        nameP.erase(pos1, PLACES.length());
+    }
+    pos2 = nameP.find(PNG);
+    if (pos2 != std::string::npos)
+    {
+        // If found then erase it from string
+        nameP.erase(pos2, PNG.length());
+    }
+
     this->type = typeP;
+
+    this->name = nameP;
 
     world->addPlaceType(typeP);
 
@@ -104,7 +116,7 @@ void Place::set(std::string key, Publishable *value)
 {
     std::pair<std::string, Publishable *> pair;
     pair = std::make_pair(key, value);
-    info.insert(pair);
+    info[pair.first] = pair.second;
 }
 
 Publishable *Place::get(std::string key)

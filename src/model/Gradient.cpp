@@ -160,7 +160,7 @@ int Gradient::getWidth()
 int Gradient::pointFrom(Position *pos, int preferredDir)
 {
 
-    std::vector<int> optimalDirs(POSSIBLE_DIRS);
+    std::vector<int> optimalDirs;
     int min = distance[pos->getRow() * w + pos->getCol()];
     int grad;
 
