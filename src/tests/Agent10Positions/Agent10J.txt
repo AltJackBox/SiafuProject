@@ -581,9 +581,11 @@
 250.258 1
 250.259 1
 250.260 1
-250.260 RestHomeBathroom-160.314 1
-244.266 RestHomeBathroom-160.314 1
-238.272 RestHomeBathroom-160.314 1
+250.259 1
+250.258 1
+250.258 RestHomeBathroom-160.314 1
+244.264 RestHomeBathroom-160.314 1
+238.270 RestHomeBathroom-160.314 1
 232.273 RestHomeBathroom-160.314 1
 226.273 RestHomeBathroom-160.314 1
 220.273 RestHomeBathroom-160.314 1
@@ -643,8 +645,8 @@
 271.407 RestHomeSeats-317.487 1
 277.413 RestHomeSeats-317.487 1
 280.419 RestHomeSeats-317.487 1
-280.425 RestHomeSeats-317.487 1
-280.431 RestHomeSeats-317.487 1
+280.425 RestHomeSeats-317.487 2
+280.431 RestHomeSeats-317.487 2
 280.437 RestHomeSeats-317.487 2
 280.443 RestHomeSeats-317.487 2
 280.449 RestHomeSeats-317.487 2
@@ -723,8 +725,6 @@
 307.136 RestHomeBeds-325.136 2
 313.136 RestHomeBeds-325.136 2
 319.136 RestHomeBeds-325.136 2
-325.136 2
-325.136 2
 325.136 2
 325.136 2
 325.136 2
@@ -1445,9 +1445,11 @@
 250.258 2
 250.259 2
 250.260 2
-250.260 RestHomeBathroom-160.314 2
-244.266 RestHomeBathroom-160.314 2
-238.272 RestHomeBathroom-160.314 2
+250.259 2
+250.258 2
+250.258 RestHomeBathroom-160.314 2
+244.264 RestHomeBathroom-160.314 2
+238.270 RestHomeBathroom-160.314 2
 232.273 RestHomeBathroom-160.314 2
 226.273 RestHomeBathroom-160.314 2
 220.273 RestHomeBathroom-160.314 2
@@ -1507,8 +1509,8 @@
 271.407 RestHomeSeats-317.487 2
 277.413 RestHomeSeats-317.487 2
 280.419 RestHomeSeats-317.487 2
-280.425 RestHomeSeats-317.487 2
-280.431 RestHomeSeats-317.487 2
+280.425 RestHomeSeats-317.487 3
+280.431 RestHomeSeats-317.487 3
 280.437 RestHomeSeats-317.487 3
 280.443 RestHomeSeats-317.487 3
 280.449 RestHomeSeats-317.487 3
@@ -1587,8 +1589,6 @@
 307.136 RestHomeBeds-325.136 3
 313.136 RestHomeBeds-325.136 3
 319.136 RestHomeBeds-325.136 3
-325.136 3
-325.136 3
 325.136 3
 325.136 3
 325.136 3
@@ -2309,9 +2309,11 @@
 250.258 3
 250.259 3
 250.260 3
-250.260 RestHomeBathroom-160.314 3
-244.266 RestHomeBathroom-160.314 3
-238.272 RestHomeBathroom-160.314 3
+250.259 3
+250.258 3
+250.258 RestHomeBathroom-160.314 3
+244.264 RestHomeBathroom-160.314 3
+238.270 RestHomeBathroom-160.314 3
 232.273 RestHomeBathroom-160.314 3
 226.273 RestHomeBathroom-160.314 3
 220.273 RestHomeBathroom-160.314 3
@@ -2371,5 +2373,3 @@
 271.407 RestHomeSeats-317.487 3
 277.413 RestHomeSeats-317.487 3
 280.419 RestHomeSeats-317.487 3
-280.425 RestHomeSeats-317.487 3
-280.431 RestHomeSeats-317.487 3

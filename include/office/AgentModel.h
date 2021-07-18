@@ -108,7 +108,7 @@ private:
 
     // void writeEventData(std::string event);
 
-    void printAgentInfo(Agent *a, int d);
+    void printAgentInfo(Agent *a, int d, EasyTime* n);
 
 public:
     AgentModel(World *world);

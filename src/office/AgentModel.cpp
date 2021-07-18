@@ -10,6 +10,7 @@
 #include <behaviormodels/BaseAgentModel.h>
 #include <exceptions/PlaceTypeUndefinedException.h>
 #include <exceptions/InfoUndefinedException.h>
+#include <utils/RandomGenerator.h>
 #include <Calendar.h>
 #include <iostream>
 #include <vector>
@@ -193,7 +194,7 @@ std::vector<Agent *> AgentModel::createAgents()
     return people;
 }
 
-void AgentModel::printAgentInfo(Agent *a, int d)
+void AgentModel::printAgentInfo(Agent *a, int d, EasyTime* n)
 {
     std::ofstream f("Agent10C.txt", std::ios_base::app);
     std::string line;
@@ -203,14 +204,14 @@ void AgentModel::printAgentInfo(Agent *a, int d)
     }
     else
     {
-        line = a->getPos()->toString() + " " + a->getDestination()->toString() + " " + std::to_string(a->getDir()) + " " + std::to_string(d) + "\n";
+        line = a->getPos()->toString() + " " + a->getDestination()->toString() + " " + std::to_string(d) + "\n";
     }
     f << line;
-    nbLines++;
-    if ((nbLines == 583) || (nbLines == 584))
-    {
-        std::cout << line;
-    }
+    // nbLines++;
+    // if ((nbLines == 583) || (nbLines == 584))
+    // {
+    //     std::cout << line << " " << n->toString() << "\n";
+    // }
     f.close();
 }
 
@@ -227,10 +228,10 @@ void AgentModel::doIteration(std::vector<Agent *> agents)
         Agent *a = agents[peopleIndex];
         handlePerson(a, now);
         handlePersonBodySensors(a);
-        if ((day < 4) && (agentName(a).compare("10") == 0))
-        {
-            printAgentInfo(a, day);
-        }
+        // if ((day < 4) && (agentName(a).compare("10") == 0))
+        // {
+        //     printAgentInfo(a, day, now);
+        // }
         peopleIndex++;
     }
 
@@ -797,7 +798,7 @@ void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, Eas
 
     // std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    double aux = 0.5;
+    double aux = RandomGenerator::randomDouble();
     if (aux <= noseMouthChance)
     {
         infect(notInfected, now);

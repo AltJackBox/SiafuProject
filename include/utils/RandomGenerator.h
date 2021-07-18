@@ -3,9 +3,11 @@
 
 class RandomGenerator {
 	
+private:
 	static int integerGen;
 	static int doubleGen;
 	
+public:
 	// Return random integer between 0 and 1
 	static int randomInteger() {
 		integerGen++;
