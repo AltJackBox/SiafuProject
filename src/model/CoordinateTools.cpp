@@ -5,7 +5,6 @@
 
 CoordinateTools::CoordinateTools(const int height, const int width, const double topRight[], const double bottomRight[], const double bottomLeft[])
 {
-	// this.width = width;
 	this->height = height;
 
 	blLat = bottomLeft[0];
@@ -56,10 +55,9 @@ double *CoordinateTools::localToCoordinates(int i, int j)
 	double y = iFactor * (height - i);
 
 	double *coordinate = new double[2];
-	// latitude
+
 	coordinate[0] = x * sinA + y * cosA + blLat;
 
-	// longitude
 	coordinate[1] = x * cosA - y * sinA + blLon;
 
 	return coordinate;

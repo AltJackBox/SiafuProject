@@ -23,9 +23,9 @@ protected:
 
     std::unordered_set<std::string> toc;
 
-    void persistObject(Position *key, Gradient *value); // protected
+    void persistObject(Position *key, Gradient *value);
 
-    Gradient *recoverObject(std::string key); // protected
+    Gradient *recoverObject(std::string key);
 
 private:
     void putInCache(std::string key, Gradient *value);

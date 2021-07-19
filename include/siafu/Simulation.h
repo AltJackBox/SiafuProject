@@ -25,11 +25,10 @@ private:
     BaseWorldModel* worldModel;
     BaseContextModel* contextModel;
     int iterationStep;
-    //SimulatorOutputPrinter outputPrinter;
     bool simulationRunning;
     std::mutex lock; 
 
-    /*synchronized*/ bool isEnded();
+    bool isEnded();
     void tickTime();
     void moveAgents();
 

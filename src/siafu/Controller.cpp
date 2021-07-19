@@ -15,7 +15,6 @@ Controller::Controller()
 Controller::Controller(std::string simulationPath)
 {
 
-	//Start the simulation without a GUI
 	if (!simulationPath.empty())
 	{
 		progress = new Progress();

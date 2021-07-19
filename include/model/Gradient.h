@@ -29,7 +29,7 @@ private:
     void calculateGradient(World *world, Position *relevantPos);
 
 public:
-    static const int UNREACHABLE; // maximum value for an int
+    static const int UNREACHABLE;
 
     Gradient();
 

@@ -34,7 +34,7 @@ std::vector<std::string> SimulationData::getFilesByPath(const std::string dirPat
             file = std::ifstream{p.path().string()};
             if (!file)
             {
-                std::cout << "File is missing : " + p.path().string() + ", no entry inside map\n";
+                throw std::runtime_error("File is missing : " + p.path().string() + ", no entry inside map");
             }
             else
             {
@@ -51,8 +51,7 @@ std::string SimulationData::getFile(std::string path)
     std::ifstream file{pathString};
     if (!file)
     {
-        std::cerr << "Your simulation data is missing " + pathString + ". Perhaps you opened the wrong directory?\n";
-        exit(EXIT_FAILURE);
+        throw std::runtime_error("Your simulation data is missing " + pathString + ". Perhaps you opened the wrong directory ?");
     }
     return pathString;
 }

@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <limits.h>
 
-#include <fstream>
 
 const int Gradient::UNREACHABLE = INT_MAX;
 

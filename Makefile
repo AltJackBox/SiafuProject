@@ -4,6 +4,7 @@ export HDR_DIR=$(CURDIR)/include
 export OBJ_DIR=$(CURDIR)/obj
 export BIN_DIR=$(CURDIR)/bin
 export RSC_DIR=$(CURDIR)/ressources
+export GRAD_DIR=$(RSC_DIR)/CalculatedGradients/Simulation-Office
 
 #g++ -I../runtime/src main.cpp -o main
 
@@ -16,22 +17,12 @@ export CFLAFLGS= -Wall              # some warnings about bad code
 export LDFLAGS= -L/usr/lib              # -L is a linker flag
 export LDLIBS= -lm                # Left empty if no libs are needed
 
-SRCS=$(SRC_DIR)/siafu/Siafu.cpp $(SRC_DIR)/siafu/Controller.cpp
-OBJS=$(OBJ_DIR)/Controller.o $(OBJ_DIR)/Siafu.o
-HDRS=$(HDR_DIR)/siafu/Controller.h 
+.PHONY: all simulator test clean
 
-EXE=$(BIN_DIR)/programme
+all: simulator
 
-.PHONY: all test clean
-
-all: $(EXE)
-
-$(EXE): $(OBJS)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(EXE) $(OBJS) 
-
-$(OBJS): $(SRCS)
-	$(CXX) $(CPPFLAGS) -c $(SRC_DIR)/siafu/Controller.cpp -o $(OBJ_DIR)/Controller.o
-	$(CXX) $(CPPFLAGS) -c $(SRC_DIR)/siafu/Siafu.cpp -o $(OBJ_DIR)/Siafu.o
+simulator:
+	cd $(SRC_DIR) && $(MAKE) all
 
 test: 
 	cd $(SRC_DIR) && $(MAKE) test

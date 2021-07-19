@@ -11,6 +11,13 @@ SRCS=$(wildcard siafu/*.cpp) \
 OBJS  := $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 DEPENDENCIES := $(OBJS:.o=.d)
 
+SIM=Simulation
+SIM_DEP=$(OBJ_DIR)/siafu/Siafu.o $(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
+	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
+	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/office/AgentModel.o $(OBJ_DIR)/office/WorldModel.o $(OBJ_DIR)/office/Constants.o \
+	$(OBJ_DIR)/utils/PersistentCachedMap.o $(OBJ_DIR)/types/BooleanType.o $(OBJ_DIR)/types/EasyTime.o $(OBJ_DIR)/types/Text.o \
+	$(OBJ_DIR)/types/TimePeriod.o $(OBJ_DIR)/utils/RandomGenerator.o
+
 TEST0=t_RandomGen
 TEST0_DEP=$(OBJ_DIR)/office/test/t_RandomGen.o
 
@@ -42,13 +49,19 @@ TEST5_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DI
 
 	
 
-all: build test
+all: build simulator
+
+simulator: $(OBJS) $(BIN_DIR)/$(SIM)
 
 test: $(OBJS) $(BIN_DIR)/$(TEST2)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
 	$(CXX) $(CPPFLAGS) -c $< -o $@ 
+
+$(BIN_DIR)/$(SIM) : $(SIM_DEP)
+	@mkdir -p $(@D)
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(SIM) $^ -lstdc++fs -lpthread
 
 $(BIN_DIR)/$(TEST0) : $(TEST0_DEP)
 	@mkdir -p $(@D)
@@ -76,11 +89,12 @@ $(BIN_DIR)/$(TEST5) : $(TEST5_DEP)
 
 -include $(DEPENDENCIES)
 
-.PHONY: all build test
+.PHONY: all build simulator test
 
 build:
 	@mkdir -p $(BIN_DIR)
 	@mkdir -p $(OBJ_DIR)
+	@mkdir -p $(GRAD_DIR)
 
 
 

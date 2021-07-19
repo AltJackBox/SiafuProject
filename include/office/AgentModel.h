@@ -15,7 +15,6 @@ class AgentModel : public BaseAgentModel
 
 private:
     std::string lastHandleInfectionExecution;
-    //std::string path = System.getProperty("user.home");
 
     std::string healthy = "Healthy";
     std::string infected = "Infected";
@@ -25,12 +24,7 @@ private:
     bool infectionDetected = false;
     int day = 1;
 
-    int nbLines = 0;
-
-    /** The door to the places. */
     Place *restHomeDoor;
-    // Place apartmentOneDoor;
-    // Place apartmentTwoDoor;
     Place *apartmentThreeDoor;
     Place *houseDoor;
 
@@ -102,12 +96,6 @@ private:
 
     void printDayInfo();
 
-    // void writeData(std::vector<Agent*> agents, EasyTime *easyTime);
-
-    // void writeDailyData(std::vector<Agent*> agents);
-
-    // void writeEventData(std::string event);
-
     void printAgentInfo(Agent *a, int d, EasyTime* n);
 
 public:
@@ -116,8 +104,6 @@ public:
     std::vector<Agent *> createAgents() override;
 
     void doIteration(std::vector<Agent *> agents) override;
-
-    int getDay();
 };
 
 #endif

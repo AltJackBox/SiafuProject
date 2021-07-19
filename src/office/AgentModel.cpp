@@ -21,11 +21,6 @@
 
 #include <fstream>
 
-int AgentModel::getDay()
-{
-    return day;
-}
-
 std::vector<Agent *> AgentModel::createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation)
 {
     std::vector<Agent *> people;
@@ -73,8 +68,6 @@ std::vector<Agent *> AgentModel::createWorker(const std::string type, const std:
         a->set(Fields::BODYTEMPERATURE, new Text("36.5"));   // ºC
         a->set(Fields::BLOODPRESSURE, new Text("120 / 80")); // mmHg / mmHg
         a->set(Fields::BLOODOXYGEN, new Text("95.3"));       // %
-        //a->set(GLUCOSE, new Text("90.1")); // mg/dL
-        //a->set(PACEMAKERACTIVE, new Text("0"));
 
         a->set(Fields::FEVER, booleanSort(Fields::FEVER));
         a->set(Fields::FEVER_DURATION, intSort(Fields::FEVER_DURATION));
@@ -137,19 +130,15 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
         if (((now->toString()).compare((new EasyTime(0, 0))->toString())) == 0)
         {
             day++;
-            // writeDailyData(agents);
             printDayInfo();
         }
 
-        //The 1 day delay is due to the exams
         isInfectionDetected(agents, now);
 
         increaseDaysAfterInfection(agents, now);
 
         infectingOthers(agents, now);
         cure(agents, now);
-
-        //writeData(agents, now);
 
         for (int i = 0; i < agents.size(); i++)
         {
@@ -174,10 +163,6 @@ AgentModel::AgentModel(World *world) : BaseAgentModel(world)
     try
     {
         restHomeDoor = *(world->getPlacesOfType("RestHomeEntrance").begin());
-        //apartmentOneDoor = world.getPlacesOfType("ApartmentOneEntrance").iterator().next();
-        //apartmentTwoDoor = world.getPlacesOfType("ApartmentTwoEntrance").iterator().next();
-        //apartmentThreeDoor = world.getPlacesOfType("ApartmentThreeEntrance").iterator().next();
-        //houseDoor = world.getPlacesOfType("HouseEntrance").iterator().next();
     }
     catch (const PlaceTypeUndefinedException &e)
     {
@@ -187,10 +172,8 @@ AgentModel::AgentModel(World *world) : BaseAgentModel(world)
 
 std::vector<Agent *> AgentModel::createAgents()
 {
-    //std::vector<Agent *> people(Constants::POPULATION);
     std::vector<Agent *> people;
     people = createWorker("RestHomeResident", "RestHomeBeds", "RestHomeSeats");
-    //createWorker(people, "Student", "StudentDesk");
     return people;
 }
 
@@ -207,11 +190,6 @@ void AgentModel::printAgentInfo(Agent *a, int d, EasyTime *n)
         line = a->getPos()->toString() + " " + a->getDestination()->toString() + " " + std::to_string(d) + "\n";
     }
     f << line;
-    // nbLines++;
-    // if ((nbLines == 583) || (nbLines == 584))
-    // {
-    //     std::cout << line << " " << n->toString() << "\n";
-    // }
     f.close();
 }
 
@@ -228,16 +206,13 @@ void AgentModel::doIteration(std::vector<Agent *> agents)
         Agent *a = agents[peopleIndex];
         handlePerson(a, now);
         handlePersonBodySensors(a);
-        // if ((day < 4) && (agentName(a).compare("10") == 0))
-        // {
-        //     printAgentInfo(a, day, now);
-        // }
         peopleIndex++;
     }
 
     delete now;
 }
 
+// Random utilization : Modify commented lines to use
 void AgentModel::handlePersonBodySensors(Agent *a)
 {
     std::string string = (a->get(Fields::BLOODOXYGEN))->toString();
@@ -268,8 +243,6 @@ void AgentModel::handlePersonBodySensors(Agent *a)
 void AgentModel::handlePerson(Agent *a, EasyTime *now)
 {
     Activity *activity = (Activity *)a->get(Fields::ACTIVITY);
-    //std::string name = activity->toString();
-
     try
     {
 
@@ -390,6 +363,7 @@ void AgentModel::beAtToilet(Agent *a, EasyTime *now)
     }
 }
 
+// Random utilization : Modify commented lines to use
 void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 {
     a->set(Fields::ACTIVITY, ActivityManager::IN_TOILET);
@@ -420,7 +394,6 @@ void AgentModel::lineInToilet(Agent *a, EasyTime *now)
     }
     else
     {
-        //toilet = (Place) info;
         toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
         a->set(Fields::DESIRED_TOILET, toilet);
         a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
@@ -519,13 +492,11 @@ void AgentModel::goHome(Agent *a)
 void AgentModel::goToSleep(Agent *a)
 {
     a->set(Fields::ACTIVITY, ActivityManager::RESTING);
-    //a->setVisible(true);
 }
 
 void AgentModel::goToDesk(Agent *a)
 {
     a->set(Fields::ACTIVITY, ActivityManager::GOING_2_DESK);
-    //a->setVisible(true);
     a->setDestination((Place *)a->get(Fields::SEAT));
 }
 
@@ -534,6 +505,7 @@ void AgentModel::beAtDesk(Agent *a)
     a->set(Fields::ACTIVITY, ActivityManager::AT_DESK);
 }
 
+// Random utilization : Modify commented lines to use
 Text *AgentModel::booleanSort(std::string op)
 {
 
@@ -588,6 +560,7 @@ Text *AgentModel::booleanSort(std::string op)
     return new Text(std::to_string(result));
 }
 
+// Random utilization : Modify commented lines to use
 Text *AgentModel::intSort(std::string op)
 {
     int result = 0;
@@ -728,6 +701,7 @@ bool AgentModel::agentSituation(Agent *a, std::string situation)
     return (value).compare(situation) == 0;
 }
 
+// Random utilization : Modify commented lines to use
 void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, EasyTime *now)
 {
     // std::random_device rd;  //Will be used to obtain a seed for the random number engine
@@ -833,111 +807,10 @@ void AgentModel::print(std::string message, EasyTime *easyTime)
     int minute = easyTime->getMinute();
     std::string result = ((hour < 10 ? " " : "") + std::to_string(hour)) + ":" + ((minute < 10 ? "0" : "") + std::to_string(minute)) + " - " + message + "\n";
     std::cout << result;
-    // writeEventData(result);
 }
 
 void AgentModel::printDayInfo()
 {
     std::string result = "DAY " + std::to_string(day) + " ----------------------------------------\n";
     std::cout << result;
-    // writeEventData(result);
 }
-
-// void writeData(std::vector<Agent *> agents, EasyTime *easyTime)
-// {
-//     PrintWriter csvWriter;
-//     std::string filePath = path + "/Desktop/WearableData.csv";
-//     try
-//     {
-//         File file = new File(filePath);
-//         if (!file.exists())
-//         {
-//             file = new File(filePath);
-//         }
-//         csvWriter = new PrintWriter(new FileWriter(file, true));
-
-//         Iterator<Agent> peopleIt = agents.iterator();
-//         while (peopleIt.hasNext())
-//         {
-//             Agent *a = peopleIt.next();
-//             csvWriter.print(day + ",");
-//             csvWriter.print(easyTime.tostd::string() + ",");
-//             csvWriter.print(agentName(a) + ","); //id
-
-//             csvWriter.print(std::string.valueOf(a->get(BLOODOXYGEN)).replace(',', '.') + ","); //blood oxygen
-//             //csvWriter.print(a->get(BLOODPRESSURE)+","); //blood pressure
-//             csvWriter.print(std::string.valueOf(a->get(BODYTEMPERATURE)).replace(',', '.') + "\r\n"); //body temperature
-//         }
-//         csvWriter.close();
-//     }
-//     catch (Exception e)
-//     {
-//         e.printStackTrace();
-//     }
-// }
-
-// void writeDailyData(Collection<Agent> agents)
-// {
-//     PrintWriter csvWriter;
-//     std::string filePath = "DailyData.csv";
-//     try
-//     {
-//         File file = new File(filePath);
-//         if (!file.exists())
-//         {
-//             file = new File(filePath);
-//         }
-//         csvWriter = new PrintWriter(new FileWriter(file, true));
-
-//         int healthy = 0;
-//         int infected = 0;
-//         int infecting = 0;
-//         int infectingAndAsymptomatic = 0;
-//         int cured = 0;
-
-//         Iterator<Agent> peopleIt = agents.iterator();
-//         while (peopleIt.hasNext())
-//         {
-//             Agent *a = peopleIt.next();
-//             healthy += agentSituation(a, this.healthy) ? 1 : 0;
-//             infected += agentSituation(a, this.infected) ? 1 : 0;
-//             infecting += agentSituation(a, this.infecting) ? 1 : 0;
-//             infectingAndAsymptomatic += agentSituation(a, this.infecting) && !bool.valueOf(a->get(SYMPTOMS).tostd::string()) ? 1 : 0;
-//             cured += agentSituation(a, this.cured) ? 1 : 0;
-//         }
-
-//         csvWriter.print(day + ",");
-//         csvWriter.print((infectionDetected ? "1" : "0") + ",");
-//         csvWriter.print(healthy + ",");
-//         csvWriter.print(infected + ",");
-//         csvWriter.print(infecting + ",");
-//         csvWriter.print(infectingAndAsymptomatic + ",");
-//         csvWriter.print(cured + "\r\n");
-//         csvWriter.close();
-//     }
-//     catch (Exception e)
-//     {
-//         e.printStackTrace();
-//     }
-// }
-
-// void writeEventData(std::string event)
-// {
-//     PrintWriter csvWriter;
-//     std::string filePath = path + "/Desktop/EventData.csv";
-//     try
-//     {
-//         File file = new File(filePath);
-//         if (!file.exists())
-//         {
-//             file = new File(filePath);
-//         }
-//         csvWriter = new PrintWriter(new FileWriter(file, true));
-//         csvWriter.print(event + "\r\n");
-//         csvWriter.close();
-//     }
-//     catch (Exception e)
-//     {
-//         e.printStackTrace();
-//     }
-// }

@@ -14,7 +14,6 @@
 
 EasyTime *WorldModel::WAKEUPTIME = new EasyTime(7, 0);
 
-/** Sleep time. */
 EasyTime *WorldModel::SLEEPTIME = new EasyTime(23, 0);
 
 void WorldModel::terminateGlobalMeeting()

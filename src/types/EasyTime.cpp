@@ -87,6 +87,7 @@ EasyTime *EasyTime::shift(EasyTime *et)
     return shift(et->getHour(), et->getMinute());
 }
 
+// Random utilization : Modify commented lines to use
 EasyTime *EasyTime::blur(const int blurMinutes)
 {
     // srand(time(0));

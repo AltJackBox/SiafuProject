@@ -28,18 +28,6 @@ void Simulation::launchSimulation()
 	t1.join();
 }
 
-// SimulatorOutputPrinter createOutputPrinter(final String type) {
-// 	if (type.equalsIgnoreCase("csv")) {
-// 		System.out.println("CSV output selected");
-// 		return new CSVPrinter(world, siafuConfig);
-// 	} else if (type.equalsIgnoreCase("null")) {
-// 		return new NullPrinter();
-// 	} else {
-// 		throw new RuntimeException(
-// 				"Unknown ouput type in the configuration");
-// 	}
-// }
-
 bool Simulation::isEnded()
 {
 	std::lock_guard<std::mutex> lg(lock);
@@ -58,8 +46,6 @@ void Simulation::operator()()
 	this->iterationStep = 100;
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
-	// this->contextModel = world->getContextModel();
-	// this->outputPrinter = createOutputPrinter(siafuConfig.getString("output.type"));
 
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;
@@ -68,7 +54,6 @@ void Simulation::operator()()
 		tickTime();
 		worldModel->doIteration(world->getPlaces());
 		agentModel->doIteration(world->getPeople());
-		// contextModel->doIteration(world->getOverlays());
 		moveAgents();
 	}
 	simulationRunning = false;

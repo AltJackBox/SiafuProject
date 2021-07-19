@@ -13,6 +13,7 @@
 #include <behaviormodels/BaseContextModel.h>
 #include <behaviormodels/BaseWorldModel.h>
 #include <exceptions/PlaceTypeUndefinedException.h>
+#include <exceptions/PositionOnAWallException.h>
 #include <iostream>
 
 int World::cacheSize;
@@ -61,27 +62,15 @@ std::vector<Position *> World::readPlacePoints(std::string filename)
                     attractor = new Position(y, x);
                     placePoints.push_back(attractor);
                 }
-                catch (std::exception const &e)
+                catch (const PositionUnreachableException &e)
                 {
-                    std::cerr << "World.cpp : Place (" << x << "  " << y << ") is unreachable. Is it out of the map or on a wall?\n";
+                    throw std::runtime_error("Place (" + std::to_string(x) + "." + std::to_string(y) + ") is unreachable. Is it out of the map or on a wall ?");
                 }
             }
         }
     }
 
     return placePoints;
-}
-
-void showPlacePoints(std::vector<Position *> pos, std::string name)
-{
-    std::cout << name + "\n";
-    int index = 0;
-    while (index != pos.size())
-    {
-        std::cout << pos[index]->toString() << " ";
-        index++;
-    }
-    std::cout << "\n";
 }
 
 void World::buildWalls()
@@ -92,8 +81,7 @@ void World::buildWalls()
     bool success = load_image(image, filename, width, height);
     if (!success)
     {
-        std::cout << "World.cpp : Error loading image\n";
-        return;
+        throw std::runtime_error("World.cpp : Error loading image of the walls");
     }
 
     this->width = width;
@@ -160,7 +148,7 @@ void World::freezeInfoFields()
 
         if (!p->checkAllInfoFieldsPresent())
         {
-            std::cerr << "World.cpp : RuntimeException : Agent " + p->getName() + " is missing at least one field that other agents have.\n";
+            throw std::runtime_error("Agent " + p->getName() + " is missing at least one field that other agents have.");
         }
     }
 
@@ -176,7 +164,7 @@ void World::createPlaces()
     }
     catch (std::exception &e)
     {
-        std::cerr << "World.cpp : RuntimeException : Can't instantiate the world model\n";
+        throw std::runtime_error("Can't instantiate the world model");
     }
     places = createPlacesFromImages();
     worldModel->createPlaces(places);
@@ -192,7 +180,6 @@ std::vector<Place *> World::createPlacesFromImages()
     {
         std::string filename = fileList[index];
         std::vector<Position *> placePoints = readPlacePoints(filename);
-        // showPlacePoints(placePoints, filename);
         int indexVec = 0;
         Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
@@ -204,10 +191,9 @@ std::vector<Place *> World::createPlacesFromImages()
             {
                 place = new Place(filename, pos, this);
             }
-            catch (std::exception &e)
+            catch (const PositionOnAWallException &e)
             {
-                std::cerr << "World.cpp : RuntimeException : One of your " + filename + " places, at " + pos->toString() + " is on a wall\n";
-                exit(EXIT_FAILURE);
+                throw std::runtime_error("One of your " + filename + " places, at " + pos->toString() + " is on a wall");
             }
             Controller::getProgress()->reportPlaceCreated(filename);
             placesFromImg.push_back(place);
@@ -302,40 +288,40 @@ Calendar *World::getTime()
     return time;
 }
 
-Place *World::getPlaceByName(std::string name)
-{
-    int index = 0;
-    while (index != places.size())
-    {
-        Place *p = places[index];
+// Place *World::getPlaceByName(std::string name)
+// {
+//     int index = 0;
+//     while (index != places.size())
+//     {
+//         Place *p = places[index];
 
-        if (p->getName().compare(name) == 0)
-        {
-            return p;
-        }
-        index++;
-    }
+//         if (p->getName().compare(name) == 0)
+//         {
+//             return p;
+//         }
+//         index++;
+//     }
 
-    std::cerr << "World.cpp : PlaceNotFoundException : " + name + "\n";
-    exit(EXIT_FAILURE);
-}
+//     std::cerr << "World.cpp : PlaceNotFoundException : " + name + "\n";
+//     exit(EXIT_FAILURE);
+// }
 
-Place *World::getPlaceByPosition(Position *pos)
-{
-    int index = 0;
-    while (index != places.size())
-    {
-        Place *p = places[index];
+// Place *World::getPlaceByPosition(Position *pos)
+// {
+//     int index = 0;
+//     while (index != places.size())
+//     {
+//         Place *p = places[index];
 
-        if (p->getPos()->equals(pos))
-        {
-            return p;
-        }
-        index++;
-    }
-    std::cerr << "World.cpp : PlaceNotFoundException : at " + pos->toString() + "\n";
-    exit(EXIT_FAILURE);
-}
+//         if (p->getPos()->equals(pos))
+//         {
+//             return p;
+//         }
+//         index++;
+//     }
+//     std::cerr << "World.cpp : PlaceNotFoundException : at " + pos->toString() + "\n";
+//     exit(EXIT_FAILURE);
+// }
 
 std::vector<Place *> World::getPlacesOfType(std::string type)
 {

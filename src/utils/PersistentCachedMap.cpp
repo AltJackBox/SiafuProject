@@ -26,8 +26,6 @@ void PersistentCachedMap::persistObject(Position *key, Gradient *value)
         cereal::BinaryOutputArchive oarchive(f);
 
         oarchive(w, h, pos->getRow(), pos->getCol(), vec);
-        //delete pos;
-        //delete value;
     }
     catch (std::exception &e)
     {
@@ -62,20 +60,18 @@ void PersistentCachedMap::putInCache(std::string key, Gradient *value)
     int repeated = getIndex(recent, key);
 
     if (repeated != -1)
-    { // It's already there
+    {
         recent.erase(recent.begin() + repeated);
     }
     else
     {
-        //std::pair<std::string, Gradient *> pair(key, value);
         cache[key] = value;
-        //cache.insert(pair);
     }
 
     recent.push_back(key); // Refresh recent list
 
     if (cache.size() > cacheSize)
-    { // Remove old element
+    {
         std::string to_erase = recent.at(0);
         recent.erase(recent.begin());
         delete cache[to_erase];
@@ -111,7 +107,6 @@ PersistentCachedMap::PersistentCachedMap(std::string basePath, std::string name,
 
             filename = p.path().string(); // UPDATE : p.path().stem().string(); ---> without extension
             file = std::ifstream{filename};
-            //std::cout << name << '\n';
             toc.insert(p.path().stem().string());
         }
     }
@@ -134,7 +129,6 @@ void PersistentCachedMap::put(Position *key, Gradient *value)
 
     if ( toc.count(s) == 0)
     {
-        // oldValue = get(key);
         persistObject(key, value);
         toc.insert(s);
         putInCache(s, value);

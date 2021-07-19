@@ -5,6 +5,7 @@
 #include <model/SimulationData.h>
 #include <exceptions/PositionOnAWallException.h>
 #include <exceptions/InitializationRequiredException.h>
+#include <exceptions/InfoUndefinedException.h>
 #include <utils/PersistentCachedMap.h>
 
 #include <string>
@@ -22,7 +23,6 @@ void Place::basicChecks(World *thisPlacesWorld)
     if (gradients == nullptr)
     {
         throw InitializationRequiredException("You need to initialize the Place class.");
-        exit(EXIT_FAILURE);
     }
     if (world != thisPlacesWorld)
     {
@@ -44,30 +44,27 @@ Place::Place(std::string typeP, Position *pos, World *world, std::string nameP, 
     }
     this->pos = pos;
 
-    // Search for the substring in string
+    // Erasing ressources & extension from type and name variables
+
     size_t pos1 = typeP.find(PLACES);
     if (pos1 != std::string::npos)
     {
-        // If found then erase it from string
         typeP.erase(pos1, PLACES.length());
     }
     size_t pos2 = typeP.find(PNG);
     if (pos2 != std::string::npos)
     {
-        // If found then erase it from string
         typeP.erase(pos2, PNG.length());
     }
 
     pos1 = nameP.find(PLACES);
     if (pos1 != std::string::npos)
     {
-        // If found then erase it from string
         nameP.erase(pos1, PLACES.length());
     }
     pos2 = nameP.find(PNG);
     if (pos2 != std::string::npos)
     {
-        // If found then erase it from string
         nameP.erase(pos2, PNG.length());
     }
 
@@ -123,7 +120,7 @@ Publishable *Place::get(std::string key)
 {
     if (info.find(key) == info.end())
     {
-        std::cerr << "InfoUndefinedException " + key;
+        throw InfoUndefinedException(key);
     }
 
     return info.at(key);

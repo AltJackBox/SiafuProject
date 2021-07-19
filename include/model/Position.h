@@ -39,6 +39,7 @@ public:
         if (worldObj == nullptr)
         {
             std::cerr << "Null world received!";
+            exit(EXIT_FAILURE);
         }
         world = worldObj;
         width = world->getWidth();

@@ -188,7 +188,7 @@ void Agent::moveInDirection(int moveDir)
 {
     if (moveDir == -1)
     {
-        return; // Place reached
+        return;
     }
 
     pos = pos->calculateMove(moveDir);
@@ -205,7 +205,7 @@ void Agent::moveTowardsPlace(Place *place)
     {
         moveInDirection(place->pointFrom(pos, dir));
     }
-    catch (const std::exception &e)
+    catch (const PositionUnreachableException &e)
     {
         {
             std::cerr << "Agent '" + this->getName() + "' can't reach '" + place->getName() + "' at '" + pos->toString() + "'\n";
@@ -236,6 +236,7 @@ void Agent::wander()
     wander(DEFAULT_SOBERNESS);
 }
 
+// Random Utilization : Modify the commented lines
 void Agent::wander(int soberness)
 {
     atDestination = true;

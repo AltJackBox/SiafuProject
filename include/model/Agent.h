@@ -36,7 +36,7 @@ private:
 
     static World *world;
 
-    static bool infoFieldsLocked /* = false*/;
+    static bool infoFieldsLocked;
 
     static std::set<std::string> INFO_FIELDS;
 

@@ -8,8 +8,7 @@ std::string SYNTAX =
 
 int main(int argc, char *argv[])
 {
-    std::string configPath = "";
-    std::string simulationPath = "";
+    std::string simulationPath = "./ressources/Simulation-Office/";
 
     std::string arg;
     for (int i = 1; i < argc; i++)
@@ -26,7 +25,6 @@ int main(int argc, char *argv[])
         }
     }
 
-    new Controller(simulationPath);
-    std::cout << "Main method executed\n";
+    Controller* controller = new Controller(simulationPath);
     return 0;
 }
