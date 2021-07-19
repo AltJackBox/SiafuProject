@@ -35,8 +35,6 @@ private:
 public:
     Simulation();
     Simulation(std::string simulationPath, Controller* control);
-
-    int day;
     
     void launchSimulation();
     bool isSimulationRunning();

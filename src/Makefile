@@ -61,7 +61,7 @@ $(OBJ_DIR)/%.o: %.cpp
 
 $(BIN_DIR)/$(SIM) : $(SIM_DEP)
 	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(SIM) $^ -lstdc++fs -lpthread
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(SIM) $^ -lstdc++fs -lpthread -pg
 
 $(BIN_DIR)/$(TEST0) : $(TEST0_DEP)
 	@mkdir -p $(@D)

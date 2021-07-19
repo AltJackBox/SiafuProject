@@ -288,41 +288,6 @@ Calendar *World::getTime()
     return time;
 }
 
-// Place *World::getPlaceByName(std::string name)
-// {
-//     int index = 0;
-//     while (index != places.size())
-//     {
-//         Place *p = places[index];
-
-//         if (p->getName().compare(name) == 0)
-//         {
-//             return p;
-//         }
-//         index++;
-//     }
-
-//     std::cerr << "World.cpp : PlaceNotFoundException : " + name + "\n";
-//     exit(EXIT_FAILURE);
-// }
-
-// Place *World::getPlaceByPosition(Position *pos)
-// {
-//     int index = 0;
-//     while (index != places.size())
-//     {
-//         Place *p = places[index];
-
-//         if (p->getPos()->equals(pos))
-//         {
-//             return p;
-//         }
-//         index++;
-//     }
-//     std::cerr << "World.cpp : PlaceNotFoundException : at " + pos->toString() + "\n";
-//     exit(EXIT_FAILURE);
-// }
-
 std::vector<Place *> World::getPlacesOfType(std::string type)
 {
     if (placeTypes.find(type) == placeTypes.end())

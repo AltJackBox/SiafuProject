@@ -55,6 +55,9 @@ void Simulation::operator()()
 		worldModel->doIteration(world->getPlaces());
 		agentModel->doIteration(world->getPeople());
 		moveAgents();
+		if ( ((AgentModel *)agentModel)->getDay() > 29){
+			control->endSimulator();
+		}
 	}
 	simulationRunning = false;
 	control->getProgress()->reportSimulationEnded();

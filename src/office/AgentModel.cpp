@@ -21,6 +21,10 @@
 
 #include <fstream>
 
+int AgentModel::getDay(){
+    return day;
+}
+
 std::vector<Agent *> AgentModel::createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation)
 {
     std::vector<Agent *> people;
