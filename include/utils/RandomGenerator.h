@@ -24,23 +24,30 @@ public:
 	
 	// Return random double between 0 and 1
 	static double randomDouble() {
-		doubleGen++;
-		switch(integerGen) {
+		double result;
+		switch(doubleGen) {
 		case 0:
-			return 0.0;
+			result = 0.0;
+			break;
 		case 1:
-			return 0.25;
+			result = 0.25;
+			break;
 		case 2:
-			return 0.5;
+			result = 0.50;
+			break;
 		case 3:
-			return 0.75;
+			result = 0.75;
+			break;
 		case 4:
 			doubleGen = 0;
-			return 1.0;
+			result = 1.0;
+			break;
 		default:
-			return 0.0;
+			result = 0.0;
+			break;
 		}
-		
+		doubleGen++;
+		return result;
 	}
 
 };

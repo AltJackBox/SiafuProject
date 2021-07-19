@@ -194,7 +194,7 @@ std::vector<Agent *> AgentModel::createAgents()
     return people;
 }
 
-void AgentModel::printAgentInfo(Agent *a, int d, EasyTime* n)
+void AgentModel::printAgentInfo(Agent *a, int d, EasyTime *n)
 {
     std::ofstream f("Agent10C.txt", std::ios_base::app);
     std::string line;
@@ -798,7 +798,8 @@ void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, Eas
 
     // std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    double aux = RandomGenerator::randomDouble();
+    // double aux = RandomGenerator::randomDouble();
+    double aux = 0.0;
     if (aux <= noseMouthChance)
     {
         infect(notInfected, now);

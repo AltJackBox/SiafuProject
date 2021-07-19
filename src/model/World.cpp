@@ -269,6 +269,8 @@ std::vector<Agent *> World::getPeople()
     // {
     //     agents.push_back(element.second);
     // }
+
+    // Same order as in the Java version in order to check the results on a fixed scenario
     agents.push_back(people["RestHomeResident - 10"]);
     agents.push_back(people["RestHomeResident - 13"]);
     agents.push_back(people["RestHomeResident - 14"]);

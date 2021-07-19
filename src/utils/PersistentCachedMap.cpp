@@ -26,14 +26,13 @@ void PersistentCachedMap::persistObject(Position *key, Gradient *value)
         cereal::BinaryOutputArchive oarchive(f);
 
         oarchive(w, h, pos->getRow(), pos->getCol(), vec);
-        delete pos;
-        delete value;
+        //delete pos;
+        //delete value;
     }
     catch (std::exception &e)
     {
         throw std::runtime_error("Can't write " + path + key->toString() + ".data");
         delete pos;
-        
     }
 }
 
@@ -68,8 +67,9 @@ void PersistentCachedMap::putInCache(std::string key, Gradient *value)
     }
     else
     {
-        std::pair<std::string, Gradient *> pair(key, value);
-        cache.insert(pair);
+        //std::pair<std::string, Gradient *> pair(key, value);
+        cache[key] = value;
+        //cache.insert(pair);
     }
 
     recent.push_back(key); // Refresh recent list
@@ -78,6 +78,7 @@ void PersistentCachedMap::putInCache(std::string key, Gradient *value)
     { // Remove old element
         std::string to_erase = recent.at(0);
         recent.erase(recent.begin());
+        delete cache[to_erase];
         cache.erase(to_erase);
     }
 }
@@ -129,12 +130,14 @@ void PersistentCachedMap::put(Position *key, Gradient *value)
         
     }
 
-    if (!toc.count(key->toString()))
+    std::string s = key->toString();
+
+    if ( toc.count(s) == 0)
     {
         // oldValue = get(key);
         persistObject(key, value);
-        toc.insert(key->toString());
-        putInCache(key->toString(), value);
+        toc.insert(s);
+        putInCache(s, value);
     }
 }
 
@@ -145,8 +148,9 @@ Gradient *PersistentCachedMap::get(std::string key)
         throw NullPointerException("Getting null key inside PersistentCachedMap");
     }
 
-    if (!toc.count(key))
+    if (toc.count(key) == 0)
     {
+        std::cout << key + "\n";
         return nullptr;
     }
     else
@@ -169,5 +173,5 @@ Gradient *PersistentCachedMap::get(std::string key)
 
 bool PersistentCachedMap::containsKey(std::string key)
 {
-    return toc.count(key);
+    return (toc.count(key) != 0);
 }
