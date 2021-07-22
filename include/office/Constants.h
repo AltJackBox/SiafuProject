@@ -173,6 +173,60 @@ public:
 
     /** The average interval between toilet visits. */
     static EasyTime *AVERAGE_TOILET_INTERVAL;
+
+    static void removeConstantsPointers()
+    {
+        if (BREAKFAST_START)
+        {
+            delete BREAKFAST_START;
+            BREAKFAST_START = nullptr;
+        }
+        if (BREAKFAST_DURATION)
+        {
+            delete BREAKFAST_DURATION;
+            BREAKFAST_DURATION = nullptr;
+        }
+        if (LUNCH_START)
+        {
+            delete LUNCH_START;
+            LUNCH_START = nullptr;
+        }
+        if (LUNCH_DURATION)
+        {
+            delete LUNCH_DURATION;
+            LUNCH_DURATION = nullptr;
+        }
+        if (SNACK_START)
+        {
+            delete SNACK_START;
+            SNACK_START = nullptr;
+        }
+        if (SNACK_DURATION)
+        {
+            delete SNACK_DURATION;
+            SNACK_DURATION = nullptr;
+        }
+        if (DINNER_START)
+        {
+            delete DINNER_START;
+            DINNER_START = nullptr;
+        }
+        if (DINNER_DURATION)
+        {
+            delete DINNER_DURATION;
+            DINNER_DURATION = nullptr;
+        }
+        if (AVERAGE_WAKE_UP_TIME)
+        {
+            delete AVERAGE_WAKE_UP_TIME;
+            AVERAGE_WAKE_UP_TIME = nullptr;
+        }
+        if (AVERAGE_TOILET_INTERVAL)
+        {
+            delete AVERAGE_TOILET_INTERVAL;
+            AVERAGE_TOILET_INTERVAL = nullptr;
+        }
+    }
 };
 
 /**
@@ -298,6 +352,8 @@ private:
 public:
     Activity(const std::string description);
 
+    ~Activity() {}
+
     std::string toString();
 };
 
@@ -322,6 +378,17 @@ public:
     static Publishable *getActivity(std::string description)
     {
         return Activities.at(description);
+    }
+
+    static void removeFieldsPointers()
+    {
+        for (std::pair<const std::string, Activity *> &act : Activities)
+        {
+            if (act.second) {
+                delete act.second;
+                act.second = nullptr;
+            }
+        }
     }
 };
 

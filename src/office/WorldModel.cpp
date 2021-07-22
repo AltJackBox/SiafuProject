@@ -16,6 +16,50 @@ EasyTime *WorldModel::WAKEUPTIME = new EasyTime(7, 0);
 
 EasyTime *WorldModel::SLEEPTIME = new EasyTime(23, 0);
 
+WorldModel::~WorldModel()
+{
+    if (breakfastStart)
+    {
+        delete breakfastStart;
+        breakfastStart = nullptr;
+    }
+    if (breakfastEnd)
+    {
+        delete breakfastEnd;
+        breakfastEnd = nullptr;
+    }
+    if (lunchStart)
+    {
+        delete lunchStart;
+        lunchStart = nullptr;
+    }
+    if (lunchEnd)
+    {
+        delete lunchEnd;
+        lunchEnd = nullptr;
+    }
+    if (snackStart)
+    {
+        delete snackStart;
+        snackStart = nullptr;
+    }
+    if (snackEnd)
+    {
+        delete snackEnd;
+        snackEnd = nullptr;
+    }
+    if (dinnerStart)
+    {
+        delete dinnerStart;
+        dinnerStart = nullptr;
+    }
+    if (dinnerEnd)
+    {
+        delete dinnerEnd;
+        dinnerEnd = nullptr;
+    }
+}
+
 void WorldModel::terminateGlobalMeeting()
 {
     int index = 0;

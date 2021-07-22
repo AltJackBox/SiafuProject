@@ -33,6 +33,8 @@ public:
 
     Gradient();
 
+    ~Gradient();
+
     Gradient(Position *center, World *world);
 
     Gradient(Position *center, World *world, Position *relevantPos);

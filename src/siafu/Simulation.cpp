@@ -14,6 +14,22 @@
 #include <behaviormodels/BaseContextModel.h>
 #include <thread>
 
+Simulation::~Simulation()
+{
+	//delete control;
+	if (simData){
+		delete simData;
+		simData = nullptr;
+	}
+	if (world){
+		delete world;
+		world = nullptr;
+	}
+	// delete time;
+	// delete agentModel;
+	// delete worldModel;
+}
+
 Simulation::Simulation(std::string simulationPath, Controller *control)
 {
 	this->simData = SimulationData::getInstance(simulationPath);
@@ -55,7 +71,8 @@ void Simulation::operator()()
 		worldModel->doIteration(world->getPlaces());
 		agentModel->doIteration(world->getPeople());
 		moveAgents();
-		if ( ((AgentModel *)agentModel)->getDay() > 29){
+		if (((AgentModel *)agentModel)->getDay() > 30)
+		{
 			control->endSimulator();
 		}
 	}

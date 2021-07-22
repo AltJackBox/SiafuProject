@@ -20,8 +20,8 @@ class SimulationData
 protected:
 	std::string path;
 
-
 public:
+	~SimulationData() {}
 
 	static SimulationData *getInstance(const std::string pathString)
 	{
@@ -47,7 +47,6 @@ protected:
 	virtual std::string getFile(std::string path);
 
 	virtual std::vector<std::string> getFilesByPath(const std::string path);
-
 };
 
 #endif

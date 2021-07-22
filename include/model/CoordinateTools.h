@@ -59,6 +59,8 @@ class CoordinateTools {
 
 	CoordinateTools();
 
+	~CoordinateTools() {};
+
 	CoordinateTools(const int height, const int width, const double topRight[] , const double bottomRight[] , const double bottomLeft[] );
 
 	double* localToCoordinates(int i, int j);

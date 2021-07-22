@@ -12,6 +12,12 @@ Controller::Controller()
 {
 }
 
+Controller::~Controller()
+{
+	if (simulation)
+		delete simulation;
+}
+
 Controller::Controller(std::string simulationPath)
 {
 

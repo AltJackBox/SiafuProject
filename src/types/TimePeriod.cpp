@@ -1,6 +1,18 @@
 #include <types/TimePeriod.h>
 #include <types/EasyTime.h>
 
+TimePeriod::~TimePeriod()
+{
+    if (start) {
+        delete start;
+        start = nullptr;
+    }
+    if (end) {
+        delete end;
+        end = nullptr;
+    }
+}
+
 TimePeriod::TimePeriod(EasyTime *start, EasyTime *end)
 {
     this->start = start;
@@ -17,12 +29,12 @@ EasyTime *TimePeriod::getEnd()
     return end;
 }
 
-std::string TimePeriod::getType() 
+std::string TimePeriod::getType()
 {
     return "TimePeriod";
 }
 
-std::string TimePeriod::toString() 
+std::string TimePeriod::toString()
 {
     return start->toString() + "-" + end->toString();
 }

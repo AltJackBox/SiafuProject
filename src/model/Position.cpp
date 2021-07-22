@@ -39,8 +39,6 @@ Position::Position(const int i, const int j)
     this->j = j;
 }
 
-Position::~Position() {}
-
 Position::Position(const double lat, const double lon) : Position(coordinateTool->coordinatesToLocal(lat, lon))
 {
 }

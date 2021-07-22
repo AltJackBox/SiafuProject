@@ -12,6 +12,8 @@ class Publishable
     virtual std::string toString() {
         return "Empty";
     }
+
+    virtual ~Publishable(){}
 };
 
 #endif

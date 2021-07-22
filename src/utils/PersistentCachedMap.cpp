@@ -13,6 +13,20 @@
 #include <cereal/archives/binary.hpp>
 #include <cereal/types/vector.hpp>
 
+PersistentCachedMap::~PersistentCachedMap()
+{
+    if (!cache.empty())
+    {
+        for (std::pair<const std::string, Gradient *> &grad : cache)
+        {
+            if (grad.second) {
+                delete grad.second;
+                grad.second = nullptr;
+            }
+        }
+    }
+}
+
 void PersistentCachedMap::persistObject(Position *key, Gradient *value)
 {
 
@@ -50,7 +64,6 @@ Gradient *PersistentCachedMap::recoverObject(std::string key)
     {
         toc.erase(key); // Try and heal the list
         throw std::runtime_error("Can't read" + path + "-" + key + ".data, did u erase it manually ?");
-        
     }
     return nullptr;
 }
@@ -92,7 +105,6 @@ PersistentCachedMap::PersistentCachedMap(std::string basePath, std::string name,
     if (ENOENT == errno)
     {
         throw std::runtime_error("Can't open " + path);
-        
     }
 
     std::string ext(".data");
@@ -116,18 +128,17 @@ void PersistentCachedMap::put(Position *key, Gradient *value)
 {
     if ((key == nullptr) || (value == nullptr))
     {
-        throw NullPointerException("Putting null value/key inside PersistentCachedMap");       
+        throw NullPointerException("Putting null value/key inside PersistentCachedMap");
     }
 
     if (key->toString().length() > MAX_KEY_LENGTH)
     {
         throw std::invalid_argument("You tried to add a key whose toString method yielded a string over 250 chars");
-        
     }
 
     std::string s = key->toString();
 
-    if ( toc.count(s) == 0)
+    if (toc.count(s) == 0)
     {
         persistObject(key, value);
         toc.insert(s);

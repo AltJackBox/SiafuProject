@@ -6,13 +6,11 @@
 #include <iostream>
 
 class World;
-class CoordinateTools;
 
 class Position
 {
 
 private:
-
     static const int NEAR_DISTANCE;
 
     static bool initialized;
@@ -50,7 +48,12 @@ public:
 
     Position();
 
-    ~Position();
+    ~Position() {}
+
+    static void removePositionPointers()
+    {
+        delete coordinateTool;
+    }
 
     Position(const int i, const int j);
 

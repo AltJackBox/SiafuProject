@@ -4,24 +4,24 @@
 #include <types/Publishable.h>
 #include <string>
 
-class BooleanType : public Publishable {
+class BooleanType : public Publishable
+{
 
-
-	private:
-    
+private:
     bool b;
 
-	public:
-    
+public:
     BooleanType(const bool val);
+
+    virtual ~BooleanType() {}
 
     std::string toString() override;
 
-	bool getValue();
+    bool getValue();
 
     std::string getType() override;
 
-	bool equals(Publishable* o);
+    bool equals(Publishable *o);
 };
 
 #endif

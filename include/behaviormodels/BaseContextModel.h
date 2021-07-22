@@ -1,17 +1,23 @@
 #ifndef BASECONTEXTMODEL_H
 #define BASECONTEXTMODEL_H
 
-
 class World;
 
-class BaseContextModel {
-	
-	protected:
-     World world;
+class BaseContextModel
+{
 
-	public:
+protected:
+	World* world;
+
+public:
 	BaseContextModel();
-    BaseContextModel(const World world) {
+
+	// ~BaseContextModel(){
+	// 	delete world;
+	// }
+	
+	BaseContextModel(World* world)
+	{
 		this->world = world;
 	}
 

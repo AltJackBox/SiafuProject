@@ -23,7 +23,7 @@ private:
 public:
     EasyTime(EasyTime *time);
 
-    ~EasyTime() {};
+    virtual ~EasyTime() {}
 
     EasyTime(const int hour, const int minute);
 

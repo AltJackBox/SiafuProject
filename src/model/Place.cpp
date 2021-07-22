@@ -18,6 +18,18 @@ PersistentCachedMap *Place::gradients;
 std::string PLACES = DEFAULT_PATH + PLACES_PATH;
 std::string PNG = ".png";
 
+Place::~Place()
+{
+    if (pos) {
+        delete pos;
+        pos = nullptr;
+    }
+    if (temporaryGradient) {
+        delete temporaryGradient;
+        temporaryGradient = nullptr;
+    }
+}
+
 void Place::basicChecks(World *thisPlacesWorld)
 {
     if (gradients == nullptr)

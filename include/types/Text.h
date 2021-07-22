@@ -13,6 +13,8 @@ private:
 public:
     Text(const std::string text);
 
+    virtual ~Text() {}
+
     std::string toString() override;
 
     std::string getText();

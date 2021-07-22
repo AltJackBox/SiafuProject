@@ -19,12 +19,13 @@ int main(int argc, char *argv[])
             std::cout << "Siafu v" << RELEASE << " , Miquel Martin, NEC Europe Ltd.\n";
             exit(0);
         }
-        else
+        else 
         {
             std::cout << "Unrecognized parameter '" << arg << "'\n";
         }
     }
 
     Controller* controller = new Controller(simulationPath);
+    // delete controller;
     return 0;
 }

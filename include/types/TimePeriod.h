@@ -18,6 +18,7 @@ private:
 public:
     TimePeriod( EasyTime* start,  EasyTime* end);
 
+    virtual ~TimePeriod();
 
     EasyTime* getStart();
 

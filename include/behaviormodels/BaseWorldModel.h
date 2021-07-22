@@ -3,25 +3,30 @@
 
 #include <vector>
 
-
-class World;
 class Place;
+class World;
 
-class BaseWorldModel {
-	
-	protected:
-    World* world;
+class BaseWorldModel
+{
 
-	public:
+protected:
+	World *world;
+
+public:
 	BaseWorldModel();
-    BaseWorldModel(World* world) {
+
+	virtual ~BaseWorldModel()
+	{
+	}
+
+	BaseWorldModel(World *world)
+	{
 		this->world = world;
 	}
 
-	virtual void createPlaces(std::vector<Place*> places) {}
+	virtual void createPlaces(std::vector<Place *> places) {}
 
-	virtual void doIteration(std::vector<Place*> places) {}
-
+	virtual void doIteration(std::vector<Place *> places) {}
 };
 
 #endif

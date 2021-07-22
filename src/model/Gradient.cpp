@@ -10,7 +10,6 @@
 #include <algorithm>
 #include <limits.h>
 
-
 const int Gradient::UNREACHABLE = INT_MAX;
 
 const int Gradient::POSSIBLE_DIRS = 8;
@@ -18,6 +17,11 @@ const int Gradient::POSSIBLE_DIRS = 8;
 const int Gradient::STRAIGHT_DISTANCE = 10;
 
 const int Gradient::DIAGONAL_DISTANCE = 14;
+
+Gradient::~Gradient()
+{
+    delete center;
+}
 
 void Gradient::calculateGradient(World *world, Position *relevantPos)
 {
@@ -50,8 +54,9 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
             {
                 try
                 {
-                    Position* newPos = pos->calculateMove(dir);
-                    if (newPos == nullptr) {
+                    Position *newPos = pos->calculateMove(dir);
+                    if (newPos == nullptr)
+                    {
                         throw PositionOnAWallException();
                     }
                     if (distanceStraight < distance[newPos->getRow() * w + newPos->getCol()])
@@ -64,7 +69,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                         }
                     }
                 }
-                catch (const PositionUnreachableException & err)
+                catch (const PositionUnreachableException &err)
                 {
                     continue;
                 }
@@ -73,8 +78,9 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
             {
                 try
                 {
-                    Position* newPos = pos->calculateMove(dir);
-                    if (newPos == nullptr) {
+                    Position *newPos = pos->calculateMove(dir);
+                    if (newPos == nullptr)
+                    {
                         throw PositionOnAWallException();
                     }
                     if (distanceDiagonal < distance[newPos->getRow() * w + newPos->getCol()])
@@ -87,7 +93,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                         }
                     }
                 }
-                catch (const PositionUnreachableException & e)
+                catch (const PositionUnreachableException &e)
                 {
                     continue;
                 }
@@ -99,9 +105,13 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
             }
         }
 
-        if (firstIteration) {
-            std::for_each(pending.begin(), pending.end(), [](Position* obj){ delete obj; });
-        } else {
+        if (firstIteration)
+        {
+            std::for_each(pending.begin(), pending.end(), [](Position *obj)
+                          { delete obj; });
+        }
+        else
+        {
             firstIteration = true;
         }
         pending = next;
@@ -175,7 +185,8 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
         try
         {
             aux = pos->calculateMove(dir);
-            if (aux == nullptr) {
+            if (aux == nullptr)
+            {
                 throw PositionOnAWallException();
             }
             grad = distance[aux->getRow() * w + aux->getCol()];

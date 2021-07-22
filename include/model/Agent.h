@@ -71,9 +71,15 @@ public:
 
     Agent(std::string name, Position *start, World *world, int zPriority);
 
+    ~Agent();
+
     static void lockInfoFields()
     {
         infoFieldsLocked = true;
+    }
+
+    static void removeAgentPointers() {
+        delete DEFAULT_DESTINATION;
     }
 
     bool isAtDestination();

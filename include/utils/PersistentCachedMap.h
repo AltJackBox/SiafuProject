@@ -35,6 +35,8 @@ public:
 
     PersistentCachedMap(std::string basePath, std::string name, int cacheSize);
 
+    ~PersistentCachedMap();
+
     void put(Position *key, Gradient *value);
 
     Gradient *get(std::string key);

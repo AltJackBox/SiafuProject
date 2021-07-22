@@ -1,6 +1,7 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include <progress/Progress.h>
 #include <unistd.h>
 #include <mutex>
 #include <string>
@@ -34,6 +35,12 @@ private:
 
 public:
     Controller();
+
+    ~Controller();
+
+    static void deleteControllerPointers(){
+        delete progress;
+    }
 
     Controller(std::string simulationPath);
 

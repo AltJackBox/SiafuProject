@@ -2,6 +2,7 @@
 #define WORLDMODEL_H
 
 #include <behaviormodels/BaseWorldModel.h>
+#include <types/EasyTime.h>
 
 class EasyTime;
 class BoolType;
@@ -41,6 +42,13 @@ private:
 
 public:
     WorldModel(World *world) : BaseWorldModel(world) {}
+
+    virtual ~WorldModel();
+
+    static void removeWorldModelPointers(){
+        delete WAKEUPTIME;
+        delete SLEEPTIME;
+    }
 
     void createPlaces(const std::vector<Place *> places) override;
 

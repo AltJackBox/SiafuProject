@@ -11,6 +11,8 @@ public:
 
     Progress();
 
+    ~Progress(){}
+
     void reportWorldCreation(std::string worldName);
 
     void reportCachePrefill(int amountOfElements) ;

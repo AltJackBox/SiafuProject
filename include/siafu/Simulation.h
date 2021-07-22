@@ -35,6 +35,8 @@ private:
 public:
     Simulation();
     Simulation(std::string simulationPath, Controller* control);
+
+    ~Simulation();
     
     void launchSimulation();
     bool isSimulationRunning();

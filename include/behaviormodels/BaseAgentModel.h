@@ -3,8 +3,8 @@
 
 #include <vector>
 
-class World;
 class Agent;
+class World;
 
 class BaseAgentModel
 {
@@ -14,13 +14,19 @@ protected:
 
 public:
 	BaseAgentModel();
+
+	virtual ~BaseAgentModel()
+	{
+	}
+
 	BaseAgentModel(World *world)
 	{
 		this->world = world;
 	}
 
-	virtual std::vector<Agent *> createAgents() {
-		return std::vector<Agent*>();
+	virtual std::vector<Agent *> createAgents()
+	{
+		return std::vector<Agent *>();
 	}
 
 	virtual void doIteration(std::vector<Agent *> agents) {}

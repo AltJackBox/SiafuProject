@@ -7,7 +7,6 @@
 #include <types/Text.h>
 #include <types/TimePeriod.h>
 #include <types/BooleanType.h>
-#include <behaviormodels/BaseAgentModel.h>
 #include <exceptions/PlaceTypeUndefinedException.h>
 #include <exceptions/InfoUndefinedException.h>
 #include <utils/RandomGenerator.h>
@@ -21,7 +20,18 @@
 
 #include <fstream>
 
-int AgentModel::getDay(){
+AgentModel::~AgentModel()
+{
+    // if (restHomeDoor)
+    //     delete restHomeDoor;
+    // if (apartmentThreeDoor)
+    //     delete apartmentThreeDoor;
+    // if (houseDoor)
+    //     delete houseDoor;
+}
+
+int AgentModel::getDay()
+{
     return day;
 }
 
@@ -777,7 +787,7 @@ void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, Eas
     // std::uniform_real_distribution<> dis(0.0, 1.0);
 
     // double aux = RandomGenerator::randomDouble();
-    double aux = 0.0;
+    double aux = 0.001;
     if (aux <= noseMouthChance)
     {
         infect(notInfected, now);

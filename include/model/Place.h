@@ -11,13 +11,12 @@
 class Position;
 class World;
 class Gradient;
-class PersistentCachedMap;
 
 class Place : public Publishable
 {
 
 private:
-	static PersistentCachedMap* gradients;
+	static PersistentCachedMap *gradients;
 
 	static World *world;
 
@@ -44,6 +43,13 @@ public:
 	}
 
 	Place();
+
+	~Place();
+
+	static void removePlacePointers()
+	{
+		delete gradients;
+	}
 
 	Place(std::string type, Position *pos, World *world);
 
@@ -72,7 +78,6 @@ public:
 	bool equals(Place *p);
 
 	std::string getType() override;
-
 };
 
 #endif

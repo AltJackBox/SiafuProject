@@ -8,9 +8,9 @@
 #include <progress/Progress.h>
 #include <office/AgentModel.h>
 #include <office/WorldModel.h>
+#include <office/Constants.h>
 #include <Calendar.h>
 #include <behaviormodels/BaseAgentModel.h>
-#include <behaviormodels/BaseContextModel.h>
 #include <behaviormodels/BaseWorldModel.h>
 #include <exceptions/PlaceTypeUndefinedException.h>
 #include <exceptions/PositionOnAWallException.h>
@@ -22,6 +22,56 @@ extern "C"
 {
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb/stb_image.h>
+}
+
+World::~World()
+{
+    if (time)
+    {
+        delete time;
+        time = nullptr;
+    }
+    if (agentModel)
+    {
+        delete agentModel;
+        agentModel = nullptr;
+    }
+    if (worldModel)
+    {
+        delete worldModel;
+        worldModel = nullptr;
+    }
+    if (walls)
+    {
+        delete[] walls;
+        walls = nullptr;
+    }
+    // delete simData;
+    if (!places.empty())
+    {
+        for (Place* &pl : places)
+        {
+            if (pl)
+            {
+                delete pl;
+                pl = nullptr;
+            }
+        }
+    }
+    Constants::removeConstantsPointers();
+    ActivityManager::removeFieldsPointers();
+
+    if (!people.empty())
+    {
+        for (std::pair<const std::string, Agent *> &ag : people)
+        {
+            if (ag.second) {
+                delete ag.second;
+                ag.second = nullptr;
+            }
+        }
+    }
+    //delete simulation;
 }
 
 bool load_image(std::vector<unsigned char> &image, const std::string &filename, int &x, int &y)
@@ -349,12 +399,12 @@ BaseAgentModel *World::getAgentModel()
     return agentModel;
 }
 
-BaseContextModel *World::getContextModel()
-{
-    return contextModel;
-}
-
 BaseWorldModel *World::getWorldModel()
 {
     return worldModel;
 }
+
+// BaseContextModel *World::getContextModel()
+// {
+//     return contextModel;
+// }

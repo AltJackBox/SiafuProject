@@ -24,11 +24,11 @@ private:
     bool infectionDetected = false;
     int day = 1;
 
-    Place *restHomeDoor;
-    Place *apartmentThreeDoor;
-    Place *houseDoor;
+    Place *restHomeDoor = nullptr;
+    Place *apartmentThreeDoor = nullptr;
+    Place *houseDoor = nullptr;
 
-    std::vector<Agent*> createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation);
+    std::vector<Agent *> createWorker(const std::string type, const std::string bedLocation, const std::string seatLocation);
 
     void handleInfection(std::vector<Agent *> agents, EasyTime *now);
 
@@ -96,10 +96,12 @@ private:
 
     void printDayInfo();
 
-    void printAgentInfo(Agent *a, int d, EasyTime* n);
+    void printAgentInfo(Agent *a, int d, EasyTime *n);
 
 public:
     AgentModel(World *world);
+
+    virtual ~AgentModel();
 
     std::vector<Agent *> createAgents() override;
 

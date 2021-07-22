@@ -11,7 +11,6 @@ class Simulation;
 class SimulationData;
 class Position;
 class BaseAgentModel;
-class BaseContextModel;
 class BaseWorldModel;
 class Place;
 class Agent;
@@ -39,7 +38,6 @@ class World
 {
 
 private:
-
     int height;
 
     int width;
@@ -56,7 +54,7 @@ private:
 
     BaseWorldModel *worldModel;
 
-    BaseContextModel *contextModel;
+    // BaseContextModel *contextModel;
 
     std::unordered_map<std::string, Agent *> people;
 
@@ -100,6 +98,8 @@ public:
 
     World() {}
 
+    ~World();
+
     World(Simulation *simulation, SimulationData *simData);
 
     std::string getWorldName();
@@ -130,9 +130,9 @@ public:
 
     BaseAgentModel *getAgentModel();
 
-    BaseContextModel *getContextModel();
-
     BaseWorldModel *getWorldModel();
+
+    // BaseContextModel *getContextModel();
 };
 
 #endif

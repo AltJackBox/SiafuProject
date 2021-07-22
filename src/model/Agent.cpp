@@ -17,6 +17,30 @@ bool Agent::infoFieldsLocked = false;
 
 std::set<std::string> Agent::INFO_FIELDS;
 
+Agent::~Agent()
+{
+    if (pos)
+    {
+        delete pos;
+        pos = nullptr;
+    }
+    if (destination)
+    {
+        delete destination;
+        destination = nullptr;
+    }
+    if (!info.empty())
+    {
+        for (std::pair<const std::string, Publishable *> &pub : info)
+        {
+            if (pub.second){
+                delete pub.second;
+                pub.second = nullptr;
+            }
+        }
+    }
+}
+
 void Agent::basicChecks(World *thisAgentsWorld)
 {
     if (world == nullptr)
@@ -261,7 +285,8 @@ void Agent::wander(int soberness)
         try
         {
             target = pos->calculateMove(dir);
-            if (target == nullptr) {
+            if (target == nullptr)
+            {
                 throw PositionOnAWallException();
             }
             pos = target;
