@@ -136,9 +136,10 @@ std::string Fields::EVENT = "Event";
 /** A temporary destination. */
 std::string Fields::TEMPORARY_DESTINATION = "TemporaryDestination";
 
-Activity::Activity(const std::string description)
+Activity::Activity(const std::string description, int act)
 {
     this->description = description;
+    this->act = act;
 }
 
 std::string Activity::toString()
@@ -146,15 +147,30 @@ std::string Activity::toString()
     return description;
 }
 
-Activity *ActivityManager::RESTING = new Activity("Resting");
-Activity *ActivityManager::LEAVING_WORK = new Activity("LeavingWork");
-Activity *ActivityManager::IN_TOILET = new Activity("InToilet");
-Activity *ActivityManager::GOING_2_TOILET = new Activity("Going2Toilet");
-Activity *ActivityManager::GOING_2_DESK = new Activity("Going2Desk");
-Activity *ActivityManager::GOING_2_GLOBAL_LUNCH = new Activity("Going2GlobalLunch");
-Activity *ActivityManager::AT_DESK = new Activity("AtDesk");
-Activity *ActivityManager::ENTERING_TOILET = new Activity("EnteringToilet");
-Activity *ActivityManager::AT_LUNCH = new Activity("AtLunch");
-Activity *ActivityManager::ENTERING_LUNCH = new Activity("EnteringLunch");
+int Activity::getAct(){
+    return act;
+}
 
-std::map<std::string, Activity *> ActivityManager::Activities = {{"Resting", RESTING}, {"LEAVING_WORK", LEAVING_WORK}, {"IN_TOILET", IN_TOILET}, {"GOING_2_TOILET", GOING_2_TOILET}, {"GOING_2_DESK", GOING_2_DESK}, {"GOING_2_GLOBAL_LUNCH", GOING_2_GLOBAL_LUNCH}, {"AT_DESK", AT_DESK}, {"ENTERING_TOILET", ENTERING_TOILET}, {"AT_LUNCH", AT_LUNCH}, {"ENTERING_TOILET", ENTERING_TOILET}};
+// Activity *ActivityManager::RESTING = new Activity("Resting");
+// Activity *ActivityManager::LEAVING_WORK = new Activity("LeavingWork");
+// Activity *ActivityManager::IN_TOILET = new Activity("InToilet");
+// Activity *ActivityManager::GOING_2_TOILET = new Activity("Going2Toilet");
+// Activity *ActivityManager::GOING_2_DESK = new Activity("Going2Desk");
+// Activity *ActivityManager::GOING_2_GLOBAL_LUNCH = new Activity("Going2GlobalLunch");
+// Activity *ActivityManager::AT_DESK = new Activity("AtDesk");
+// Activity *ActivityManager::ENTERING_TOILET = new Activity("EnteringToilet");
+// Activity *ActivityManager::AT_LUNCH = new Activity("AtLunch");
+// Activity *ActivityManager::ENTERING_LUNCH = new Activity("EnteringLunch");
+
+std::string Activity::resting = "Resting";
+std::string Activity::leaving_work = "LeavingWork";
+std::string Activity::in_toilet = "InToilet";
+std::string Activity::going_2_toilet = "Going2Toilet";
+std::string Activity::going_2_desk = "Going2Desk";
+std::string Activity::going_2_global_lunch = "Going2GlobalLunch";
+std::string Activity::at_desk = "AtDesk";
+std::string Activity::entering_toilet = "EnteringToilet";
+std::string Activity::at_lunch = "AtLunch";
+std::string Activity::entering_lunch = "EnteringLunch";
+
+// std::map<std::string, Activity *> ActivityManager::Activities = {{"Resting", RESTING}, {"LEAVING_WORK", LEAVING_WORK}, {"IN_TOILET", IN_TOILET}, {"GOING_2_TOILET", GOING_2_TOILET}, {"GOING_2_DESK", GOING_2_DESK}, {"GOING_2_GLOBAL_LUNCH", GOING_2_GLOBAL_LUNCH}, {"AT_DESK", AT_DESK}, {"ENTERING_TOILET", ENTERING_TOILET}, {"AT_LUNCH", AT_LUNCH}, {"ENTERING_TOILET", ENTERING_TOILET}};

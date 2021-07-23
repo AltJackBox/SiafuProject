@@ -7,6 +7,7 @@
 #include <string>
 #include <iostream>
 #include <iterator>
+#include <memory>
 
 class Place;
 class World;
@@ -54,7 +55,7 @@ private:
 
     Place *destination;
 
-    std::map<std::string, Publishable *> info;
+    std::map<std::string, Publishable*> info;
 
     int zPriority;
 

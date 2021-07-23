@@ -5,6 +5,7 @@
 #include <exceptions/InfoUndefinedException.h>
 #include <exceptions/InitializationRequiredException.h>
 #include <exceptions/PositionOnAWallException.h>
+#include <office/Constants.h>
 #include <exception>
 #include <stdlib.h>
 #include <random>
@@ -29,14 +30,16 @@ Agent::~Agent()
         delete destination;
         destination = nullptr;
     }
-    if (!info.empty())
+    for (std::pair<const std::string, Publishable *> &inf : info)
     {
-        for (std::pair<const std::string, Publishable *> &pub : info)
+        if (inf.second)
         {
-            if (pub.second){
-                delete pub.second;
-                pub.second = nullptr;
+            try {
+                delete inf.second;
+            } catch (const std::exception &e) {
+                std::cout << "Place deleted twice\n";
             }
+            inf.second = nullptr;
         }
     }
 }

@@ -69,6 +69,7 @@ void WorldModel::terminateGlobalMeeting()
         Agent *p = people[index];
         if (((Text *)p->get(Fields::EVENT))->toString().compare("ConferenceRoomMeeting") == 0)
         {
+            delete p->get(Fields::EVENT);
             p->set(Fields::EVENT, new Text("GlobalMeetingEnded"));
         }
         index++;
@@ -96,8 +97,9 @@ void WorldModel::organizeGlobalMeeting()
         if (seatsLeft > 0)
         {
             seatsLeft--;
+            delete p->get(Fields::EVENT);
             p->set(Fields::EVENT, new Text("ConferenceRoomMeeting"));
-            p->set("TemporaryDestination", seats[seatsIndex]);
+            p->set(Fields::TEMPORARY_DESTINATION, seats[seatsIndex]);
             seatsIndex++;
         }
         peopleIndex++;

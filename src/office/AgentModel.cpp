@@ -69,7 +69,7 @@ std::vector<Agent *> AgentModel::createWorker(const std::string type, const std:
         a->set(Fields::DESK, desk);
         a->set(Fields::WAKE_UP_TIME, wakeUpTime);
         a->set(Fields::SLEEP_TIME, sleepTime);
-        a->set(Fields::ACTIVITY, ActivityManager::getActivity("LEAVING_WORK"));
+        a->set(Fields::ACTIVITY, new Activity(Activity::leaving_work, Activity::Activities::LEAVING_WORK));
         a->set(Fields::TOILET_INTERVAL, toiletInterval);
         a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(wakeUpTime))->shift(toiletInterval));
         a->set(Fields::DESIRED_TOILET, new Text("None"));
@@ -240,6 +240,7 @@ void AgentModel::handlePersonBodySensors(Agent *a)
     double aux = 0.5;
 
     bloodOxygen = bloodOxygen < 95 ? bloodOxygen + aux : bloodOxygen - aux;
+    delete a->get(Fields::BLOODOXYGEN);
     a->set(Fields::BLOODOXYGEN, new Text(std::to_string(bloodOxygen)));
 
     std::string str = (a->get(Fields::BODYTEMPERATURE))->toString();
@@ -247,6 +248,7 @@ void AgentModel::handlePersonBodySensors(Agent *a)
 
     double bodytemperature = std::stod(str);
     bodytemperature = bodytemperature < 36.5 ? bodytemperature + aux : bodytemperature - aux;
+    delete a->get(Fields::BODYTEMPERATURE);
     a->set(Fields::BODYTEMPERATURE, new Text(std::to_string(bodytemperature)));
 
     //double glucose = Double.parseDouble(a.get(GLUCOSE).tostd::string().replace(',', '.'));
@@ -256,53 +258,45 @@ void AgentModel::handlePersonBodySensors(Agent *a)
 
 void AgentModel::handlePerson(Agent *a, EasyTime *now)
 {
-    Activity *activity = (Activity *)a->get(Fields::ACTIVITY);
     try
     {
-
-        if (activity == ActivityManager::RESTING)
+        Activity *activity = (Activity *)a->get(Fields::ACTIVITY);
+        int act = activity->getAct();
+        switch (act)
         {
+        case Activity::Activities::RESTING:
             if (now->isAfter((EasyTime *)a->get(Fields::WAKE_UP_TIME)) && now->isBefore((EasyTime *)a->get(Fields::SLEEP_TIME)))
             {
                 goToDesk(a);
+                delete a->get(Fields::NEXT_TOILET_VISIT);
                 a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(((EasyTime *)a->get(Fields::WAKE_UP_TIME))))->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL)));
             }
             return;
-        }
-        else if (activity == ActivityManager::LEAVING_WORK)
-        {
+        case Activity::Activities::LEAVING_WORK:
             if (a->isAtDestination())
             {
                 goToSleep(a);
             }
             return;
-        }
-        else if (activity == ActivityManager::GOING_2_DESK)
-        {
+        case Activity::Activities::GOING_2_DESK:
             if (a->isAtDestination())
             {
                 beAtDesk(a);
             }
             return;
-        }
-        else if (activity == ActivityManager::GOING_2_TOILET)
-        {
+        case Activity::Activities::GOING_2_TOILET:
             if (a->isAtDestination())
             {
                 lineInToilet(a, now);
             }
             return;
-        }
-        else if (activity == ActivityManager::GOING_2_GLOBAL_LUNCH)
-        {
+        case Activity::Activities::GOING_2_GLOBAL_LUNCH:
             if (a->isAtDestination())
             {
                 beAtGlobalMeeting(a);
             }
             return;
-        }
-        else if (activity == ActivityManager::AT_DESK)
-        {
+        case Activity::Activities::AT_DESK:
             if (now->isAfter((EasyTime *)a->get(Fields::SLEEP_TIME)) || now->isIn(new TimePeriod(new EasyTime(0, 0), (EasyTime *)a->get(Fields::WAKE_UP_TIME))))
             {
                 goHome(a);
@@ -313,22 +307,16 @@ void AgentModel::handlePerson(Agent *a, EasyTime *now)
                 goToToilet(a);
             }
             return;
-        }
-        else if (activity == ActivityManager::ENTERING_TOILET)
-        {
+        case Activity::Activities::ENTERING_TOILET:
             if (a->isAtDestination())
             {
                 arriveAtToilet(a, now);
             }
             return;
-        }
-        else if (activity == ActivityManager::IN_TOILET)
-        {
+        case Activity::Activities::IN_TOILET:
             beAtToilet(a, now);
             return;
-        }
-        else
-        {
+        default:
             throw std::runtime_error("Unknown Activity");
         }
     }
@@ -342,6 +330,7 @@ void AgentModel::beAtGlobalMeeting(Agent *a)
 {
     if (((Text *)a->get(Fields::EVENT))->toString().compare("GlobalMeetingEnded") == 0)
     {
+        delete a->get(Fields::EVENT);
         a->set(Fields::EVENT, new Text("None"));
         goToDesk(a);
     }
@@ -349,8 +338,9 @@ void AgentModel::beAtGlobalMeeting(Agent *a)
 
 void AgentModel::goToGlobalMeeting(Agent *a)
 {
-    a->setDestination((Place *)a->get("TemporaryDestination"));
-    a->set(Fields::ACTIVITY, ActivityManager::GOING_2_GLOBAL_LUNCH);
+    a->setDestination((Place *)a->get(Fields::TEMPORARY_DESTINATION));
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::going_2_global_lunch, Activity::Activities::GOING_2_GLOBAL_LUNCH));
 }
 
 void AgentModel::handleEvent(Agent *a)
@@ -380,7 +370,8 @@ void AgentModel::beAtToilet(Agent *a, EasyTime *now)
 // Random utilization : Modify commented lines to use
 void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 {
-    a->set(Fields::ACTIVITY, ActivityManager::IN_TOILET);
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::in_toilet, Activity::Activities::IN_TOILET));
 
     // std::random_device rd;  //Will be used to obtain a seed for the random number engine
     // std::mt19937 gen(rd()); //Standard mersenne_twister_engine seeded with rd()
@@ -392,6 +383,7 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
     {
         nextEventTime->shift(0, -1);
     }
+    delete a->get(Fields::NEXT_EVENT_TIME);
     a->set(Fields::NEXT_EVENT_TIME, nextEventTime);
 }
 
@@ -400,21 +392,25 @@ void AgentModel::lineInToilet(Agent *a, EasyTime *now)
     Publishable *info = a->get(Fields::DESIRED_TOILET);
     Place *toilet;
 
-    if (!(info->getType().compare("Place") == 0))
+    if (info->getType().compare("Text") == 0)
     {
         toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
+        delete a->get(Fields::DESIRED_TOILET);
         a->set(Fields::DESIRED_TOILET, toilet);
+        delete a->get(Fields::NEXT_EVENT_TIME);
         a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
     }
     else
     {
         toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
         a->set(Fields::DESIRED_TOILET, toilet);
+        delete a->get(Fields::NEXT_EVENT_TIME);
         a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
     }
 
     if (now->isAfter((EasyTime *)a->get(Fields::NEXT_EVENT_TIME)))
     {
+        delete a->get(Fields::NEXT_TOILET_VISIT);
         a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(now))->shift(0, 2 * Constants::TOILET_RETRY_BLUR)->blur(Constants::TOILET_RETRY_BLUR));
         goToDesk(a);
     }
@@ -427,7 +423,8 @@ void AgentModel::lineInToilet(Agent *a, EasyTime *now)
     {
         toilet->set("Busy", new BooleanType(true));
         a->setDestination(toilet);
-        a->set(Fields::ACTIVITY, ActivityManager::ENTERING_TOILET);
+        delete a->get(Fields::ACTIVITY);
+        a->set(Fields::ACTIVITY, new Activity(Activity::entering_toilet, Activity::Activities::ENTERING_TOILET));
     }
 }
 
@@ -474,7 +471,8 @@ void AgentModel::goToToilet(Agent *a)
     {
         throw std::runtime_error("Nearest place of type RestHomeBathroomEntrance not found inside AgentModel");
     }
-    a->set(Fields::ACTIVITY, ActivityManager::GOING_2_TOILET);
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::going_2_toilet, Activity::Activities::GOING_2_TOILET));
     a->set(Fields::WAITING_PLACE, a->getDestination());
 }
 
@@ -483,11 +481,13 @@ bool AgentModel::isTimeForToilet(Agent *a, EasyTime *now)
     EasyTime *nextVisit = (EasyTime *)a->get(Fields::NEXT_TOILET_VISIT);
     if (nextVisit->isBefore((EasyTime *)a->get(Fields::WAKE_UP_TIME)))
     {
-        nextVisit->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL));
-        a->set(Fields::NEXT_TOILET_VISIT, nextVisit);
+        EasyTime* affect = new EasyTime(nextVisit->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL))); // creation of new value to allow delete of older value
+        delete a->get(Fields::NEXT_TOILET_VISIT);
+        a->set(Fields::NEXT_TOILET_VISIT, affect);
     }
     if (now->isAfter((EasyTime *)a->get(Fields::NEXT_TOILET_VISIT)))
     {
+        delete a->get(Fields::NEXT_TOILET_VISIT);
         a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(now))->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL)));
         return true;
     }
@@ -500,23 +500,27 @@ bool AgentModel::isTimeForToilet(Agent *a, EasyTime *now)
 void AgentModel::goHome(Agent *a)
 {
     a->setDestination((Place *)a->get(Fields::DESK));
-    a->set(Fields::ACTIVITY, ActivityManager::LEAVING_WORK);
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::leaving_work, Activity::Activities::LEAVING_WORK));
 }
 
 void AgentModel::goToSleep(Agent *a)
 {
-    a->set(Fields::ACTIVITY, ActivityManager::RESTING);
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::resting, Activity::Activities::RESTING));
 }
 
 void AgentModel::goToDesk(Agent *a)
 {
-    a->set(Fields::ACTIVITY, ActivityManager::GOING_2_DESK);
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::going_2_desk, Activity::Activities::GOING_2_DESK));
     a->setDestination((Place *)a->get(Fields::SEAT));
 }
 
 void AgentModel::beAtDesk(Agent *a)
 {
-    a->set(Fields::ACTIVITY, ActivityManager::AT_DESK);
+    delete a->get(Fields::ACTIVITY);
+    a->set(Fields::ACTIVITY, new Activity(Activity::at_desk, Activity::Activities::AT_DESK));
 }
 
 // Random utilization : Modify commented lines to use
@@ -642,6 +646,7 @@ void AgentModel::isInfectionDetected(std::vector<Agent *> agents, EasyTime *easy
             !((a->get(Fields::INFECTION_DETECTED))->toString()).compare("true") == 0)
         {
             infectionDetected = true;
+            delete a->get(Fields::INFECTION_DETECTED);
             a->set(Fields::INFECTION_DETECTED, new Text("true"));
             print("Infection detected in agent " + agentName(a), easyTime);
             isolateAgent(a);
@@ -657,6 +662,9 @@ void AgentModel::isolateAgent(Agent *a)
 
 void AgentModel::infect(Agent *a, EasyTime *now)
 {
+    delete a->get(Fields::SITUATION);
+    delete a->get(Fields::DAYS_AFTER_INFECTION);
+    delete a->get(Fields::INFECTION_TIME);
     a->set(Fields::SITUATION, new Text(infected));
     a->set(Fields::DAYS_AFTER_INFECTION, new Text("0"));
     a->set(Fields::INFECTION_TIME, new Text((now->shift(23, 55))->toString()));
@@ -664,6 +672,9 @@ void AgentModel::infect(Agent *a, EasyTime *now)
 
 void AgentModel::infect(Agent *a, EasyTime *now, int daysAfterInfection)
 {
+    delete a->get(Fields::SITUATION);
+    delete a->get(Fields::DAYS_AFTER_INFECTION);
+    delete a->get(Fields::INFECTION_TIME);
     a->set(Fields::SITUATION, new Text(infected));
     a->set(Fields::DAYS_AFTER_INFECTION, new Text(std::to_string(daysAfterInfection)));
     a->set(Fields::INFECTION_TIME, new Text((now->shift(23, 55))->toString()));
@@ -677,6 +688,7 @@ void AgentModel::infectingOthers(std::vector<Agent *> agents, EasyTime *now)
         Agent *a = agents[peopleIndex];
         if (agentSituation(a, infected) && (std::stoi((a->get(Fields::DAYS_AFTER_INFECTION))->toString()) == Constants::TRANSMISSION_DAYS_TO_START))
         {
+            delete a->get(Fields::SITUATION);
             a->set(Fields::SITUATION, new Text(infecting));
             print("Agent " + agentName(a) + " is infecting others", now);
         }
@@ -692,6 +704,7 @@ void AgentModel::cure(std::vector<Agent *> agents, EasyTime *now)
         Agent *a = agents[peopleIndex];
         if (agentSituation(a, infecting) && (std::stoi((a->get(Fields::DAYS_AFTER_INFECTION))->toString()) == Constants::TRANSMISSION_DURATION + Constants::TRANSMISSION_DAYS_TO_START))
         {
+            delete a->get(Fields::SITUATION);
             a->set(Fields::SITUATION, new Text(cured));
             print("Agent " + a->toString() + " is cured", now);
         }
@@ -787,7 +800,7 @@ void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, Eas
     // std::uniform_real_distribution<> dis(0.0, 1.0);
 
     // double aux = RandomGenerator::randomDouble();
-    double aux = 0.001;
+    double aux = -0.001;
     if (aux <= noseMouthChance)
     {
         infect(notInfected, now);
@@ -809,6 +822,7 @@ void AgentModel::increaseDaysAfterInfection(std::vector<Agent *> agents, EasyTim
         if ((((now->toString()).compare((a->get(Fields::INFECTION_TIME))->toString())) == 0) && (agentSituation(a, infected) || agentSituation(a, infecting)))
         {
             int daysAfterInfection = std::stoi(a->get(Fields::DAYS_AFTER_INFECTION)->toString());
+            delete a->get(Fields::DAYS_AFTER_INFECTION);
             a->set(Fields::DAYS_AFTER_INFECTION, new Text(std::to_string(daysAfterInfection + 1)));
         }
         agentIndex++;

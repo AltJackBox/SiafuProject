@@ -59,7 +59,6 @@ World::~World()
         }
     }
     Constants::removeConstantsPointers();
-    ActivityManager::removeFieldsPointers();
 
     if (!people.empty())
     {

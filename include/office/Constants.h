@@ -348,48 +348,65 @@ class Activity : public Publishable
 {
 private:
     std::string description;
+    int act; // used for switch case
 
 public:
-    Activity(const std::string description);
+    static std::string resting;
+    static std::string leaving_work ;
+    static std::string in_toilet;
+    static std::string going_2_toilet;
+    static std::string going_2_desk;
+    static std::string going_2_global_lunch;
+    static std::string at_desk;
+    static std::string entering_toilet;
+    static std::string at_lunch;
+    static std::string entering_lunch;
+
+    enum Activities{RESTING = 1, LEAVING_WORK = 2, IN_TOILET = 3, GOING_2_TOILET = 4, GOING_2_DESK = 5, GOING_2_GLOBAL_LUNCH = 6, AT_DESK = 7, ENTERING_TOILET = 8, AT_LUNCH = 9, ENTERING_LUNCH = 10};
+
+    Activity(const std::string description, int act);
 
     ~Activity() {}
 
     std::string toString();
+
+    int getAct();
 };
 
-class ActivityManager
-{
+// class ActivityManager
+// {
 
-private:
-    static std::map<std::string, Activity *> Activities;
+// private:
+//     static std::map<std::string, Activity *> Activities;
 
-public:
-    static Activity *RESTING;
-    static Activity *LEAVING_WORK;
-    static Activity *IN_TOILET;
-    static Activity *GOING_2_TOILET;
-    static Activity *GOING_2_DESK;
-    static Activity *GOING_2_GLOBAL_LUNCH;
-    static Activity *AT_DESK;
-    static Activity *ENTERING_TOILET;
-    static Activity *AT_LUNCH;
-    static Activity *ENTERING_LUNCH;
+// public:
+//     static Activity *RESTING;
+//     static Activity *LEAVING_WORK;
+//     static Activity *IN_TOILET;
+//     static Activity *GOING_2_TOILET;
+//     static Activity *GOING_2_DESK;
+//     static Activity *GOING_2_GLOBAL_LUNCH;
+//     static Activity *AT_DESK;
+//     static Activity *ENTERING_TOILET;
+//     static Activity *AT_LUNCH;
+//     static Activity *ENTERING_LUNCH;
 
-    static Publishable *getActivity(std::string description)
-    {
-        return Activities.at(description);
-    }
+//     static Publishable *getActivity(std::string description)
+//     {
+//         return Activities.at(description);
+//     }
 
-    static void removeFieldsPointers()
-    {
-        for (std::pair<const std::string, Activity *> &act : Activities)
-        {
-            if (act.second) {
-                delete act.second;
-                act.second = nullptr;
-            }
-        }
-    }
-};
+//     static void removeFieldsPointers()
+//     {
+//         for (std::pair<const std::string, Activity *> &act : Activities)
+//         {
+//             if (act.second)
+//             {
+//                 delete act.second;
+//                 act.second = nullptr;
+//             }
+//         }
+//     }
+// };
 
 #endif

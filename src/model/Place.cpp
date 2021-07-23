@@ -28,6 +28,7 @@ Place::~Place()
         delete temporaryGradient;
         temporaryGradient = nullptr;
     }
+    info.clear();
 }
 
 void Place::basicChecks(World *thisPlacesWorld)
@@ -123,8 +124,9 @@ Position *Place::getPos()
 
 void Place::set(std::string key, Publishable *value)
 {
-    std::pair<std::string, Publishable *> pair;
-    pair = std::make_pair(key, value);
+    std::pair<std::string, std::shared_ptr<Publishable>> pair;
+    std::shared_ptr<Publishable> ptr(value);
+    pair = std::make_pair(key, ptr);
     info[pair.first] = pair.second;
 }
 
@@ -135,7 +137,7 @@ Publishable *Place::get(std::string key)
         throw InfoUndefinedException(key);
     }
 
-    return info.at(key);
+    return info.at(key).get();
 }
 
 Gradient *Place::getGradient()

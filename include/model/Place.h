@@ -7,6 +7,7 @@
 #include <utils/PersistentCachedMap.h>
 #include <string>
 #include <map>
+#include <memory>
 
 class Position;
 class World;
@@ -28,7 +29,7 @@ private:
 
 	bool visible = true;
 
-	std::map<std::string, Publishable *> info;
+	std::map<std::string, std::shared_ptr<Publishable>> info;
 
 	void basicChecks(World *thisPlacesWorld);
 
