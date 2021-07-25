@@ -3,6 +3,7 @@
 
 #include <behaviormodels/BaseWorldModel.h>
 #include <types/EasyTime.h>
+#include <memory>
 
 class EasyTime;
 class BoolType;
@@ -18,21 +19,21 @@ private:
 
     bool dayEventsPlanned = false;
 
-    EasyTime *breakfastStart;
+    std::shared_ptr<EasyTime> breakfastStart = nullptr;
 
-    EasyTime *breakfastEnd;
+    std::shared_ptr<EasyTime> breakfastEnd = nullptr;
 
-    EasyTime *lunchStart;
+    std::shared_ptr<EasyTime> lunchStart = nullptr;
 
-    EasyTime *lunchEnd;
+    std::shared_ptr<EasyTime> lunchEnd = nullptr;
 
-    EasyTime *snackStart;
+    std::shared_ptr<EasyTime> snackStart = nullptr;
 
-    EasyTime *snackEnd;
+    std::shared_ptr<EasyTime> snackEnd = nullptr;
 
-    EasyTime *dinnerStart;
+    std::shared_ptr<EasyTime> dinnerStart = nullptr;
 
-    EasyTime *dinnerEnd;
+    std::shared_ptr<EasyTime> dinnerEnd = nullptr;
 
     void terminateGlobalMeeting();
 

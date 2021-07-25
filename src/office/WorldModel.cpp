@@ -18,46 +18,6 @@ EasyTime *WorldModel::SLEEPTIME = new EasyTime(23, 0);
 
 WorldModel::~WorldModel()
 {
-    if (breakfastStart)
-    {
-        delete breakfastStart;
-        breakfastStart = nullptr;
-    }
-    if (breakfastEnd)
-    {
-        delete breakfastEnd;
-        breakfastEnd = nullptr;
-    }
-    if (lunchStart)
-    {
-        delete lunchStart;
-        lunchStart = nullptr;
-    }
-    if (lunchEnd)
-    {
-        delete lunchEnd;
-        lunchEnd = nullptr;
-    }
-    if (snackStart)
-    {
-        delete snackStart;
-        snackStart = nullptr;
-    }
-    if (snackEnd)
-    {
-        delete snackEnd;
-        snackEnd = nullptr;
-    }
-    if (dinnerStart)
-    {
-        delete dinnerStart;
-        dinnerStart = nullptr;
-    }
-    if (dinnerEnd)
-    {
-        delete dinnerEnd;
-        dinnerEnd = nullptr;
-    }
 }
 
 void WorldModel::terminateGlobalMeeting()
@@ -108,17 +68,17 @@ void WorldModel::organizeGlobalMeeting()
 
 void WorldModel::planDayEvents()
 {
-    breakfastStart = new EasyTime(Constants::BREAKFAST_START);
-    breakfastEnd = (new EasyTime(breakfastStart))->shift(Constants::BREAKFAST_DURATION)->blur(Constants::BREAKFAST_DURATION_BLUR);
+    breakfastStart = std::shared_ptr<EasyTime>(new EasyTime(Constants::BREAKFAST_START));
+    breakfastEnd = std::shared_ptr<EasyTime>( (new EasyTime(breakfastStart))->shift(Constants::BREAKFAST_DURATION)->blur(Constants::BREAKFAST_DURATION_BLUR) );
 
-    lunchStart = new EasyTime(Constants::LUNCH_START);
-    lunchEnd = (new EasyTime(lunchStart))->shift(Constants::LUNCH_DURATION)->blur(Constants::LUNCH_DURATION_BLUR);
+    lunchStart = std::shared_ptr<EasyTime>(new EasyTime(Constants::LUNCH_START));
+    lunchEnd = std::shared_ptr<EasyTime>((new EasyTime(lunchStart))->shift(Constants::LUNCH_DURATION)->blur(Constants::LUNCH_DURATION_BLUR));
 
-    snackStart = new EasyTime(Constants::SNACK_START);
-    snackEnd = (new EasyTime(snackStart))->shift(Constants::SNACK_DURATION)->blur(Constants::SNACK_DURATION_BLUR);
+    snackStart = std::shared_ptr<EasyTime>(new EasyTime(Constants::SNACK_START));
+    snackEnd = std::shared_ptr<EasyTime>((new EasyTime(snackStart))->shift(Constants::SNACK_DURATION)->blur(Constants::SNACK_DURATION_BLUR));
 
-    dinnerStart = new EasyTime(Constants::DINNER_START);
-    dinnerEnd = (new EasyTime(dinnerStart))->shift(Constants::DINNER_DURATION)->blur(Constants::DINNER_DURATION_BLUR);
+    dinnerStart = std::shared_ptr<EasyTime>(new EasyTime(Constants::DINNER_START));
+    dinnerEnd = std::shared_ptr<EasyTime>((new EasyTime(dinnerStart))->shift(Constants::DINNER_DURATION)->blur(Constants::DINNER_DURATION_BLUR));
 
     dayEventsPlanned = true;
 }
@@ -134,7 +94,7 @@ void WorldModel::createPlaces(const std::vector<Place *> places)
 void WorldModel::doIteration(const std::vector<Place *> places)
 {
     Calendar *time = world->getTime();
-    EasyTime *now = new EasyTime(time->getHour(), time->getMin());
+    std::shared_ptr<EasyTime> now = std::shared_ptr<EasyTime>(new EasyTime(time->getHour(), time->getMin()));
 
     if (now->isAfter(SLEEPTIME) && dayEventsPlanned)
     {

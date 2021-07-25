@@ -22,12 +22,6 @@
 
 AgentModel::~AgentModel()
 {
-    // if (restHomeDoor)
-    //     delete restHomeDoor;
-    // if (apartmentThreeDoor)
-    //     delete apartmentThreeDoor;
-    // if (houseDoor)
-    //     delete houseDoor;
 }
 
 int AgentModel::getDay()
@@ -72,12 +66,12 @@ std::vector<Agent *> AgentModel::createWorker(const std::string type, const std:
         a->set(Fields::ACTIVITY, new Activity(Activity::leaving_work, Activity::Activities::LEAVING_WORK));
         a->set(Fields::TOILET_INTERVAL, toiletInterval);
         a->set(Fields::NEXT_TOILET_VISIT, (new EasyTime(wakeUpTime))->shift(toiletInterval));
-        a->set(Fields::DESIRED_TOILET, new Text("None"));
+        a->set(Fields::DESIRED_TOILET, nullptr);
         a->set(Fields::NEXT_EVENT_TIME, new Text("None"));
         a->set(Fields::TOILET_DURATION, new Text("None"));
-        a->set(Fields::WAITING_PLACE, new Text("None"));
+        a->set(Fields::WAITING_PLACE, nullptr);
         a->set(Fields::EVENT, new Text("None"));
-        a->set(Fields::TEMPORARY_DESTINATION, new Text("None"));
+        a->set(Fields::TEMPORARY_DESTINATION, nullptr);
 
         a->set(Fields::BODYTEMPERATURE, new Text("36.5"));   // ºC
         a->set(Fields::BLOODPRESSURE, new Text("120 / 80")); // mmHg / mmHg
@@ -379,7 +373,7 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 
     // EasyTime *nextEventTime = (new EasyTime(now))->shift(0, dis(gen));
     EasyTime *nextEventTime = (new EasyTime(now))->shift(0, Constants::TOILET_VISIT_DURATION + 1);
-    if ((nextEventTime->toString()).compare((new EasyTime(23, 59))->toString()) == 0)
+    if ((nextEventTime->toString()).compare("23:59") == 0)
     {
         nextEventTime->shift(0, -1);
     }
@@ -389,24 +383,10 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 
 void AgentModel::lineInToilet(Agent *a, EasyTime *now)
 {
-    Publishable *info = a->get(Fields::DESIRED_TOILET);
-    Place *toilet;
-
-    if (info->getType().compare("Text") == 0)
-    {
-        toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
-        delete a->get(Fields::DESIRED_TOILET);
-        a->set(Fields::DESIRED_TOILET, toilet);
-        delete a->get(Fields::NEXT_EVENT_TIME);
-        a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
-    }
-    else
-    {
-        toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
-        a->set(Fields::DESIRED_TOILET, toilet);
-        delete a->get(Fields::NEXT_EVENT_TIME);
-        a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
-    }
+    Place * toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
+    a->set(Fields::DESIRED_TOILET, toilet);
+    delete a->get(Fields::NEXT_EVENT_TIME);
+    a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
 
     if (now->isAfter((EasyTime *)a->get(Fields::NEXT_EVENT_TIME)))
     {
@@ -481,7 +461,7 @@ bool AgentModel::isTimeForToilet(Agent *a, EasyTime *now)
     EasyTime *nextVisit = (EasyTime *)a->get(Fields::NEXT_TOILET_VISIT);
     if (nextVisit->isBefore((EasyTime *)a->get(Fields::WAKE_UP_TIME)))
     {
-        EasyTime* affect = new EasyTime(nextVisit->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL))); // creation of new value to allow delete of older value
+        EasyTime *affect = new EasyTime(nextVisit->shift((EasyTime *)a->get(Fields::TOILET_INTERVAL))); // creation of new value to allow delete of older value
         delete a->get(Fields::NEXT_TOILET_VISIT);
         a->set(Fields::NEXT_TOILET_VISIT, affect);
     }

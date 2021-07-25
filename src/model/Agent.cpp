@@ -25,23 +25,26 @@ Agent::~Agent()
         delete pos;
         pos = nullptr;
     }
-    if (destination)
-    {
-        delete destination;
-        destination = nullptr;
-    }
+    // if (destination)
+    // {
+    //     delete destination;
+    //     destination = nullptr;
+    // }
+    // erasing entries which contains places, because all places of the world have already been deleted at this point
+    info.erase(Fields::DESIRED_TOILET);
+    info.erase(Fields::DESK);
+    info.erase(Fields::SEAT);
+    info.erase(Fields::TEMPORARY_DESTINATION);
+    info.erase(Fields::WAITING_PLACE);
     for (std::pair<const std::string, Publishable *> &inf : info)
     {
         if (inf.second)
         {
-            try {
-                delete inf.second;
-            } catch (const std::exception &e) {
-                std::cout << "Place deleted twice\n";
-            }
+            delete inf.second;
             inf.second = nullptr;
         }
     }
+    info.clear();
 }
 
 void Agent::basicChecks(World *thisAgentsWorld)

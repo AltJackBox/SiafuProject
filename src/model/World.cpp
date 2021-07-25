@@ -57,6 +57,7 @@ World::~World()
                 pl = nullptr;
             }
         }
+        places.clear();
     }
     Constants::removeConstantsPointers();
 
@@ -69,6 +70,7 @@ World::~World()
                 ag.second = nullptr;
             }
         }
+        people.clear();
     }
     //delete simulation;
 }

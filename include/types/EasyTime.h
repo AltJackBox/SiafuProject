@@ -3,6 +3,7 @@
 
 #include <types/Publishable.h>
 #include <string>
+#include <memory>
 
 class TimePeriod;
 
@@ -21,11 +22,17 @@ private:
     void normalize();
 
 public:
+    EasyTime(std::shared_ptr<EasyTime> time);
+
     EasyTime(EasyTime *time);
 
     virtual ~EasyTime() {}
 
     EasyTime(const int hour, const int minute);
+
+    bool isAfter(std::shared_ptr<EasyTime> t);
+
+    bool isBefore(std::shared_ptr<EasyTime> t);
 
     bool isAfter(EasyTime *t);
 

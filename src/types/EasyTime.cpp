@@ -20,6 +20,13 @@ void EasyTime::normalize()
     hour %= HOURS_PER_DAY;
 }
 
+EasyTime::EasyTime(std::shared_ptr<EasyTime> time)
+{
+    this->hour = time->getHour();
+    this->minute = time->getMinute();
+    normalize();
+}
+
 EasyTime::EasyTime(EasyTime *time)
 {
     this->hour = time->getHour();
@@ -32,6 +39,25 @@ EasyTime::EasyTime(const int hour, const int minute)
     this->hour = hour;
     this->minute = minute;
     normalize();
+}
+
+bool EasyTime::isAfter(std::shared_ptr<EasyTime> t)
+{
+    if (hour > t->hour)
+    {
+        return true;
+    }
+    else if ((hour == t->hour) && (minute > t->minute))
+    {
+        return true;
+    }
+
+    return false;
+}
+
+bool EasyTime::isBefore(std::shared_ptr<EasyTime>  t)
+{
+    return !isAfter(t);
 }
 
 bool EasyTime::isAfter(EasyTime *t)

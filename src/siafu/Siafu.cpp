@@ -26,6 +26,6 @@ int main(int argc, char *argv[])
     }
 
     Controller* controller = new Controller(simulationPath);
-    // delete controller;
+    delete controller;
     return 0;
 }

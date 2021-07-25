@@ -20,11 +20,13 @@ std::string PNG = ".png";
 
 Place::~Place()
 {
-    if (pos) {
+    if (pos)
+    {
         delete pos;
         pos = nullptr;
     }
-    if (temporaryGradient) {
+    if (temporaryGradient)
+    {
         delete temporaryGradient;
         temporaryGradient = nullptr;
     }
