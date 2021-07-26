@@ -81,6 +81,7 @@ public:
 
     static void removeAgentPointers() {
         delete DEFAULT_DESTINATION;
+        DEFAULT_DESTINATION = nullptr;
     }
 
     bool isAtDestination();

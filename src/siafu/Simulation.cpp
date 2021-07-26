@@ -16,18 +16,16 @@
 
 Simulation::~Simulation()
 {
-	//delete control;
-	if (simData){
+	if (simData)
+	{
 		delete simData;
 		simData = nullptr;
 	}
-	if (world){
+	if (world)
+	{
 		delete world;
 		world = nullptr;
 	}
-	// delete time;
-	// delete agentModel;
-	// delete worldModel;
 }
 
 Simulation::Simulation(std::string simulationPath, Controller *control)
@@ -63,15 +61,20 @@ void Simulation::operator()()
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
 
+	char s;
+	printf("Press any key to start: \n");
+	int scan = scanf("%c", &s);
+
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;
+	int duration = control->getDuration();
 	while (!isEnded())
 	{
 		tickTime();
 		worldModel->doIteration(world->getPlaces());
 		agentModel->doIteration(world->getPeople());
 		moveAgents();
-		if (((AgentModel *)agentModel)->getDay() > 5)
+		if (((AgentModel *)agentModel)->getDay() > duration)
 		{
 			control->endSimulator();
 		}

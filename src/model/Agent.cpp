@@ -221,11 +221,13 @@ void Agent::moveInDirection(int moveDir)
         return;
     }
 
-    pos = pos->calculateMove(moveDir);
-    if (pos == nullptr)
+    Position* aux = pos->calculateMove(moveDir);
+    if (aux == nullptr)
     {
         throw PositionOnAWallException();
     }
+    delete pos;
+    pos = aux;
     this->dir = moveDir;
 }
 
@@ -295,6 +297,7 @@ void Agent::wander(int soberness)
             {
                 throw PositionOnAWallException();
             }
+            delete pos;
             pos = target;
             stuck = false;
         }

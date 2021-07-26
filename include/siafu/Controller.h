@@ -32,6 +32,7 @@ private:
     Simulation *simulation;
     static Progress *progress;
     std::mutex mutex;
+    int duration;
 
 public:
     Controller();
@@ -42,7 +43,7 @@ public:
         delete progress;
     }
 
-    Controller(std::string simulationPath);
+    Controller(std::string simulationPath, int days);
 
     static Progress *getProgress()
     {
@@ -60,5 +61,7 @@ public:
     void endSimulator();
 
     bool isSimulationRunning();
+
+    int getDuration();
 };
 #endif

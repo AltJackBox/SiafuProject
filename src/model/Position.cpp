@@ -60,6 +60,7 @@ Position *Position::calculateMove(const int rawDir)
 
     if (world->isAWall(p))
     {
+        delete p;
         return nullptr;
     }
 

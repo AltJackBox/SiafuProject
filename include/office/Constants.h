@@ -373,40 +373,4 @@ public:
     int getAct();
 };
 
-// class ActivityManager
-// {
-
-// private:
-//     static std::map<std::string, Activity *> Activities;
-
-// public:
-//     static Activity *RESTING;
-//     static Activity *LEAVING_WORK;
-//     static Activity *IN_TOILET;
-//     static Activity *GOING_2_TOILET;
-//     static Activity *GOING_2_DESK;
-//     static Activity *GOING_2_GLOBAL_LUNCH;
-//     static Activity *AT_DESK;
-//     static Activity *ENTERING_TOILET;
-//     static Activity *AT_LUNCH;
-//     static Activity *ENTERING_LUNCH;
-
-//     static Publishable *getActivity(std::string description)
-//     {
-//         return Activities.at(description);
-//     }
-
-//     static void removeFieldsPointers()
-//     {
-//         for (std::pair<const std::string, Activity *> &act : Activities)
-//         {
-//             if (act.second)
-//             {
-//                 delete act.second;
-//                 act.second = nullptr;
-//             }
-//         }
-//     }
-// };
-
 #endif

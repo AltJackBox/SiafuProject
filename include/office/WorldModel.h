@@ -47,8 +47,14 @@ public:
     virtual ~WorldModel();
 
     static void removeWorldModelPointers(){
-        delete WAKEUPTIME;
-        delete SLEEPTIME;
+        if (WAKEUPTIME) {
+            delete WAKEUPTIME;
+            WAKEUPTIME = nullptr;
+        }
+        if (SLEEPTIME) {
+            delete SLEEPTIME;
+            SLEEPTIME = nullptr;
+        }
     }
 
     void createPlaces(const std::vector<Place *> places) override;

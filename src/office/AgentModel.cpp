@@ -17,8 +17,8 @@
 #include <algorithm>
 #include <random>
 #include <cmath>
-
 #include <fstream>
+#include <memory>
 
 AgentModel::~AgentModel()
 {
@@ -51,8 +51,8 @@ std::vector<Agent *> AgentModel::createWorker(const std::string type, const std:
     {
         Place *desk = beds[bedIndex];
         Place *seat = seats[seatIndex];
-
-        Agent *a = new Agent(type + " - " + std::to_string(i + 1), desk->getPos(), world);
+        Position * deskPos = new Position(desk->getPos()->getRow(), desk->getPos()->getCol()); // we need to create a new instance to avoid deletion errors
+        Agent *a = new Agent(type + " - " + std::to_string(i + 1), deskPos, world);
         //a->setVisible(true);
         EasyTime *wakeUpTime = (new EasyTime(Constants::AVERAGE_WAKE_UP_TIME))->blur(Constants::WAKE_UP_START_BLUR);
         EasyTime *sleepTime = (new EasyTime(wakeUpTime))->shift(Constants::AVERAGE_WAKE_HOURS, 0)->blur(Constants::SLEEP_END_BLUR);
@@ -135,7 +135,7 @@ void AgentModel::handleInfection(std::vector<Agent *> agents, EasyTime *now)
     if (lastHandleInfectionExecution.empty() || !(lastHandleInfectionExecution.compare(now->toString()) == 0))
     {
 
-        if (((now->toString()).compare((new EasyTime(0, 0))->toString())) == 0)
+        if (((now->toString()).compare("0:0")) == 0)
         {
             day++;
             printDayInfo();
@@ -252,6 +252,8 @@ void AgentModel::handlePersonBodySensors(Agent *a)
 
 void AgentModel::handlePerson(Agent *a, EasyTime *now)
 {
+    TimePeriod *timep;
+    EasyTime *timepStart;
     try
     {
         Activity *activity = (Activity *)a->get(Fields::ACTIVITY);
@@ -291,10 +293,14 @@ void AgentModel::handlePerson(Agent *a, EasyTime *now)
             }
             return;
         case Activity::Activities::AT_DESK:
-            if (now->isAfter((EasyTime *)a->get(Fields::SLEEP_TIME)) || now->isIn(new TimePeriod(new EasyTime(0, 0), (EasyTime *)a->get(Fields::WAKE_UP_TIME))))
+            timepStart = new EasyTime(0, 0);
+            timep = new TimePeriod(timepStart, (EasyTime *)a->get(Fields::WAKE_UP_TIME));
+            if (now->isAfter((EasyTime *)a->get(Fields::SLEEP_TIME)) || now->isIn(timep))
             {
                 goHome(a);
             }
+            delete timep;
+            delete timepStart;
             handleEvent(a);
             if (isTimeForToilet(a, now))
             {
@@ -383,10 +389,13 @@ void AgentModel::arriveAtToilet(Agent *a, EasyTime *now)
 
 void AgentModel::lineInToilet(Agent *a, EasyTime *now)
 {
-    Place * toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
+    Place *toilet = getNearestBathroomNotBusy(a, "RestHomeBathroom");
     a->set(Fields::DESIRED_TOILET, toilet);
+    
+    EasyTime * shiftValue = new EasyTime(0, Constants::MAX_WAIT_TIME);
     delete a->get(Fields::NEXT_EVENT_TIME);
-    a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(new EasyTime(0, Constants::MAX_WAIT_TIME)));
+    a->set(Fields::NEXT_EVENT_TIME, (new EasyTime(now))->shift(shiftValue));
+    delete shiftValue;
 
     if (now->isAfter((EasyTime *)a->get(Fields::NEXT_EVENT_TIME)))
     {

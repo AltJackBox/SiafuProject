@@ -26,6 +26,8 @@ extern "C"
 
 World::~World()
 {
+    
+
     if (time)
     {
         delete time;
@@ -46,10 +48,9 @@ World::~World()
         delete[] walls;
         walls = nullptr;
     }
-    // delete simData;
     if (!places.empty())
     {
-        for (Place* &pl : places)
+        for (Place *&pl : places)
         {
             if (pl)
             {
@@ -59,20 +60,23 @@ World::~World()
         }
         places.clear();
     }
-    Constants::removeConstantsPointers();
-
     if (!people.empty())
     {
         for (std::pair<const std::string, Agent *> &ag : people)
         {
-            if (ag.second) {
+            if (ag.second)
+            {
                 delete ag.second;
                 ag.second = nullptr;
             }
         }
         people.clear();
     }
-    //delete simulation;
+    // remove static pointers
+    Position::removePositionPointers();
+    WorldModel::removeWorldModelPointers();
+    Constants::removeConstantsPointers();
+    Place::removePlacePointers();
 }
 
 bool load_image(std::vector<unsigned char> &image, const std::string &filename, int &x, int &y)

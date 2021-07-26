@@ -50,6 +50,7 @@ public:
 	static void removePlacePointers()
 	{
 		delete gradients;
+		gradients = nullptr;
 	}
 
 	Place(std::string type, Position *pos, World *world);
@@ -66,7 +67,7 @@ public:
 
 	Position *getPos();
 
-	void set(std::string key, Publishable *value);
+	void set(std::string key, Publishable * value);
 
 	Publishable *get(std::string key);
 

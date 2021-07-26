@@ -67,6 +67,14 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                             next.insert(newPos);
                             insertedPositions.push_back(newPos->toString());
                         }
+                        else
+                        {
+                            delete newPos;
+                        }
+                    }
+                    else
+                    {
+                        delete newPos;
                     }
                 }
                 catch (const PositionUnreachableException &err)
@@ -91,6 +99,14 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                             next.insert(newPos);
                             insertedPositions.push_back(newPos->toString());
                         }
+                        else
+                        {
+                            delete newPos;
+                        }
+                    }
+                    else
+                    {
+                        delete newPos;
                     }
                 }
                 catch (const PositionUnreachableException &e)
@@ -200,6 +216,7 @@ int Gradient::pointFrom(Position *pos, int preferredDir)
                 optimalDirs.clear();
                 optimalDirs.push_back(dir);
             }
+            delete aux;
         }
         catch (const PositionUnreachableException &e)
         {

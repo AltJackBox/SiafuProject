@@ -3,14 +3,6 @@
 
 TimePeriod::~TimePeriod()
 {
-    if (start) {
-        delete start;
-        start = nullptr;
-    }
-    if (end) {
-        delete end;
-        end = nullptr;
-    }
 }
 
 TimePeriod::TimePeriod(EasyTime *start, EasyTime *end)

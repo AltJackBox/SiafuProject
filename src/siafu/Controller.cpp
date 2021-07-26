@@ -14,12 +14,23 @@ Controller::Controller()
 
 Controller::~Controller()
 {
-	if (simulation)
+	if (simulation) {
 		delete simulation;
+		simulation = nullptr;
+	}
+	if (progress){
+		delete progress;
+		progress = nullptr;
+	}
 }
 
-Controller::Controller(std::string simulationPath)
+Controller::Controller(std::string simulationPath, int days)
 {
+	if (days == -1) {
+		duration = 30;
+	} else {
+		duration = days;
+	}
 
 	if (!simulationPath.empty())
 	{
@@ -32,6 +43,10 @@ Controller::Controller(std::string simulationPath)
 		std::cout << "You need to provide a simulation at the command line.\n";
 		exit(1);
 	}
+}
+
+int Controller::getDuration(){
+	return duration;
 }
 
 void Controller::stopSimulation()

@@ -78,6 +78,7 @@ void PersistentCachedMap::putInCache(std::string key, Gradient *value)
     }
     else
     {
+        delete cache[key];
         cache[key] = value;
     }
 
@@ -122,6 +123,8 @@ PersistentCachedMap::PersistentCachedMap(std::string basePath, std::string name,
             toc.insert(p.path().stem().string());
         }
     }
+
+    closedir(dir);
 }
 
 void PersistentCachedMap::put(Position *key, Gradient *value)
@@ -155,7 +158,6 @@ Gradient *PersistentCachedMap::get(std::string key)
 
     if (toc.count(key) == 0)
     {
-        std::cout << key + "\n";
         return nullptr;
     }
     else
