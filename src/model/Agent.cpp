@@ -25,11 +25,6 @@ Agent::~Agent()
         delete pos;
         pos = nullptr;
     }
-    // if (destination)
-    // {
-    //     delete destination;
-    //     destination = nullptr;
-    // }
     // erasing entries which contains places, because all places of the world have already been deleted at this point
     info.erase(Fields::DESIRED_TOILET);
     info.erase(Fields::DESK);

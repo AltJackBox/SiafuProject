@@ -38,6 +38,7 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     }
     std::set<Position *> pending;
     std::set<Position *> next;
+    
     std::vector<std::string> insertedPositions;
 
     distance[center->getRow() * w + center->getCol()] = 0;
@@ -66,16 +67,10 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                         {
                             next.insert(newPos);
                             insertedPositions.push_back(newPos->toString());
-                        }
-                        else
-                        {
-                            delete newPos;
+                            continue;
                         }
                     }
-                    else
-                    {
-                        delete newPos;
-                    }
+                    //delete newPos;
                 }
                 catch (const PositionUnreachableException &err)
                 {
@@ -98,16 +93,10 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                         {
                             next.insert(newPos);
                             insertedPositions.push_back(newPos->toString());
-                        }
-                        else
-                        {
-                            delete newPos;
+                            continue;
                         }
                     }
-                    else
-                    {
-                        delete newPos;
-                    }
+                    //delete newPos;
                 }
                 catch (const PositionUnreachableException &e)
                 {

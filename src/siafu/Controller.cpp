@@ -24,13 +24,10 @@ Controller::~Controller()
 	}
 }
 
-Controller::Controller(std::string simulationPath, int days)
+Controller::Controller(std::string simulationPath, int days, bool stopAtEntry)
 {
-	if (days == -1) {
-		duration = 30;
-	} else {
-		duration = days;
-	}
+	stop = stopAtEntry;
+	duration = days;
 
 	if (!simulationPath.empty())
 	{
@@ -49,17 +46,22 @@ int Controller::getDuration(){
 	return duration;
 }
 
+bool Controller::getStop(){
+	return stop;
+}
+
 void Controller::stopSimulation()
 {
-	mutex.lock();
+	//mutex.lock();
 	simulation->die();
-	simulation = NULL;
-	mutex.unlock();
+	//simulation = NULL;
+	//mutex.unlock();
 }
 
 void Controller::startSimulation(std::string simulationPath)
 {
-	simulation = new Simulation(simulationPath, this);
+	//simulation = new Simulation(simulationPath, this);
+	simulation->run();
 }
 
 World *Controller::getWorld()
@@ -74,12 +76,12 @@ SimulationData *Controller::getSimulationData()
 
 void Controller::endSimulator()
 {
-	mutex.lock();
+	//mutex.lock();
 	if (this->simulation != nullptr)
 	{
 		this->simulation->die();
 	}
-	mutex.unlock();
+	//mutex.unlock();
 }
 
 bool Controller::isSimulationRunning()

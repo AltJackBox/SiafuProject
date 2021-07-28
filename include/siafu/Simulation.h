@@ -41,7 +41,8 @@ public:
     void launchSimulation();
     bool isSimulationRunning();
     World* getWorld(); 
-    void operator()();
+    // void operator()();
+    void run();
     void die();
     SimulationData* getSimulationData();
 };

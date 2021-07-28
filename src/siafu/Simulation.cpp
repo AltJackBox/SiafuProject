@@ -38,13 +38,14 @@ Simulation::Simulation(std::string simulationPath, Controller *control)
 
 void Simulation::launchSimulation()
 {
-	std::thread t1(&Simulation::operator(), this);
-	t1.join();
+	// std::thread t1(&Simulation::operator(), this);
+	// t1.join();
+	this->run();
 }
 
 bool Simulation::isEnded()
 {
-	std::lock_guard<std::mutex> lg(lock);
+	//std::lock_guard<std::mutex> lg(lock);
 	return ended;
 }
 
@@ -53,17 +54,22 @@ void Simulation::tickTime()
 	time->add(iterationStep);
 }
 
-void Simulation::operator()()
+// void Simulation::operator()()
+void Simulation::run()
 {
 	this->world = new World(this, simData);
 	this->time = world->getTime();
-	this->iterationStep = 100;
+	this->iterationStep = 10;
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
 
-	char s;
-	printf("Press any key to start: \n");
-	int scan = scanf("%c", &s);
+	if (control->getStop()) {
+		control->endSimulator();
+		// char s;
+		// printf("Stop at Entry of the Simulation\n");
+		// printf("Press any key to start: \n");
+		// int scan = scanf("%c", &s);
+	}
 
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;
