@@ -52,16 +52,16 @@ bool Controller::getStop(){
 
 void Controller::stopSimulation()
 {
-	//mutex.lock();
+	mutex.lock();
 	simulation->die();
 	//simulation = NULL;
-	//mutex.unlock();
+	mutex.unlock();
 }
 
 void Controller::startSimulation(std::string simulationPath)
 {
-	//simulation = new Simulation(simulationPath, this);
-	simulation->run();
+	simulation = new Simulation(simulationPath, this);
+	// simulation->run();
 }
 
 World *Controller::getWorld()
@@ -76,12 +76,12 @@ SimulationData *Controller::getSimulationData()
 
 void Controller::endSimulator()
 {
-	//mutex.lock();
+	mutex.lock();
 	if (this->simulation != nullptr)
 	{
 		this->simulation->die();
 	}
-	//mutex.unlock();
+	mutex.unlock();
 }
 
 bool Controller::isSimulationRunning()

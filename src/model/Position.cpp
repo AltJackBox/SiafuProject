@@ -67,6 +67,13 @@ Position *Position::calculateMove(const int rawDir)
     return p;
 }
 
+bool Position::operator==(Position *y)
+{
+    std::cout << "Compared\n";
+
+    return this->equals(y);
+}
+
 bool Position::equals(Position *p)
 {
 
@@ -155,4 +162,21 @@ int Position::getCol()
 void Position::setCol(const int newJ)
 {
     this->j = newJ;
+}
+
+int Position::hashCode()
+{
+    int h = hash;
+    std::string s = toString();
+    if (h == 0 && s.length() > 0)
+    {
+        const char *value = s.c_str();
+
+        for (int i = 0; i < s.length(); i++)
+        {
+            h = 31 * h + value[i];
+        }
+        hash = h;
+    }
+    return h;
 }

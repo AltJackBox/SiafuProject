@@ -38,14 +38,14 @@ Simulation::Simulation(std::string simulationPath, Controller *control)
 
 void Simulation::launchSimulation()
 {
-	// std::thread t1(&Simulation::operator(), this);
-	// t1.join();
-	this->run();
+	std::thread t1(&Simulation::operator(), this);
+	t1.join();
+	// this->run();
 }
 
 bool Simulation::isEnded()
 {
-	//std::lock_guard<std::mutex> lg(lock);
+	std::lock_guard<std::mutex> lg(lock);
 	return ended;
 }
 
@@ -54,12 +54,12 @@ void Simulation::tickTime()
 	time->add(iterationStep);
 }
 
-// void Simulation::operator()()
-void Simulation::run()
+void Simulation::operator()()
+// void Simulation::run()
 {
 	this->world = new World(this, simData);
 	this->time = world->getTime();
-	this->iterationStep = 10;
+	this->iterationStep = 100;
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
 

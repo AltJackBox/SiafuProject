@@ -31,6 +31,8 @@ private:
 
     int j;
 
+    int hash = 0;
+
 public:
     static void initialize(World *worldObj, const double topRight[], const double bottomRight[], const double bottomLeft[])
     {
@@ -66,6 +68,8 @@ public:
 
     Position *calculateMove(const int rawDir);
 
+    bool operator==(Position* y);
+
     bool equals(Position *p);
 
     int compareTo(const Position *p);
@@ -83,6 +87,8 @@ public:
     int getCol();
 
     void setCol(const int newJ);
+
+    int hashCode();
 };
 
 #endif

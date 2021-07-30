@@ -7,6 +7,8 @@ std::vector<std::string> notFound;
 
 // Lines to add to write a file to compare
 
+//C++
+
 // if (pending.size() == 96) {
 //     std::ofstream f("pendingC.txt");
 //     for (auto pos : pending)
@@ -14,6 +16,26 @@ std::vector<std::string> notFound;
 //         f << pos->toString() + "\n";
 //     }
 //     f.close();
+// }
+
+//JAVA
+
+// PrintWriter writer;
+// try
+// {
+//     writer = new PrintWriter("wallsJ.txt", "UTF-8");
+//     writer.print("1 ");
+//     writer.close();
+// }
+// catch (FileNotFoundException e)
+// {
+//     // TODO Auto-generated catch block
+//     e.printStackTrace();
+// }
+// catch (UnsupportedEncodingException e)
+// {
+//     // TODO Auto-generated catch block
+//     e.printStackTrace();
 // }
 
 void lookLine(std::string lineA, std::ifstream &File1, std::ifstream &File2)
@@ -42,45 +64,21 @@ void lookLine(std::string lineA, std::ifstream &File1, std::ifstream &File2)
 int main()
 {
 
-    // Compare the content of 2 files
-
-    // std::ifstream FileC;
-    // FileC.open("pendingC.txt");
-    // std::ifstream FileJ;
-    // FileJ.open("pendingJ.txt");
-    // std::string line;
-
-    // while (std::getline(FileC, line))
-    // {
-    //     lookLine(line, FileC, FileJ);
-    // }
-    // std::cout << "Not found : \n\n";
-    // for (auto s : notFound)
-    // {
-    //     std::cout << s + "\n";
-    // }
-
-    // Compare content and order of the line (no difference)
+    // Compare the content of 2 files (the lines can be in different order in the 2 files)
 
     std::ifstream FileC;
     FileC.open("pendingC.txt");
     std::ifstream FileJ;
     FileJ.open("pendingJ.txt");
-    std::string lineC;
-    std::string lineJ;
+    std::string line;
 
-    //seek back to beginning and use std::equal to compare contents
-    FileC.seekg(0, std::ifstream::beg);
-    FileJ.seekg(0, std::ifstream::beg);
-    bool value = std::equal(std::istreambuf_iterator<char>(FileC.rdbuf()),
-                            std::istreambuf_iterator<char>(),
-                            std::istreambuf_iterator<char>(FileJ.rdbuf()));
-    if (value)
+    while (std::getline(FileC, line))
     {
-        std::cout << "Equals\n";
+        lookLine(line, FileC, FileJ);
     }
-    else
+    std::cout << "Not found : \n\n";
+    for (auto s : notFound)
     {
-        std::cout << "Not equals\n";
+        std::cout << s + "\n";
     }
 }

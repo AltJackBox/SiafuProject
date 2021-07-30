@@ -231,35 +231,34 @@ std::vector<Place *> World::createPlacesFromImages()
     std::vector<Place *> placesFromImg;
     std::vector<std::string> fileList = simData->getPlaceFiles();
 
-#pragma omp parallel for 
-        for (int index = 0; index < fileList.size(); index++)
-        {
-            std::string filename = fileList[index];
-            std::vector<Position *> placePoints = readPlacePoints(filename);
-            Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
+    // #pragma omp parallel for
+    for (int index = 0; index < fileList.size(); index++)
+    {
+        std::string filename = fileList[index];
+        std::vector<Position *> placePoints = readPlacePoints(filename);
+        Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
-            std::vector<Place *> placesThread;
-            int nLoops = placePoints.size();
-            for (int indexVec = 0; indexVec < nLoops ; indexVec++)
+        // std::vector<Place *> placesThread;
+        int nLoops = placePoints.size();
+        for (int indexVec = 0; indexVec < nLoops; indexVec++)
+        {
+            Position *pos = placePoints[indexVec];
+            Place *place;
+            try
             {
-                //std::cout << "Calculation from : " << omp_get_thread_num() << "\n";
-                Position *pos = placePoints[indexVec];
-                Place *place;
-                try
-                {
-                    place = new Place(filename, pos, this);
-                }
-                catch (const PositionOnAWallException &e)
-                {
-                    throw std::runtime_error("One of your " + filename + " places, at " + pos->toString() + " is on a wall");
-                }
-                Controller::getProgress()->reportPlaceCreated(filename);
-                //placesFromImg.push_back(place);
-                placesThread.push_back(place);
+                place = new Place(filename, pos, this);
             }
-#pragma omp critical
-            placesFromImg.insert(placesFromImg.end(), placesThread.begin(), placesThread.end());
+            catch (const PositionOnAWallException &e)
+            {
+                throw std::runtime_error("One of your " + filename + " places, at " + pos->toString() + " is on a wall");
+            }
+            Controller::getProgress()->reportPlaceCreated(filename);
+            // placesThread.push_back(place);
+            placesFromImg.push_back(place);
         }
+        // #pragma omp critical
+        // placesFromImg.insert(placesFromImg.end(), placesThread.begin(), placesThread.end());
+    }
 
     return placesFromImg;
 }
