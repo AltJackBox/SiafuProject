@@ -11,10 +11,6 @@ protected:
 
 public:
 	BaseContextModel();
-
-	// ~BaseContextModel(){
-	// 	delete world;
-	// }
 	
 	BaseContextModel(World* world)
 	{

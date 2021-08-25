@@ -11,6 +11,7 @@ int main(int argc, char *argv[])
     std::string simulationPath = "./ressources/Simulation-Office/";
     int duration = 30;
     bool stop = false;
+    bool gradient = false;
     std::string arg;
     for (int i = 1; i < argc; i++)
     {
@@ -28,9 +29,13 @@ int main(int argc, char *argv[])
         {
             stop = true;
         }
+        else if ((arg.compare("-g") == 0) || (arg.compare("--grad") == 0))
+        {
+            gradient = true;
+        }
     }
 
-    Controller *controller = new Controller(simulationPath, duration, stop);
+    Controller *controller = new Controller(simulationPath, duration, stop, gradient);
     delete controller;
     return 0;
 }

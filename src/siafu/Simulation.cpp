@@ -61,15 +61,18 @@ void Simulation::operator()()
 	this->agentModel = world->getAgentModel();
 	this->worldModel = world->getWorldModel();
 
-	if (control->getStop()) {
+	if (control->getGrad())
+	{
 		control->endSimulator();
-		// char s;
-		// printf("Stop at Entry of the Simulation\n");
-		// printf("Press any key to start: \n");
-		// int scan = scanf("%c", &s);
 	}
 
-
+	if (control->getStop())
+	{
+		char s;
+		printf("Stop at Entry of the Simulation\n");
+		printf("Press any key to start: \n");
+		int scan = scanf("%c", &s);
+	}
 
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;

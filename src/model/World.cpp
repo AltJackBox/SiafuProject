@@ -73,7 +73,6 @@ World::~World()
         people.clear();
     }
     // remove static pointers
-    Position::removePositionPointers();
     WorldModel::removeWorldModelPointers();
     Constants::removeConstantsPointers();
     Place::removePlacePointers();

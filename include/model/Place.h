@@ -10,7 +10,6 @@
 #include <memory>
 
 class Position;
-// class World;
 class Gradient;
 
 class Place : public Publishable
@@ -54,8 +53,6 @@ public:
 	}
 
 	Place(std::string type, Position *pos, World *world);
-
-	// Place(std::string type, Position *pos, World *world, std::string name, Position *relevantPosition);
 
 	std::string toString() override;
 

@@ -46,12 +46,6 @@ public:
 
     ~Position() {}
 
-    static void removePositionPointers()
-    {
-        // delete coordinateTool;
-        // coordinateTool = nullptr;
-    }
-
     Position(const int i, const int j);
 
     Position(const double lat, const double lon);

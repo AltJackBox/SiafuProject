@@ -2,7 +2,7 @@
 #include <iostream>
 
 void test1(){
-    Controller* controller = new Controller("./ressources/Simulation-Office/", -1, false);
+    Controller* controller = new Controller("./ressources/Simulation-Office/", -1, false, false);
     std::cout << "Test 1 passed\n";
 }   
 

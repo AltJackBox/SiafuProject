@@ -34,17 +34,20 @@ private:
     std::mutex mutex;
     int duration;
     bool stop;
+    bool gradient;
 
 public:
     Controller();
 
     ~Controller();
 
-    static void deleteControllerPointers(){
+    static void deleteControllerPointers()
+    {
         delete progress;
+        progress = nullptr;
     }
 
-    Controller(std::string simulationPath, int days, bool stopAtEntry);
+    Controller(std::string simulationPath, int days, bool stopAtEntry, bool gradient);
 
     static Progress *getProgress()
     {
@@ -66,5 +69,7 @@ public:
     int getDuration();
 
     bool getStop();
+
+    bool getGrad();
 };
 #endif

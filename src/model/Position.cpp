@@ -36,10 +36,6 @@ Position::Position(const int i, const int j)
     this->j = j;
 }
 
-// Position::Position(const double lat, const double lon) : Position(coordinateTool->coordinatesToLocal(lat, lon))
-// {
-// }
-
 Position::Position(Position *p) : Position(p->i, p->j)
 {
 }
@@ -63,13 +59,6 @@ Position *Position::calculateMove(const int rawDir)
 
     return p;
 }
-
-// bool Position::operator==(Position *y)
-// {
-//     std::cout << "Compared\n";
-
-//     return this->equals(y);
-// }
 
 bool Position::equals(Position *p)
 {
@@ -135,11 +124,6 @@ bool Position::isNear(const Position *pos, const int radius)
 
     return true;
 }
-
-// double *Position::getCoordinates()
-// {
-//     return coordinateTool->localToCoordinates(this);
-// }
 
 int Position::getRow()
 {

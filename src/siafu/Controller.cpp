@@ -24,10 +24,11 @@ Controller::~Controller()
 	}
 }
 
-Controller::Controller(std::string simulationPath, int days, bool stopAtEntry)
+Controller::Controller(std::string simulationPath, int days, bool stopAtEntry, bool gradient)
 {
 	stop = stopAtEntry;
 	duration = days;
+	this->gradient = gradient;
 
 	if (!simulationPath.empty())
 	{
@@ -48,6 +49,10 @@ int Controller::getDuration(){
 
 bool Controller::getStop(){
 	return stop;
+}
+
+bool Controller::getGrad(){
+	return gradient;
 }
 
 void Controller::stopSimulation()
