@@ -46,18 +46,15 @@ void Place::basicChecks(World *thisPlacesWorld)
     }
 }
 
-Place::Place(std::string type, Position *pos, World *world) : Place(type, pos, world, type + "-" + pos->toString(), nullptr)
+Place::Place(std::string typeP, Position *posP, World *world)
 {
-}
-
-Place::Place(std::string typeP, Position *pos, World *world, std::string nameP, Position *relevantPosition)
-{
+    std::string nameP = typeP + "-" + posP->toString();
     basicChecks(world);
-    if (world->isAWall(pos))
+    if (world->isAWall(posP))
     {
         throw PositionOnAWallException();
     }
-    this->pos = pos;
+    this->pos = posP;
 
     // Erasing ressources & extension from type and name variables
 
@@ -89,11 +86,7 @@ Place::Place(std::string typeP, Position *pos, World *world, std::string nameP, 
 
     world->addPlaceType(typeP);
 
-    if (relevantPosition != nullptr)
-    {
-        temporaryGradient = new Gradient(pos, world, relevantPosition);
-    }
-    else if (!(gradients->containsKey(pos->toString())))
+    if (!(gradients->containsKey(pos->toString())))
     {
         gradients->put(pos, new Gradient(pos, world));
     }

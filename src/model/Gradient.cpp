@@ -23,7 +23,7 @@ Gradient::~Gradient()
     delete center;
 }
 
-struct hashPosition
+struct hashPosition // Hasher function
 {
     size_t operator()(Position *p) const
     {
@@ -31,7 +31,7 @@ struct hashPosition
     }
 };
 
-struct keyEqual
+struct keyEqual // Comparison function
 {
     size_t operator()(Position *p1, Position *p2) const
     {
@@ -39,7 +39,7 @@ struct keyEqual
     }
 };
 
-void Gradient::calculateGradient(World *world, Position *relevantPos)
+void Gradient::calculateGradient(World *world /*, Position *relevantPos*/)
 {
     // int nbLoops = 0;
     // int nbInserted = 0;
@@ -129,11 +129,11 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
                     continue;
                 }
             }
-            if ((relevantPos != nullptr) && (pending.find(relevantPos) != pending.end()))
-            {
-                foundRelevantPos = true;
-                doneCalculating = true;
-            }
+            // if ((relevantPos != nullptr) && (pending.find(relevantPos) != pending.end()))
+            // {
+            //     foundRelevantPos = true;
+            //     doneCalculating = true;
+            // }
         }
         // nbLoops++;
         if (firstIteration)
@@ -155,17 +155,17 @@ void Gradient::calculateGradient(World *world, Position *relevantPos)
     // std::cout << "Loops = " << std::to_string(nbLoops) << "\n";
     // std::cout << "Catchs = " << std::to_string(nbCatch) << "\n";
     // std::cout << "Insertions = " << std::to_string(nbInserted) << "\n\n";
-    if (relevantPos != nullptr && !foundRelevantPos)
-    {
-        throw PositionUnreachableException();
-    }
+    // if (relevantPos != nullptr && !foundRelevantPos)
+    // {
+    //     throw PositionUnreachableException();
+    // }
 }
 
-Gradient::Gradient(Position *center, World *world) : Gradient(center, world, nullptr)
-{
-}
+// Gradient::Gradient(Position *center, World *world) : Gradient(center, world, nullptr)
+// {
+// }
 
-Gradient::Gradient(Position *center, World *world, Position *relevantPos)
+Gradient::Gradient(Position *center, World *world /*, Position *relevantPos*/)
 {
     h = world->getHeight();
     w = world->getWidth();
@@ -173,7 +173,7 @@ Gradient::Gradient(Position *center, World *world, Position *relevantPos)
     this->center = center;
     // std::cout << "\n";
     // std::cout << "POSITION = " << center->toString() << "\n";
-    calculateGradient(world, relevantPos);
+    calculateGradient(world/*, relevantPos*/);
 }
 
 Gradient::Gradient(Position *center, int h, int w, std::vector<int> distance)

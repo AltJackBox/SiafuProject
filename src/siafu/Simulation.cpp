@@ -40,7 +40,6 @@ void Simulation::launchSimulation()
 {
 	std::thread t1(&Simulation::operator(), this);
 	t1.join();
-	// this->run();
 }
 
 bool Simulation::isEnded()
@@ -55,7 +54,6 @@ void Simulation::tickTime()
 }
 
 void Simulation::operator()()
-// void Simulation::run()
 {
 	this->world = new World(this, simData);
 	this->time = world->getTime();
@@ -70,6 +68,8 @@ void Simulation::operator()()
 		// printf("Press any key to start: \n");
 		// int scan = scanf("%c", &s);
 	}
+
+
 
 	control->getProgress()->reportSimulationStarted();
 	simulationRunning = true;

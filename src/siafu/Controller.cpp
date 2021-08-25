@@ -54,14 +54,12 @@ void Controller::stopSimulation()
 {
 	mutex.lock();
 	simulation->die();
-	//simulation = NULL;
 	mutex.unlock();
 }
 
 void Controller::startSimulation(std::string simulationPath)
 {
 	simulation = new Simulation(simulationPath, this);
-	// simulation->run();
 }
 
 World *Controller::getWorld()

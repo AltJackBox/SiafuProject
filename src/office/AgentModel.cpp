@@ -9,7 +9,6 @@
 #include <types/BooleanType.h>
 #include <exceptions/PlaceTypeUndefinedException.h>
 #include <exceptions/InfoUndefinedException.h>
-#include <utils/RandomGenerator.h>
 #include <Calendar.h>
 #include <iostream>
 #include <vector>
@@ -788,7 +787,6 @@ void AgentModel::willTheAgentBeInfected(Agent *infected, Agent *notInfected, Eas
 
     // std::uniform_real_distribution<> dis(0.0, 1.0);
 
-    // double aux = RandomGenerator::randomDouble();
     double aux = -0.001;
     if (aux <= noseMouthChance)
     {

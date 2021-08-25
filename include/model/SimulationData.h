@@ -42,7 +42,7 @@ public:
 	std::string getWallsFile();
 
 protected:
-	SimulationData(std::string givenPath);
+	SimulationData(std::string givenPath); // need to be modified to public in order to be tested
 
 	virtual std::string getFile(std::string path);
 

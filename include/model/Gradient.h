@@ -26,7 +26,7 @@ private:
 
     Position *center;
 
-    void calculateGradient(World *world, Position *relevantPos);
+    void calculateGradient(World *world /*, Position *relevantPos*/);
 
 public:
     static const int UNREACHABLE;
@@ -37,7 +37,7 @@ public:
 
     Gradient(Position *center, World *world);
 
-    Gradient(Position *center, World *world, Position *relevantPos);
+    // Gradient(Position *center, World *world, Position *relevantPos);
 
     Gradient(Position *center, int h, int w, std::vector<int> distance);
 

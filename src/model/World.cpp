@@ -231,14 +231,14 @@ std::vector<Place *> World::createPlacesFromImages()
     std::vector<Place *> placesFromImg;
     std::vector<std::string> fileList = simData->getPlaceFiles();
 
-    // #pragma omp parallel for
+    #pragma omp parallel for
     for (int index = 0; index < fileList.size(); index++)
     {
         std::string filename = fileList[index];
         std::vector<Position *> placePoints = readPlacePoints(filename);
         Controller::getProgress()->reportPlacesFound(filename, placePoints.size());
 
-        // std::vector<Place *> placesThread;
+        std::vector<Place *> placesThread;
         int nLoops = placePoints.size();
         for (int indexVec = 0; indexVec < nLoops; indexVec++)
         {
@@ -253,11 +253,10 @@ std::vector<Place *> World::createPlacesFromImages()
                 throw std::runtime_error("One of your " + filename + " places, at " + pos->toString() + " is on a wall");
             }
             Controller::getProgress()->reportPlaceCreated(filename);
-            // placesThread.push_back(place);
-            placesFromImg.push_back(place);
+            placesThread.push_back(place);
         }
-        // #pragma omp critical
-        // placesFromImg.insert(placesFromImg.end(), placesThread.begin(), placesThread.end());
+        #pragma omp critical
+        placesFromImg.insert(placesFromImg.end(), placesThread.begin(), placesThread.end());
     }
 
     return placesFromImg;

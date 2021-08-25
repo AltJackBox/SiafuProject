@@ -57,7 +57,7 @@ private:
 
     std::map<std::string, Publishable*> info;
 
-    int zPriority;
+    // int zPriority;
 
     void basicChecks(World *thisAgentsWorld);
 
@@ -70,7 +70,7 @@ public:
 
     Agent(std::string name, Position *start, World *world);
 
-    Agent(std::string name, Position *start, World *world, int zPriority);
+    // Agent(std::string name, Position *start, World *world, int zPriority);
 
     ~Agent();
 

@@ -2,10 +2,7 @@
 #define POSITION_H
 
 #include <model/World.h>
-#include <model/CoordinateTools.h>
 #include <iostream>
-
-class World;
 
 class Position
 {
@@ -14,8 +11,6 @@ private:
     static const int NEAR_DISTANCE;
 
     static bool initialized;
-
-    static CoordinateTools *coordinateTool;
 
     static int width;
 
@@ -44,7 +39,6 @@ public:
         world = worldObj;
         width = world->getWidth();
         height = world->getHeight();
-        coordinateTool = new CoordinateTools(height, width, topRight, bottomRight, bottomLeft);
         initialized = true;
     }
 
@@ -54,8 +48,8 @@ public:
 
     static void removePositionPointers()
     {
-        delete coordinateTool;
-        coordinateTool = nullptr;
+        // delete coordinateTool;
+        // coordinateTool = nullptr;
     }
 
     Position(const int i, const int j);

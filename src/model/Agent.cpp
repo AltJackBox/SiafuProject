@@ -54,11 +54,7 @@ void Agent::basicChecks(World *thisAgentsWorld)
     }
 }
 
-Agent::Agent(std::string name, Position *start, World *world) : Agent(name, start, world, 0)
-{
-}
-
-Agent::Agent(std::string name, Position *start, World *world, int zPriority)
+Agent::Agent(std::string name, Position *start, World *world)
 {
     basicChecks(world);
     this->name = name;
@@ -66,7 +62,6 @@ Agent::Agent(std::string name, Position *start, World *world, int zPriority)
     this->pos = start;
     this->destination = getDefaultPlace(start, world);
     this->atDestination = true;
-    this->zPriority = zPriority;
 }
 
 bool Agent::isAtDestination()
@@ -87,16 +82,6 @@ void Agent::setName(std::string name)
 std::string Agent::getName()
 {
     return name;
-}
-
-int Agent::getZPriority()
-{
-    return zPriority;
-}
-
-void Agent::setZPriority(int zPriority)
-{
-    this->zPriority = zPriority;
 }
 
 Place *Agent::getDestination()
@@ -370,8 +355,6 @@ bool Agent::equals(Agent *agent)
     else if (!pos->equals(agent->pos))
         return false;
     if (speed != agent->speed)
-        return false;
-    if (zPriority != agent->zPriority)
         return false;
     return true;
 }

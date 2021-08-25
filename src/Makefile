@@ -1,22 +1,25 @@
-#g++ -I../runtime/src main.cpp -o main
-
 SRCS=$(wildcard siafu/*.cpp) \
 	$(wildcard siafu/test/*.cpp) \
 	$(wildcard model/*.cpp) \
 	$(wildcard model/test/*.cpp) \
+	$(wildcard office/*.cpp) \
+	$(wildcard office/test/*.cpp) \
 	$(wildcard progress/*.cpp) \
 	$(wildcard types/*.cpp) \
+	$(wildcard utils/*.cpp) \
+	$(wildcard utils/test/*.cpp) \
 	$(wildcard *.cpp) \
 
 OBJS  := $(SRCS:%.cpp=$(OBJ_DIR)/%.o)
 DEPENDENCIES := $(OBJS:.o=.d)
 
+TEST_OBJS=$(OBJ_DIR)/office/test/t_RandomGen.o $(OBJ_DIR)/model/test/t_stb.o $(OBJ_DIR)/siafu/test/t_Simulation.o $(OBJ_DIR)/model/test/t_SimulationData.o \
+	$(OBJ_DIR)/model/test/t_World.o $(OBJ_DIR)/model/test/t_HashSet.o $(OBJ_DIR)/utils/test/t_PersistentCachedMap.o 
+
+COORDINATETOOL=$(OBJ_DIR)/model/CoordinateTools.o 
+
 SIM=Simulation
-SIM_DEP=$(OBJ_DIR)/siafu/Siafu.o $(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
-	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
-	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/office/AgentModel.o $(OBJ_DIR)/office/WorldModel.o $(OBJ_DIR)/office/Constants.o \
-	$(OBJ_DIR)/utils/PersistentCachedMap.o $(OBJ_DIR)/types/BooleanType.o $(OBJ_DIR)/types/EasyTime.o $(OBJ_DIR)/types/Text.o \
-	$(OBJ_DIR)/types/TimePeriod.o
+SIM_DEP=$(filter-out $(TEST_OBJS) $(COORDINATETOOL), $(OBJS))
 
 TEST0=t_RandomGen
 TEST0_DEP=$(OBJ_DIR)/office/test/t_RandomGen.o
@@ -29,31 +32,23 @@ TEST2_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DI
 	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
 	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/office/AgentModel.o $(OBJ_DIR)/office/WorldModel.o $(OBJ_DIR)/office/Constants.o \
 	$(OBJ_DIR)/utils/PersistentCachedMap.o $(OBJ_DIR)/types/BooleanType.o $(OBJ_DIR)/types/EasyTime.o $(OBJ_DIR)/types/Text.o \
-	$(OBJ_DIR)/types/TimePeriod.o $(OBJ_DIR)/utils/RandomGenerator.o $(OBJ_DIR)/siafu/test/t_Simulation.o
+	$(OBJ_DIR)/types/TimePeriod.o $(OBJ_DIR)/siafu/test/t_Simulation.o
 
 TEST3=t_SimulationData
 TEST3_DEP=$(OBJ_DIR)/model/SimulationData.o $(OBJ_DIR)/model/test/t_SimulationData.o
 
-TEST4=t_World
+TEST4=t_PersistentCachedMap
 TEST4_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
-	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
-	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/model/test/t_World.o
-
-TEST5=t_PersistentCachedMap
-TEST5_DEP=$(OBJ_DIR)/siafu/Controller.o $(OBJ_DIR)/progress/Progress.o  $(OBJ_DIR)/model/World.o $(OBJ_DIR)/model/SimulationData.o \
 	$(OBJ_DIR)/siafu/Simulation.o $(OBJ_DIR)/model/Position.o $(OBJ_DIR)/model/Place.o $(OBJ_DIR)/model/Gradient.o $(OBJ_DIR)/model/Agent.o $(OBJ_DIR)/Calendar.o \
 	$(OBJ_DIR)/model/CoordinateTools.o $(OBJ_DIR)/office/AgentModel.o $(OBJ_DIR)/office/WorldModel.o $(OBJ_DIR)/office/Constants.o \
 	$(OBJ_DIR)/utils/PersistentCachedMap.o $(OBJ_DIR)/types/BooleanType.o $(OBJ_DIR)/types/EasyTime.o $(OBJ_DIR)/types/Text.o \
 	$(OBJ_DIR)/types/TimePeriod.o $(OBJ_DIR)/utils/test/t_PersistentCachedMap.o 
 
-
-	
-
 all: build simulator
 
-simulator: $(OBJS) $(BIN_DIR)/$(SIM)
+simulator: $(SIM_DEP) $(BIN_DIR)/$(SIM)
 
-test: $(OBJS) $(BIN_DIR)/$(TEST2)
+test: $(OBJS) $(BIN_DIR)/$(TEST0) $(BIN_DIR)/$(TEST1) $(BIN_DIR)/$(TEST2) $(BIN_DIR)/$(TEST3) #$(BIN_DIR)/$(TEST4)
 
 $(OBJ_DIR)/%.o: %.cpp
 	@mkdir -p $(@D)
@@ -61,7 +56,7 @@ $(OBJ_DIR)/%.o: %.cpp
 
 $(BIN_DIR)/$(SIM) : $(SIM_DEP)
 	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(SIM) $^ -lstdc++fs -lpthread
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(SIM) $^ -lstdc++fs -lpthread -fopenmp
 
 $(BIN_DIR)/$(TEST0) : $(TEST0_DEP)
 	@mkdir -p $(@D)
@@ -73,7 +68,7 @@ $(BIN_DIR)/$(TEST1) : $(TEST1_DEP)
 
 $(BIN_DIR)/$(TEST2) : $(TEST2_DEP)
 	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST2) $^ -lstdc++fs -lpthread
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST2) $^ -lstdc++fs -lpthread -fopenmp
 
 $(BIN_DIR)/$(TEST3) : $(TEST3_DEP)
 	@mkdir -p $(@D)
@@ -81,11 +76,7 @@ $(BIN_DIR)/$(TEST3) : $(TEST3_DEP)
 
 $(BIN_DIR)/$(TEST4) : $(TEST4_DEP)
 	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST4) $^ -lstdc++fs -lpthread
-
-$(BIN_DIR)/$(TEST5) : $(TEST5_DEP)
-	@mkdir -p $(@D)
-	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST5) $^ -lstdc++fs -lpthread
+	$(CXX) $(LDFLAGS) $(LDLIBS) -o $(BIN_DIR)/$(TEST4) $^ -lstdc++fs -lpthread -fopenmp
 
 -include $(DEPENDENCIES)
 
