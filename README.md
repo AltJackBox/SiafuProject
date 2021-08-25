@@ -17,7 +17,7 @@ You can then run it using the command :
 
 Besides, you can use the launching options :
 
-#### --days <number> or -d <number>
+#### --days (number) or -d (number)
 Specifies the amount of days for the simulation
 
 #### --stop or -s 
@@ -29,7 +29,7 @@ After the creation or recovery of Gradients, the program will shut down
 
 The script performance.sh can be used to launch the simulation multiple times :
 
-#### bash performance.sh <loop> <d>
+#### bash performance.sh (loop) (d)
 Launches the simulation loop times, with d amount of days for the simulation. This script can be used to facilitate the performance analysis process, for instance you can combine it with the time command on unbuntu to measure the execution time of the program.
 
 
